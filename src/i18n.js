@@ -9,6 +9,13 @@ const resources = {
       "We've missed you": "We've missed you",
     },
   },
+  hr: {
+    translation: {
+      Search: "Pretraga",
+      "Welcome back": "Dobrodošli natrag",
+      "We've missed you": "Nedostajali ste nam",
+    },
+  },
   fr: {
     translation: {
       Search: "Rechercher…",
@@ -34,8 +41,8 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: "en",
-  fallbackLng: "en",
+  lng: "hr",
+  fallbackLng: "hr",
   interpolation: {
     escapeValue: false,
   },

@@ -76,9 +76,17 @@ const Sidebar = ({ items, showFooter = true, ...rest }) => {
   return (
     <Drawer variant="permanent" {...rest}>
       <Brand component={NavLink} to="/">
-        <BrandIcon />{" "}
+        {/* <BrandIcon />{" "} */}
+        <img
+          style={{ backgroundColor: "white", borderRadius: "4px" }}
+          src="https://sos-at-vie-1.exo.io/a1portal/A1_01_08RED_3_L-1024x1024.png"
+          width="30px"
+          height="28px"
+        />{" "}
+        &nbsp;&nbsp;
         <Box ml={1}>
-          Material App <BrandChip label="PRO" />
+          A1 App
+          {/* <BrandChip label="PRO" /> */}
         </Box>
       </Brand>
       <SidebarNav items={items} />

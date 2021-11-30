@@ -24,21 +24,21 @@ const Flag = styled.img`
 
 const languageOptions = {
   en: {
-    icon: "/static/img/flags/us.png",
+    icon: "/static/img/flags/gb.png",
     name: "English",
   },
-  fr: {
-    icon: "/static/img/flags/fr.png",
-    name: "French",
+  hr: {
+    icon: "/static/img/flags/hr.png",
+    name: "Hrvatski",
   },
-  de: {
-    icon: "/static/img/flags/de.png",
-    name: "German",
-  },
-  nl: {
-    icon: "/static/img/flags/nl.png",
-    name: "Dutch",
-  },
+  // de: {
+  //   icon: "/static/img/flags/de.png",
+  //   name: "German",
+  // },
+  // nl: {
+  //   icon: "/static/img/flags/nl.png",
+  //   name: "Dutch",
+  // },
 };
 
 function NavbarLanguagesDropdown() {

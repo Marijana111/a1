@@ -56,7 +56,7 @@ const SidebarFooter = ({ ...rest }) => {
             {!user && (
               <Avatar
                 alt="Lucy Lavender"
-                src="/static/img/avatars/avatar-1.jpg"
+                src="https://tellmetrip.com/img/no-user.png"
               />
             )}
           </FooterBadge>
@@ -66,8 +66,8 @@ const SidebarFooter = ({ ...rest }) => {
             <FooterText variant="body2">{user.displayName}</FooterText>
           )}
           {/* Demo data */}
-          {!user && <FooterText variant="body2">Lucy Lavender</FooterText>}
-          <FooterSubText variant="caption">UX Designer</FooterSubText>
+          {!user && <FooterText variant="body2">Prijavljeni User</FooterText>}
+          <FooterSubText variant="caption">Admin</FooterSubText>
         </Grid>
       </Grid>
     </Footer>
