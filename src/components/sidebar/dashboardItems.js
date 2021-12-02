@@ -237,27 +237,27 @@ const elementsSection = [
     // ],
   },
   {
-    href: "/tables/data-grid",
+    href: "/requests/requests-grid",
     icon: TableChartIcon,
     title: "Zahtjevi",
   },
   {
-    href: "/tables/data-grid",
+    href: "/fault-repairs/fault-repairs-grid",
     icon: ErrorIcon,
     title: "Smetnje",
   },
   {
-    href: "/tables/data-grid",
+    href: "/reports/reports-grid",
     icon: Archive,
     title: "Izvještaji",
   },
   {
-    href: "/tables/data-grid",
+    href: "/configuration/configuration-grid",
     icon: VpnKeyIcon,
     title: "Šifrarnik",
   },
   {
-    href: "/tables/data-grid",
+    href: "/notifications/notifications-grid",
     icon: NotificationsIcon,
     title: "Obavijesti",
   },

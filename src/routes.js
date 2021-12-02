@@ -104,6 +104,22 @@ const Calendar = async(() => import("./pages/pages/Calendar"));
 // Table components
 const DataGrid = async(() => import("./pages/tables/DataGrid"));
 
+const DataGridRequests = async(() => import("./pages/tables/DataGridRequests"));
+
+const DataGridFaultRepair = async(() =>
+  import("./pages/tables/DataGridFaultRepair")
+);
+
+const DataGridReports = async(() => import("./pages/tables/DataGridReports"));
+
+const DataGridConfiguration = async(() =>
+  import("./pages/tables/DataGridConfiguration")
+);
+
+const DataGridNotifications = async(() =>
+  import("./pages/tables/DataGridNotifications")
+);
+
 // Chart components
 const Chartjs = async(() => import("./pages/charts/Chartjs"));
 
@@ -360,6 +376,62 @@ const routes = [
       },
     ],
   },
+
+  {
+    path: "requests",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "requests-grid",
+        element: <DataGridRequests />,
+      },
+    ],
+  },
+
+  {
+    path: "fault-repairs",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "fault-repairs-grid",
+        element: <DataGridFaultRepair />,
+      },
+    ],
+  },
+
+  {
+    path: "reports",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "reports-grid",
+        element: <DataGridReports />,
+      },
+    ],
+  },
+
+  {
+    path: "configuration",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "configuration-grid",
+        element: <DataGridConfiguration />,
+      },
+    ],
+  },
+
+  {
+    path: "notifications",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "notifications-grid",
+        element: <DataGridNotifications />,
+      },
+    ],
+  },
+
   {
     path: "icons",
     element: <DashboardLayout />,

@@ -76,19 +76,7 @@ function DataGridDemo() {
     <Card mb={6}>
       <CardContent pb={1}>
         <Typography variant="h6" gutterBottom>
-          Data Grid
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          A fast and extendable data table and data grid for React, made by
-          Material-UI.{" "}
-          <Link
-            href="https://material-ui.com/components/data-grid/"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Official docs
-          </Link>
-          .
+          Filteri
         </Typography>
       </CardContent>
       <Paper>
@@ -111,7 +99,7 @@ function DataGridPage() {
     <React.Fragment>
       <Helmet title="Data Grid" />
       <Typography variant="h3" gutterBottom display="inline">
-        Data Grid
+        Korisnici
       </Typography>
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>

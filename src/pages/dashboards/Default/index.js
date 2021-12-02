@@ -33,12 +33,12 @@ function Default() {
           <Typography variant="h3" gutterBottom>
             Default Dashboard
           </Typography>
-          <Typography variant="subtitle1">
+          {/* <Typography variant="subtitle1">
             {t("Welcome back")}, Lucy! {t("We've missed you")}.{" "}
             <span role="img" aria-label="Waving Hand Sign">
               👋
             </span>
-          </Typography>
+          </Typography> */}
         </Grid>
 
         <Grid item>
