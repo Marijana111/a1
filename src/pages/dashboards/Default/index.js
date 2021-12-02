@@ -31,14 +31,8 @@ function Default() {
       <Grid justifyContent="space-between" container spacing={6}>
         <Grid item>
           <Typography variant="h3" gutterBottom>
-            Default Dashboard
+            Naslovnica
           </Typography>
-          {/* <Typography variant="subtitle1">
-            {t("Welcome back")}, Lucy! {t("We've missed you")}.{" "}
-            <span role="img" aria-label="Waving Hand Sign">
-              👋
-            </span>
-          </Typography> */}
         </Grid>
 
         <Grid item>

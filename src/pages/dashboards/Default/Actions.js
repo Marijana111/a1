@@ -46,9 +46,9 @@ function Actions() {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        Today: April 29
+        {new Date().toLocaleDateString()}
       </Button>
-      <Menu
+      {/* <Menu
         id="simple-menu"
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -60,7 +60,7 @@ function Actions() {
         <MenuItem onClick={handleClose}>Last 30 days</MenuItem>
         <MenuItem onClick={handleClose}>This month</MenuItem>
         <MenuItem onClick={handleClose}>Last month</MenuItem>
-      </Menu>
+      </Menu> */}
     </React.Fragment>
   );
 }

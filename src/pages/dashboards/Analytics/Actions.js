@@ -45,9 +45,7 @@ function Actions() {
         aria-owns={anchorEl ? "simple-menu" : undefined}
         aria-haspopup="true"
         onClick={handleClick}
-      >
-        Today: April 29
-      </Button>
+      ></Button>
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}

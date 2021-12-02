@@ -51,7 +51,13 @@ const SidebarFooter = ({ ...rest }) => {
             }}
             variant="dot"
           >
-            {!!user && <Avatar alt={user.displayName} src={user.avatar} />}
+            {!!user && (
+              <Avatar
+                alt={user.displayName}
+                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                // {user.avatar}
+              />
+            )}
             {/* Demo data */}
             {!user && (
               <Avatar
@@ -63,10 +69,15 @@ const SidebarFooter = ({ ...rest }) => {
         </Grid>
         <Grid item>
           {!!user && (
-            <FooterText variant="body2">{user.displayName}</FooterText>
+            <FooterText variant="body2">
+              Prijavljeni Korisnik
+              {/* {user.displayName} */}
+            </FooterText>
           )}
           {/* Demo data */}
-          {!user && <FooterText variant="body2">Prijavljeni User</FooterText>}
+          {!user && (
+            <FooterText variant="body2">Prijavljeni Korisnik</FooterText>
+          )}
           <FooterSubText variant="caption">Admin</FooterSubText>
         </Grid>
       </Grid>

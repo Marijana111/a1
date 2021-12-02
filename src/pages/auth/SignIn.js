@@ -32,14 +32,23 @@ const BigAvatar = styled(Avatar)`
 function SignIn() {
   return (
     <React.Fragment>
-      <Brand />
+      <img
+        src="https://ssc.a1.hr/o/a1-theme/images/logo@2x.png"
+        height="80px"
+        width="80px"
+      />
+      <br />
+      {/* <Brand /> */}
       <Wrapper>
         <Helmet title="Sign In" />
-        <BigAvatar alt="Lucy" src="/static/img/avatars/avatar-1.jpg" />
+        <BigAvatar
+          alt="Lucy"
+          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+        />
 
-        <Typography component="h1" variant="h4" align="center" gutterBottom>
+        {/* <Typography component="h1" variant="h4" align="center" gutterBottom>
           Welcome back, Lucy!
-        </Typography>
+        </Typography> */}
         <Typography component="h2" variant="body1" align="center">
           Sign in to your account to continue
         </Typography>

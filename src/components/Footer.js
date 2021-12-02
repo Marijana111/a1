@@ -42,27 +42,28 @@ function Footer() {
         <Hidden mdDown>
           <Grid container item xs={12} md={6}>
             <List>
-              <ListItemButton component="a" href="#">
-                <ListItemText primary="Support" />
-              </ListItemButton>
-              <ListItemButton component="a" href="#">
-                <ListItemText primary="Help Center" />
-              </ListItemButton>
-              <ListItemButton component="a" href="#">
-                <ListItemText primary="Privacy" />
-              </ListItemButton>
-              <ListItemButton component="a" href="#">
-                <ListItemText primary="Terms of Service" />
+              <ListItemButton>
+                <ListItemText
+                  primary={`© ${new Date().getFullYear()} - A1 App`}
+                />
               </ListItemButton>
             </List>
           </Grid>
         </Hidden>
         <Grid container item xs={12} md={6} justifyContent="flex-end">
           <List>
-            <ListItemButton>
-              <ListItemText
-                primary={`© ${new Date().getFullYear()} - Material App`}
-              />
+            <ListItemButton component="a" href="#">
+              <ListItemText primary="Podrška" />
+            </ListItemButton>
+            <ListItemButton component="a" href="#">
+              <ListItemText primary="Kontakt" />
+            </ListItemButton>
+            <ListItemButton
+              style={{ marginRight: "80px" }}
+              component="a"
+              href="#"
+            >
+              <ListItemText primary="Pomoć" />
             </ListItemButton>
           </List>
         </Grid>
