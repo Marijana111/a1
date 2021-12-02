@@ -45,34 +45,34 @@ function Default() {
       <Grid container spacing={6}>
         <Grid item xs={12} sm={12} md={6} lg={3} xl>
           <Stats
-            title="Sales Today"
-            amount="2.532"
-            chip="Today"
-            percentagetext="+26%"
+            title="Zahtjevi danas"
+            amount="30"
+            chip="Danas"
+            percentagetext="+28%"
             percentagecolor={green[500]}
           />
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={3} xl>
           <Stats
-            title="Visitors"
-            amount="170.212"
-            chip="Annual"
+            title="Ukupno zahtjeva"
+            amount="248"
+            chip="Mjesečno"
             percentagetext="-14%"
             percentagecolor={red[500]}
           />
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={3} xl>
           <Stats
-            title="Total Earnings"
-            amount="$ 24.300"
-            chip="Monthly"
+            title="Ukupno smetnje"
+            amount="17"
+            chip="Mjesečno"
             percentagetext="+18%"
             percentagecolor={green[500]}
           />
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={3} xl>
           <Stats
-            title="Pending Orders"
+            title="Aktivne smetnje"
             amount="45"
             chip="Yearly"
             percentagetext="-9%"
@@ -82,19 +82,19 @@ function Default() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={6}>
+      {/* <Grid container spacing={6}>
         <Grid item xs={12} lg={8}>
           <LineChart />
         </Grid>
         <Grid item xs={12} lg={4}>
           <DoughnutChart />
         </Grid>
-      </Grid>
+      </Grid> */}
       <Grid container spacing={6}>
-        <Grid item xs={12} lg={4}>
+        {/* <Grid item xs={12} lg={4}>
           <BarChart />
-        </Grid>
-        <Grid item xs={12} lg={8}>
+        </Grid> */}
+        <Grid item xs={12} lg={12}>
           <Table />
         </Grid>
       </Grid>

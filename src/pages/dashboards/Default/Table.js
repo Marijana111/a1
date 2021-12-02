@@ -45,42 +45,36 @@ const rows = [
   createData(
     "Project Aurora",
     "01/01/2021",
-    "31/06/2021",
     <Chip label="Done" color="success" />,
     "James Dalton"
   ),
   createData(
     "Project Eagle",
     "01/01/2021",
-    "31/06/2021",
     <Chip label="In Progress" color="warning" />,
     "Tracy Mack"
   ),
   createData(
     "Project Fireball",
     "01/01/2021",
-    "31/06/2021",
     <Chip label="Done" color="success" />,
     "Sallie Love"
   ),
   createData(
     "Project Omega",
     "01/01/2021",
-    "31/06/2021",
     <Chip label="Cancelled" color="error" />,
     "Glenda Jang"
   ),
   createData(
     "Project Yoda",
     "01/01/2021",
-    "31/06/2021",
     <Chip label="Done" color="success" />,
     "Raymond Ennis"
   ),
   createData(
     "Project Zulu",
     "01/01/2021",
-    "31/06/2021",
     <Chip label="Done" color="success" />,
     "Matthew Winters"
   ),
@@ -94,18 +88,17 @@ const DashboardTable = () => (
           <MoreVertical />
         </IconButton>
       }
-      title="Latest projects"
+      title="Zadnji zahtjevi"
     />
     <Paper>
       <TableWrapper>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Start Date</TableCell>
-              <TableCell>End Date</TableCell>
-              <TableCell>State</TableCell>
-              <TableCell>Assignee</TableCell>
+              <TableCell>Naziv</TableCell>
+              <TableCell>Datum kreiranje</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Osoba</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

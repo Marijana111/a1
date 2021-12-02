@@ -108,7 +108,7 @@ const Stats = ({
           percentagecolor={percentagecolor}
           illustration={illustration}
         >
-          <span>{percentagetext}</span> Since last month
+          <span>{percentagetext}</span> Od prošlog mjeseca
         </Percentage>
         {!illustration && <Chip label={chip} />}
       </CardContent>
