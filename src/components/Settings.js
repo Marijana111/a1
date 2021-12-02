@@ -123,49 +123,17 @@ function Demo({ title, themeVariant }) {
 function Demos() {
   return (
     <Wrapper>
-      <Heading>Select a demo</Heading>
-
       <Box px={4} my={3}>
         <Alert icon={false} severity="info">
-          <strong>Hello!</strong> Select your style below. Choose the ones that
-          best fits your needs.
+          Odaberite varijantu prikaza koja Vam najviše odgovara.
         </Alert>
       </Box>
 
       <Box px={4} my={3}>
         <Grid container spacing={3}>
-          <Demo title="Dark" themeVariant={THEMES.DARK} />
-          <Demo title="Light" themeVariant={THEMES.LIGHT} />
-          <Demo title="Default" themeVariant={THEMES.DEFAULT} />
-          <Demo title="Blue" themeVariant={THEMES.BLUE} />
-          <Demo title="Green" themeVariant={THEMES.GREEN} />
-          <Demo title="Indigo" themeVariant={THEMES.INDIGO} />
+          <Demo title="Tamna" themeVariant={THEMES.DARK} />
+          <Demo title="Crno-bijela" themeVariant={THEMES.DEFAULT} />
         </Grid>
-      </Box>
-
-      <Box my={3} mx={4}>
-        <Button
-          component={Link}
-          to="/documentation/welcome"
-          variant="outlined"
-          size="large"
-          target="_blank"
-          fullWidth={true}
-        >
-          Documentation
-        </Button>
-      </Box>
-      <Box my={3} mx={4}>
-        <Button
-          href="https://material-ui.com/store/items/material-app/"
-          variant="contained"
-          color="primary"
-          size="large"
-          target="_blank"
-          fullWidth={true}
-        >
-          Get Material App
-        </Button>
       </Box>
     </Wrapper>
   );

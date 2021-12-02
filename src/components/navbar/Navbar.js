@@ -106,9 +106,6 @@ const Navbar = ({ onDrawerToggle }) => {
             </Grid>
             <Grid item xs />
             <Grid item>
-              <NavbarMessagesDropdown />
-              <NavbarNotificationsDropdown />
-              <NavbarLanguagesDropdown />
               <NavbarUserDropdown />
             </Grid>
           </Grid>

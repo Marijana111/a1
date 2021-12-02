@@ -42,7 +42,7 @@ const SidebarNav = ({ items }) => {
                 component="div"
                 key={item.title}
                 pages={item.pages}
-                title={item.title}
+                // title={item.title}
               />
             ))}
         </Items>

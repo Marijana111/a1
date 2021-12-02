@@ -120,7 +120,7 @@ const SidebarNavListItem = (props) => {
         depth={depth}
         component={CustomRouterLink}
         to={href}
-        activeClassName="active"
+        // activeClassName="active"
       >
         {Icon && <Icon />}
         <Title depth={depth}>

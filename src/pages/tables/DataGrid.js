@@ -116,12 +116,9 @@ function DataGridPage() {
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
         <Link component={NavLink} to="/">
-          Dashboard
+          Naslovnica
         </Link>
-        <Link component={NavLink} to="/">
-          Tables
-        </Link>
-        <Typography>Data Grid</Typography>
+        <Typography>Korisnici</Typography>
       </Breadcrumbs>
 
       <Divider my={6} />

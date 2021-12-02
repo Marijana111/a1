@@ -36,10 +36,7 @@ function App() {
 
   return (
     <HelmetProvider>
-      <Helmet
-        titleTemplate="%s | Material App"
-        defaultTitle="Material App - React Admin & Dashboard Template"
-      />
+      <Helmet titleTemplate="A1 App" defaultTitle="A1 App" />
       <Provider store={store}>
         <StylesProvider jss={jss}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>

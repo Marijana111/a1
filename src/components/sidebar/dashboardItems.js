@@ -1,25 +1,14 @@
-import {
-  BookOpen,
-  Briefcase,
-  Calendar,
-  CheckSquare,
-  CreditCard,
-  Grid,
-  Heart,
-  Layout,
-  List,
-  Map,
-  ShoppingCart,
-  PieChart,
-  Sliders,
-  Users,
-} from "react-feather";
+import { List, Sliders, User, Archive } from "react-feather";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import ErrorIcon from "@mui/icons-material/Error";
+import TableChartIcon from "@mui/icons-material/TableChart";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 const pagesSection = [
   {
     href: "/",
     icon: Sliders,
-    title: "Dashboard",
+    title: "Naslovnica",
     //children: [
     // {
     //   href: "/default",
@@ -229,23 +218,48 @@ const elementsSection = [
   //   ],
   // },
   {
-    href: "/tables",
-    icon: List,
+    href: "/tables/data-grid",
+    icon: User,
     title: "Korisnici",
-    children: [
-      // {
-      //   href: "/tables/simple-table",
-      //   title: "Simple Table",
-      // },
-      // {
-      //   href: "/tables/advanced-table",
-      //   title: "Advanced Table",
-      // },
-      {
-        href: "/tables/data-grid",
-        title: "Pregled korisnika",
-      },
-    ],
+    // children: [
+    //   // {
+    //   //   href: "/tables/simple-table",
+    //   //   title: "Simple Table",
+    //   // },
+    //   // {
+    //   //   href: "/tables/advanced-table",
+    //   //   title: "Advanced Table",
+    //   // },
+    //   {
+    //     href: "/tables/data-grid",
+    //     title: "Pregled korisnika",
+    //   },
+    // ],
+  },
+  {
+    href: "/tables/data-grid",
+    icon: TableChartIcon,
+    title: "Zahtjevi",
+  },
+  {
+    href: "/tables/data-grid",
+    icon: ErrorIcon,
+    title: "Smetnje",
+  },
+  {
+    href: "/tables/data-grid",
+    icon: Archive,
+    title: "Izvještaji",
+  },
+  {
+    href: "/tables/data-grid",
+    icon: VpnKeyIcon,
+    title: "Šifrarnik",
+  },
+  {
+    href: "/tables/data-grid",
+    icon: NotificationsIcon,
+    title: "Obavijesti",
   },
   // {
   //   href: "/icons",

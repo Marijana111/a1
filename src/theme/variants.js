@@ -249,10 +249,10 @@ const indigoVariant = merge(defaultVariant, {
 const variants = [
   defaultVariant,
   darkVariant,
-  lightVariant,
-  blueVariant,
-  greenVariant,
-  indigoVariant,
+  // lightVariant,
+  // blueVariant,
+  // greenVariant,
+  // indigoVariant,
 ];
 
 export default variants;
