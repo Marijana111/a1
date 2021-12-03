@@ -12,9 +12,6 @@ import { spacing } from "@mui/system";
 import { green, red } from "@mui/material/colors";
 
 import Actions from "./Actions";
-import BarChart from "./BarChart";
-import LineChart from "./LineChart";
-import DoughnutChart from "./DoughnutChart";
 import Stats from "./Stats";
 import Table from "./Table";
 
@@ -81,19 +78,7 @@ function Default() {
           />
         </Grid>
       </Grid>
-
-      {/* <Grid container spacing={6}>
-        <Grid item xs={12} lg={8}>
-          <LineChart />
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          <DoughnutChart />
-        </Grid>
-      </Grid> */}
       <Grid container spacing={6}>
-        {/* <Grid item xs={12} lg={4}>
-          <BarChart />
-        </Grid> */}
         <Grid item xs={12} lg={12}>
           <Table />
         </Grid>

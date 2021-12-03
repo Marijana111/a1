@@ -40,7 +40,7 @@ function Blank() {
 
       <Divider my={6} />
 
-      <Grid container spacing={6}>
+      {/* <Grid container spacing={6}>
         <Grid item xs={12} md={6}>
           <LineChart />
         </Grid>
@@ -59,7 +59,7 @@ function Blank() {
         <Grid item xs={12} md={6}>
           <PolarChart />
         </Grid>
-      </Grid>
+      </Grid> */}
     </React.Fragment>
   );
 }
