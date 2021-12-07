@@ -9,20 +9,20 @@ const pagesSection = [
     href: "/",
     icon: Sliders,
     title: "Naslovnica",
-    //children: [
-    // {
-    //   href: "/default",
-    //   title: "Default",
-    // },
-    // {
-    //   href: "/analytics",
-    //   title: "Analytics",
-    // },
-    // {
-    //   href: "/saas",
-    //   title: "SaaS",
-    // },
-    //],
+    children: [
+      {
+        href: "/default",
+        title: "Default",
+      },
+      // {
+      //   href: "/analytics",
+      //   title: "Analytics",
+      // },
+      // {
+      //   href: "/saas",
+      //   title: "SaaS",
+      // },
+    ],
   },
   // {
   //   href: "/pages",

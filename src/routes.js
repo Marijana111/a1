@@ -140,16 +140,12 @@ const routes = [
   // },
   {
     path: "/",
-    element: (
-      <DashboardLayout>
-        <Default />
-      </DashboardLayout>
-    ),
+    element: <DashboardLayout />,
     children: [
-      // {
-      //   path: "default",
-      //   element: <Default />,
-      // },
+      {
+        path: "default",
+        element: <Default />,
+      },
       // {
       //   path: "analytics",
       //   element: <Analytics />,
