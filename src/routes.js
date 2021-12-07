@@ -9,7 +9,7 @@ import async from "./components/Async";
 import AuthLayout from "./layouts/Auth";
 import DashboardLayout from "./layouts/Dashboard";
 import DocLayout from "./layouts/Doc";
-import PresentationLayout from "./layouts/Presentation";
+//import PresentationLayout from "./layouts/Presentation";
 
 // Guards
 import AuthGuard from "./components/guards/AuthGuard";
@@ -46,14 +46,14 @@ import TextFields from "./pages/forms/TextFields";
 import MaterialIcons from "./pages/icons/MaterialIcons";
 
 // Page components
-import Blank from "./pages/pages/Blank";
-import InvoiceDetails from "./pages/pages/InvoiceDetails";
-import InvoiceList from "./pages/pages/InvoiceList";
-import Orders from "./pages/pages/Orders";
-import Pricing from "./pages/pages/Pricing";
-import Settings from "./pages/pages/Settings";
-import Projects from "./pages/pages/Projects";
-import Chat from "./pages/pages/Chat";
+// import Blank from "./pages/pages/Blank";
+// import InvoiceDetails from "./pages/pages/InvoiceDetails";
+// import InvoiceList from "./pages/pages/InvoiceList";
+// import Orders from "./pages/pages/Orders";
+// import Pricing from "./pages/pages/Pricing";
+// import Settings from "./pages/pages/Settings";
+// import Projects from "./pages/pages/Projects";
+// import Chat from "./pages/pages/Chat";
 
 // Table components
 import SimpleTable from "./pages/tables/SimpleTable";
@@ -128,33 +128,37 @@ const DataGridNotifications = async(() =>
 // const VectorMaps = async(() => import("./pages/maps/VectorMaps"));
 
 const routes = [
+  // {
+  //   path: "/",
+  //   element: <PresentationLayout />,
+  //   children: [
+  //     {
+  //       path: "",
+  //       element: <Landing />,
+  //     },
+  //   ],
+  // },
   {
     path: "/",
-    element: <PresentationLayout />,
-    children: [
-      {
-        path: "",
-        element: <Landing />,
-      },
-    ],
-  },
-  {
-    path: "/dashboard",
-    element: <DashboardLayout />,
-    children: [
-      {
-        path: "default",
-        element: <Default />,
-      },
-      {
-        path: "analytics",
-        element: <Analytics />,
-      },
-      {
-        path: "saas",
-        element: <SaaS />,
-      },
-    ],
+    element: (
+      <DashboardLayout>
+        <Default />
+      </DashboardLayout>
+    ),
+    // children: [
+    //   {
+    //     path: "default",
+    //     element: <Default />,
+    //   },
+    //   {
+    //     path: "analytics",
+    //     element: <Analytics />,
+    //   },
+    //   {
+    //     path: "saas",
+    //     element: <SaaS />,
+    //   },
+    // ],
   },
   // {
   //   path: "pages",
