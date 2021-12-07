@@ -6,22 +6,22 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 
 const pagesSection = [
   {
-    href: "/",
+    href: "/dashboard",
     icon: Sliders,
     title: "Naslovnica",
     children: [
       {
-        href: "/default",
+        href: "/dashboard/default",
         title: "Default",
       },
-      // {
-      //   href: "/analytics",
-      //   title: "Analytics",
-      // },
-      // {
-      //   href: "/saas",
-      //   title: "SaaS",
-      // },
+      {
+        href: "/dashboard/analytics",
+        title: "Analytics",
+      },
+      {
+        href: "/dashboard/saas",
+        title: "SaaS",
+      },
     ],
   },
   // {

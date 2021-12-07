@@ -128,32 +128,32 @@ const GoogleMaps = async(() => import("./pages/maps/GoogleMaps"));
 const VectorMaps = async(() => import("./pages/maps/VectorMaps"));
 
 const routes = [
-  // {
-  //   path: "/",
-  //   element: <PresentationLayout />,
-  //   children: [
-  //     {
-  //       path: "",
-  //       element: <Landing />,
-  //     },
-  //   ],
-  // },
   {
     path: "/",
+    element: <PresentationLayout />,
+    children: [
+      {
+        path: "",
+        element: <Landing />,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
     element: <DashboardLayout />,
     children: [
       {
         path: "default",
         element: <Default />,
       },
-      // {
-      //   path: "analytics",
-      //   element: <Analytics />,
-      // },
-      // {
-      //   path: "saas",
-      //   element: <SaaS />,
-      // },
+      {
+        path: "analytics",
+        element: <Analytics />,
+      },
+      {
+        path: "saas",
+        element: <SaaS />,
+      },
     ],
   },
   {
