@@ -1,11 +1,13 @@
 import {
   Breadcrumbs as MuiBreadcrumbs,
+  Button,
   Card as MuiCard,
   CardContent as MuiCardContent,
   Divider as MuiDivider,
   Link,
   Paper as MuiPaper,
   Typography,
+  Grid,
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
@@ -14,6 +16,8 @@ import { Helmet } from "react-helmet-async";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components/macro";
 import { userService } from "../../Services/userService";
+import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -99,19 +103,38 @@ function DataGridDemo() {
 }
 
 function DataGridPage() {
+  const navigate = useNavigate();
   return (
     <React.Fragment>
       <Helmet title="Data Grid" />
-      <Typography variant="h3" gutterBottom display="inline">
-        Korisnici
-      </Typography>
 
-      <Breadcrumbs aria-label="Breadcrumb" mt={2}>
-        <Link component={NavLink} to="/">
-          Naslovnica
-        </Link>
-        <Typography>Korisnici</Typography>
-      </Breadcrumbs>
+      <Grid justifyContent="space-between" container spacing={10}>
+        <Grid item>
+          <Typography variant="h3" gutterBottom display="inline">
+            Korisnici
+          </Typography>
+
+          <Breadcrumbs aria-label="Breadcrumb" mt={2}>
+            <Link component={NavLink} to="/">
+              Naslovnica
+            </Link>
+            <Typography>Korisnici</Typography>
+          </Breadcrumbs>
+        </Grid>
+        <Grid item>
+          <div>
+            <Button
+              onClick={() => navigate("/users/add-user")}
+              variant="contained"
+              type="button"
+              color="error"
+            >
+              <AddIcon />
+              Dodaj korisnika
+            </Button>
+          </div>
+        </Grid>
+      </Grid>
 
       <Divider my={5} />
 

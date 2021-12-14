@@ -103,6 +103,7 @@ const SaaS = async(() => import("./pages/dashboards/SaaS"));
 
 // Table components
 const DataGrid = async(() => import("./pages/tables/DataGrid"));
+const AddUser = async(() => import("./pages/tables/User/AddUser"));
 
 const DataGridRequests = async(() => import("./pages/tables/DataGridRequests"));
 
@@ -362,17 +363,28 @@ const routes = [
     path: "tables",
     element: <DashboardLayout />,
     children: [
-      {
-        path: "simple-table",
-        element: <SimpleTable />,
-      },
-      {
-        path: "advanced-table",
-        element: <AdvancedTable />,
-      },
+      // {
+      //   path: "simple-table",
+      //   element: <SimpleTable />,
+      // },
+      // {
+      //   path: "advanced-table",
+      //   element: <AdvancedTable />,
+      // },
       {
         path: "data-grid",
         element: <DataGrid />,
+      },
+    ],
+  },
+
+  {
+    path: "users",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "add-user",
+        element: <AddUser />,
       },
     ],
   },
