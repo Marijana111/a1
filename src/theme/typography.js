@@ -1,5 +1,6 @@
 const typography = {
   fontFamily: [
+    "Open Sans",
     "Inter",
     "-apple-system",
     "BlinkMacSystemFont",

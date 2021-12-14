@@ -41,7 +41,7 @@ function Actions() {
       </SmallButton>
       <Button
         variant="contained"
-        color="secondary"
+        color="primary"
         aria-owns={anchorEl ? "simple-menu" : undefined}
         aria-haspopup="true"
         onClick={handleClick}

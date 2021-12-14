@@ -82,6 +82,7 @@ function DataGridDemo() {
       <Paper>
         <div style={{ height: 400, width: "100%" }}>
           <DataGrid
+            disableColumnMenu
             rowsPerPageOptions={[5, 10, 25]}
             rows={rows}
             columns={columns}
