@@ -8,6 +8,11 @@ import {
   Paper as MuiPaper,
   Typography,
   Grid,
+  TextField as MuiTextField,
+  Select,
+  MenuItem,
+  FormControl as MuiFormControl,
+  InputLabel,
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
@@ -28,6 +33,14 @@ const Divider = styled(MuiDivider)(spacing);
 const Breadcrumbs = styled(MuiBreadcrumbs)(spacing);
 
 const Paper = styled(MuiPaper)(spacing);
+
+const TextField = styled(MuiTextField)(spacing);
+
+const FormControlSpacing = styled(MuiFormControl)(spacing);
+
+const FormControl = styled(FormControlSpacing)`
+  min-width: 148px;
+`;
 
 function DataGridDemo() {
   const [users, setUsers] = useState([]);
@@ -83,7 +96,51 @@ function DataGridDemo() {
     <Card mb={6}>
       <CardContent pb={1}>
         <Typography variant="h6" gutterBottom>
-          Filteri
+          <Grid container spacing={6}>
+            <Grid item md={4}>
+              <TextField
+                name="searchName"
+                label="Pretraga po imenu"
+                //value={values.firstName}
+                //error={Boolean(touched.firstName && errors.firstName)}
+                fullWidth
+                //helperText={touched.firstName && errors.firstName}
+                //onBlur={handleBlur}
+                //onChange={handleChange}
+                variant="outlined"
+                my={2}
+              />
+            </Grid>
+            <Grid item md={4}>
+              <TextField
+                name="searchPhone"
+                label="Pretraga po telefonu"
+                //value={values.lastName}
+                //error={Boolean(touched.lastName && errors.lastName)}
+                fullWidth
+                //helperText={touched.lastName && errors.lastName}
+                //onBlur={handleBlur}
+                //onChange={handleChange}
+                variant="outlined"
+                my={2}
+              />
+            </Grid>
+            <Grid style={{ marginTop: "8px" }} item md={4}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Tvrtka</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  //value={age}
+                  label="Tvrtka"
+                  //onChange={handleChange}
+                >
+                  <MenuItem value={10}>Test 1</MenuItem>
+                  <MenuItem value={20}>Test 2</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
         </Typography>
       </CardContent>
       <Paper>
