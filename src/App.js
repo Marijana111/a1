@@ -20,6 +20,7 @@ import useTheme from "./hooks/useTheme";
 import { store } from "./redux/store";
 
 import { AuthProvider } from "./contexts/JWTContext";
+import { THEMES } from "./constants";
 // import { AuthProvider } from "./contexts/FirebaseAuthContext";
 // import { AuthProvider } from "./contexts/Auth0Context";
 // import { AuthProvider } from "./contexts/CognitoContext";
@@ -41,8 +42,8 @@ function App() {
         <StylesProvider jss={jss}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <StyledEngineProvider injectFirst>
-              <MuiThemeProvider theme={createTheme(theme)}>
-                <ThemeProvider theme={createTheme(theme)}>
+              <MuiThemeProvider theme={createTheme(THEMES.DEFAULT)}>
+                <ThemeProvider theme={createTheme(THEMES.DEFAULT)}>
                   <AuthProvider>{content}</AuthProvider>
                 </ThemeProvider>
               </MuiThemeProvider>

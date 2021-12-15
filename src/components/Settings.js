@@ -131,7 +131,7 @@ function Demos() {
 
       <Box px={4} my={3}>
         <Grid container spacing={3}>
-          <Demo title="Tamna" themeVariant={THEMES.DARK} />
+          <Demo title="Tamna" themeVariant={THEMES.DEFAULT} />
           <Demo title="Crno-bijela" themeVariant={THEMES.DEFAULT} />
         </Grid>
       </Box>
