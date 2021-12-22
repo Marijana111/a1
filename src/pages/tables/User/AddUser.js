@@ -4,6 +4,7 @@ import styled from "styled-components/macro";
 import { NavLink } from "react-router-dom";
 import { Formik } from "formik";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
 
 import {
   Alert as MuiAlert,
@@ -79,6 +80,8 @@ function BasicForm() {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -139,7 +142,6 @@ function BasicForm() {
                     />
                   </Grid>
                 </Grid>
-
                 <TextField
                   name="email"
                   label="Email"
@@ -153,7 +155,6 @@ function BasicForm() {
                   variant="outlined"
                   my={2}
                 />
-
                 <TextField
                   name="password"
                   label="Lozinka"
@@ -167,7 +168,6 @@ function BasicForm() {
                   variant="outlined"
                   my={2}
                 />
-
                 <TextField
                   name="confirmPassword"
                   label="Potvrdi lozinku"
@@ -183,9 +183,18 @@ function BasicForm() {
                   variant="outlined"
                   my={2}
                 />
-
                 <Button type="submit" variant="contained" color="error" mt={3}>
                   Spremi
+                </Button>
+                &nbsp; &nbsp;
+                <Button
+                  onClick={() => navigate("/tables/data-grid")}
+                  style={{ backgroundColor: "black" }}
+                  type="button"
+                  variant="contained"
+                  mt={3}
+                >
+                  Odustani
                 </Button>
               </form>
             )}

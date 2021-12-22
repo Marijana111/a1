@@ -34,17 +34,17 @@ function Actions() {
   return (
     <React.Fragment>
       <SmallButton size="small" mr={2}>
-        <LoopIcon />
+        <LoopIcon style={{ color: "black" }} />
       </SmallButton>
       <SmallButton size="small" mr={2}>
-        <FilterListIcon />
+        <FilterListIcon style={{ color: "black" }} />
       </SmallButton>
       <Button
+        style={{ color: "white", backgroundColor: "black" }}
         variant="contained"
-        color="primary"
         aria-owns={anchorEl ? "simple-menu" : undefined}
         aria-haspopup="true"
-        onClick={handleClick}
+        disabled
       >
         {new Date().toLocaleDateString()}
       </Button>
