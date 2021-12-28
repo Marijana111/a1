@@ -202,13 +202,14 @@ function DataGridDemo() {
               columns={columns}
               pageSize={5}
               checkboxSelection
+              hideFooterSelectedRowCount
               onSelectionModelChange={(ids) => {
-                const selectedIDs = new Set(ids);
-                const selectedRow = users.filter((row) =>
-                  selectedIDs.has(row.id)
-                );
-
-                setSelectedItems(selectedRow);
+                console.log("check", ids);
+                setSelectedItems(ids);
+                // const selectedIDs = new Set(ids);
+                // const selectedRow = users.filter((row) =>
+                //   selectedIDs.has(row.id)
+                // );
               }}
               {...users}
             />

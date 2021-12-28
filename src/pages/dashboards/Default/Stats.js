@@ -110,7 +110,9 @@ const Stats = ({
         >
           <span>{percentagetext}</span> Od prošlog mjeseca
         </Percentage>
-        {!illustration && <Chip label={chip} />}
+        {!illustration && (
+          <Chip style={{ backgroundColor: "black" }} label={chip} />
+        )}
       </CardContent>
 
       {!!illustration && (
