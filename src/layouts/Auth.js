@@ -24,7 +24,7 @@ const Auth = ({ children }) => {
       <GlobalStyle />
       {children}
       <Outlet />
-      <Settings />
+      {/* <Settings /> */}
     </Root>
   );
 };

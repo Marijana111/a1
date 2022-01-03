@@ -140,26 +140,22 @@ const routes = [
   //   ],
   // },
   {
-    path: "/",
-    element: (
-      <DashboardLayout>
-        <Default />
-      </DashboardLayout>
-    ),
-    // children: [
-    //   {
-    //     path: "default",
-    //     element: <Default />,
-    //   },
-    //   {
-    //     path: "analytics",
-    //     element: <Analytics />,
-    //   },
-    //   {
-    //     path: "saas",
-    //     element: <SaaS />,
-    //   },
-    // ],
+    path: "/home",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "",
+        element: <Default />,
+      },
+      // {
+      //   path: "analytics",
+      //   element: <Analytics />,
+      // },
+      // {
+      //   path: "saas",
+      //   element: <SaaS />,
+      // },
+    ],
   },
   // {
   //   path: "pages",
@@ -241,32 +237,32 @@ const routes = [
   //     },
   //   ],
   // },
-  // {
-  //   path: "auth",
-  //   element: <AuthLayout />,
-  //   children: [
-  //     {
-  //       path: "sign-in",
-  //       element: <SignIn />,
-  //     },
-  //     {
-  //       path: "sign-up",
-  //       element: <SignUp />,
-  //     },
-  //     {
-  //       path: "reset-password",
-  //       element: <ResetPassword />,
-  //     },
-  //     {
-  //       path: "404",
-  //       element: <Page404 />,
-  //     },
-  //     {
-  //       path: "500",
-  //       element: <Page500 />,
-  //     },
-  //   ],
-  // },
+  {
+    path: "/",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "/",
+        element: <SignIn />,
+      },
+      // {
+      //   path: "sign-up",
+      //   element: <SignUp />,
+      // },
+      // {
+      //   path: "reset-password",
+      //   element: <ResetPassword />,
+      // },
+      // {
+      //   path: "404",
+      //   element: <Page404 />,
+      // },
+      // {
+      //   path: "500",
+      //   element: <Page500 />,
+      // },
+    ],
+  },
   // {
   //   path: "components",
   //   element: <DashboardLayout />,

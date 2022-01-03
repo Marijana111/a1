@@ -32,25 +32,31 @@ const BigAvatar = styled(Avatar)`
 function SignIn() {
   return (
     <React.Fragment>
-      <img
+      {/* <img
         src="https://ssc.a1.hr/o/a1-theme/images/logo@2x.png"
         height="80px"
         width="80px"
       />
-      <br />
+      <br /> */}
       {/* <Brand /> */}
       <Wrapper>
         <Helmet title="Sign In" />
-        <BigAvatar
+        {/* <BigAvatar
           alt="Lucy"
-          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          src="https://ssc.a1.hr/o/a1-theme/images/logo@2x.png"
+        /> */}
+        <img
+          style={{ marginLeft: "40%", textAlign: "center" }}
+          src="https://ssc.a1.hr/o/a1-theme/images/logo@2x.png"
+          height="92px"
+          width="92px"
         />
 
         {/* <Typography component="h1" variant="h4" align="center" gutterBottom>
           Welcome back, Lucy!
         </Typography> */}
         <Typography component="h2" variant="body1" align="center">
-          Sign in to your account to continue
+          Prijavite se za nastavak
         </Typography>
 
         <SignInComponent />

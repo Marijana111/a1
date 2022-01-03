@@ -6,7 +6,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 
 const pagesSection = [
   {
-    href: "/",
+    href: "/home",
     icon: Sliders,
     title: "Naslovnica",
     // children: [

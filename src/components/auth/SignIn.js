@@ -42,7 +42,7 @@ function SignIn() {
         try {
           await signIn(values.email, values.password);
 
-          navigate("/private");
+          navigate("/home");
         } catch (error) {
           const message = error.message || "Something went wrong";
 
@@ -63,8 +63,8 @@ function SignIn() {
       }) => (
         <form noValidate onSubmit={handleSubmit}>
           <Alert mt={3} mb={3} severity="info">
-            Use <strong>demo@bootlab.io</strong> and{" "}
-            <strong>unsafepassword</strong> to sign in
+            Koristi <strong>demo@bootlab.io</strong> i{" "}
+            <strong>unsafepassword</strong> za prijavu
           </Alert>
           {errors.submit && (
             <Alert mt={2} mb={3} severity="warning">
@@ -74,7 +74,7 @@ function SignIn() {
           <TextField
             type="email"
             name="email"
-            label="Email Address"
+            label="Email adresa"
             value={values.email}
             error={Boolean(touched.email && errors.email)}
             fullWidth
@@ -86,7 +86,7 @@ function SignIn() {
           <TextField
             type="password"
             name="password"
-            label="Password"
+            label="Lozinka"
             value={values.password}
             error={Boolean(touched.password && errors.password)}
             fullWidth
@@ -97,7 +97,7 @@ function SignIn() {
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            label="Zapamti me"
           />
           <Button
             type="submit"
@@ -106,15 +106,16 @@ function SignIn() {
             color="primary"
             disabled={isSubmitting}
           >
-            Sign in
+            Prijavi se
           </Button>
           <Button
             component={Link}
-            to="/auth/reset-password"
+            //to="/auth/reset-password"
+            to="#"
             fullWidth
             color="primary"
           >
-            Forgot password
+            Zaboravljena lozinka
           </Button>
         </form>
       )}
