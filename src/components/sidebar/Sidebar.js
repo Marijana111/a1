@@ -75,7 +75,7 @@ const BrandChip = styled(Chip)`
 const Sidebar = ({ items, showFooter = true, ...rest }) => {
   return (
     <Drawer variant="permanent" {...rest}>
-      <Brand component={NavLink} to="/">
+      <Brand component={NavLink} to="/home">
         {/* <BrandIcon />{" "} */}
         <img
           style={{ backgroundColor: "white", borderRadius: "4px" }}
