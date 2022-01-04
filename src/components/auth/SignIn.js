@@ -50,8 +50,8 @@ function SignIn() {
   return (
     <Formik
       initialValues={{
-        email: "demo@bootlab.io",
-        password: "unsafepassword",
+        email: "",
+        password: "",
         submit: false,
       }}
       validationSchema={Yup.object().shape({
@@ -116,6 +116,7 @@ function SignIn() {
             focusColor="black"
             my={2}
           />
+          {console.log("values", values)}
           <FormControlLabel
             control={
               <Checkbox
@@ -128,12 +129,14 @@ function SignIn() {
             label="Zapamti me"
           />
           <Button
-            style={{ backgroundColor: "black" }}
+            style={{ backgroundColor: "black", color: "white" }}
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            disabled={isSubmitting}
+            disabled={
+              values.email == "" || values.password == "" ? true : false
+            }
           >
             Prijavi se
           </Button>
