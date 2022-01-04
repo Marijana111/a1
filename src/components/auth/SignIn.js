@@ -62,10 +62,6 @@ function SignIn() {
         values,
       }) => (
         <form noValidate onSubmit={handleSubmit}>
-          <Alert mt={3} mb={3} severity="info">
-            Koristi <strong>demo@bootlab.io</strong> i{" "}
-            <strong>unsafepassword</strong> za prijavu
-          </Alert>
           {errors.submit && (
             <Alert mt={2} mb={3} severity="warning">
               {errors.submit}
@@ -75,7 +71,7 @@ function SignIn() {
             type="email"
             name="email"
             label="Email adresa"
-            value={values.email}
+            //value={values.email}
             error={Boolean(touched.email && errors.email)}
             fullWidth
             helperText={touched.email && errors.email}
@@ -87,7 +83,7 @@ function SignIn() {
             type="password"
             name="password"
             label="Lozinka"
-            value={values.password}
+            //value={values.password}
             error={Boolean(touched.password && errors.password)}
             fullWidth
             helperText={touched.password && errors.password}
@@ -96,10 +92,19 @@ function SignIn() {
             my={2}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox
+                value="remember"
+                style={{
+                  color: "#0c0c0d",
+                }}
+                //color="default"
+              />
+            }
             label="Zapamti me"
           />
           <Button
+            style={{ backgroundColor: "black" }}
             type="submit"
             fullWidth
             variant="contained"
@@ -113,7 +118,7 @@ function SignIn() {
             //to="/auth/reset-password"
             to="#"
             fullWidth
-            color="primary"
+            color="error"
           >
             Zaboravljena lozinka
           </Button>
