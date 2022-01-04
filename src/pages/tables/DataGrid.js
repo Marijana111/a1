@@ -25,6 +25,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import HandleButtons from "../../components/Common/HandleButtons";
 import CheckModal from "../../components/Common/CheckModal";
+import { makeStyles } from "@mui/styles";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -85,12 +86,46 @@ const CssSelect = styled(Select, {
   // focused color for input with variant='outlined'
   "& .MuiOutlinedInput-root": {
     "&.Mui-focused fieldset": {
-      borderColor: p.focusColor,
+      borderColor: "black",
     },
   },
 }));
 
+const useStyles = makeStyles({
+  root: {
+    width: 200,
+    "& .MuiOutlinedInput-input": {
+      color: "black",
+    },
+    "& .MuiInputLabel-root": {
+      color: "secondary",
+    },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "secondary",
+    },
+    "&:hover .MuiOutlinedInput-input": {
+      color: "black",
+    },
+    "&:hover .MuiInputLabel-root": {
+      color: "secondary",
+    },
+    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "black",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+      color: "black",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "black",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "black",
+    },
+  },
+});
+
 function DataGridDemo() {
+  const classes = useStyles();
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -219,18 +254,17 @@ function DataGridDemo() {
               </Grid>
               <Grid style={{ marginTop: "8px" }} item md={4}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Tvrtka</InputLabel>
-                  <CssSelect
-                    focusColor="black"
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
+                  <TextField
+                    className={classes.root}
                     //value={age}
+                    onChange={(e) => console.log("ee", e.target.value)}
+                    variant="outlined"
                     label="Tvrtka"
-                    //onChange={handleChange}
+                    select
                   >
-                    <MenuItem value={10}>Test 1</MenuItem>
-                    <MenuItem value={20}>Test 2</MenuItem>
-                  </CssSelect>
+                    <MenuItem value={"Test 1"}>Test 1</MenuItem>
+                    <MenuItem value={"Test 2"}>Test 2</MenuItem>
+                  </TextField>
                 </FormControl>
               </Grid>
             </Grid>
