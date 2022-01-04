@@ -24,6 +24,29 @@ function SignIn() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
 
+  const CssTextField = styled(TextField, {
+    shouldForwardProp: (props) => props !== "focusColor",
+  })((p) => ({
+    // input label when focused
+    "& label.Mui-focused": {
+      color: p.focusColor,
+    },
+    // focused color for input with variant='standard'
+    "& .MuiInput-underline:after": {
+      borderBottomColor: p.focusColor,
+    },
+    // focused color for input with variant='filled'
+    "& .MuiFilledInput-underline:after": {
+      borderBottomColor: p.focusColor,
+    },
+    // focused color for input with variant='outlined'
+    "& .MuiOutlinedInput-root": {
+      "&.Mui-focused fieldset": {
+        borderColor: p.focusColor,
+      },
+    },
+  }));
+
   return (
     <Formik
       initialValues={{
@@ -67,7 +90,7 @@ function SignIn() {
               {errors.submit}
             </Alert>
           )}
-          <TextField
+          <CssTextField
             type="email"
             name="email"
             label="Email adresa"
@@ -78,8 +101,9 @@ function SignIn() {
             onBlur={handleBlur}
             onChange={handleChange}
             my={2}
+            focusColor="black"
           />
-          <TextField
+          <CssTextField
             type="password"
             name="password"
             label="Lozinka"
@@ -89,6 +113,7 @@ function SignIn() {
             helperText={touched.password && errors.password}
             onBlur={handleBlur}
             onChange={handleChange}
+            focusColor="black"
             my={2}
           />
           <FormControlLabel
@@ -98,7 +123,6 @@ function SignIn() {
                 style={{
                   color: "#0c0c0d",
                 }}
-                //color="default"
               />
             }
             label="Zapamti me"
