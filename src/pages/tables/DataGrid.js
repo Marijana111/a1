@@ -44,6 +44,52 @@ const FormControl = styled(FormControlSpacing)`
   min-width: 148px;
 `;
 
+const CssTextField = styled(TextField, {
+  shouldForwardProp: (props) => props !== "focusColor",
+})((p) => ({
+  // input label when focused
+  "& label.Mui-focused": {
+    color: p.focusColor,
+  },
+  // focused color for input with variant='standard'
+  "& .MuiInput-underline:after": {
+    borderBottomColor: p.focusColor,
+  },
+  // focused color for input with variant='filled'
+  "& .MuiFilledInput-underline:after": {
+    borderBottomColor: p.focusColor,
+  },
+  // focused color for input with variant='outlined'
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: p.focusColor,
+    },
+  },
+}));
+
+const CssSelect = styled(Select, {
+  shouldForwardProp: (props) => props !== "focusColor",
+})((p) => ({
+  // input label when focused
+  "& label.Mui-focused": {
+    color: p.focusColor,
+  },
+  // focused color for input with variant='standard'
+  "& .MuiInput-underline:after": {
+    borderBottomColor: p.focusColor,
+  },
+  // focused color for input with variant='filled'
+  "& .MuiFilledInput-underline:after": {
+    borderBottomColor: p.focusColor,
+  },
+  // focused color for input with variant='outlined'
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: p.focusColor,
+    },
+  },
+}));
+
 function DataGridDemo() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -142,7 +188,8 @@ function DataGridDemo() {
           <Typography variant="h6" gutterBottom>
             <Grid container spacing={6}>
               <Grid item md={4}>
-                <TextField
+                <CssTextField
+                  focusColor="black"
                   name="searchName"
                   label="Pretraga po imenu"
                   //value={values.firstName}
@@ -156,7 +203,8 @@ function DataGridDemo() {
                 />
               </Grid>
               <Grid item md={4}>
-                <TextField
+                <CssTextField
+                  focusColor="black"
                   name="searchPhone"
                   label="Pretraga po telefonu"
                   //value={values.lastName}
@@ -172,7 +220,8 @@ function DataGridDemo() {
               <Grid style={{ marginTop: "8px" }} item md={4}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Tvrtka</InputLabel>
-                  <Select
+                  <CssSelect
+                    focusColor="black"
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     //value={age}
@@ -181,18 +230,21 @@ function DataGridDemo() {
                   >
                     <MenuItem value={10}>Test 1</MenuItem>
                     <MenuItem value={20}>Test 2</MenuItem>
-                  </Select>
+                  </CssSelect>
                 </FormControl>
               </Grid>
             </Grid>
           </Typography>
         </CardContent>
-        <HandleButtons
-          handleUpdate={handleToUpdate}
-          handleDetail={handleToDetail}
-          handleDelete={handleToDelete}
-          selectedItemsLength={selectedItems.length}
-        />
+        <div style={{ marginLeft: "15px" }}>
+          <HandleButtons
+            handleUpdate={handleToUpdate}
+            handleDetail={handleToDetail}
+            handleDelete={handleToDelete}
+            selectedItemsLength={selectedItems.length}
+          />
+        </div>
+        <br />
         <Paper>
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
