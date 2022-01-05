@@ -36,7 +36,7 @@ mock.onPost("/api/auth/sign-in").reply(async (config) => {
     }
 
     if (user.password !== password) {
-      return [400, { message: "Incorrect password" }];
+      return [400, { message: "Korisničko ime ili lozinka nisu ispravni." }];
     }
 
     const accessToken = sign({ userId: user.id }, JWT_SECRET, {
