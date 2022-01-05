@@ -53,7 +53,6 @@ function SignIn() {
           height="92px"
           width="92px"
         />
-        <p>dodali</p>
         {/* <Typography component="h1" variant="h4" align="center" gutterBottom>
           Welcome back, Lucy!
         </Typography> */}
