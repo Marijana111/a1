@@ -116,7 +116,6 @@ function SignIn() {
             focusColor="black"
             my={2}
           />
-          {console.log("values", values)}
           <FormControlLabel
             control={
               <Checkbox
