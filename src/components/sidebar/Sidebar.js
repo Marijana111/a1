@@ -78,6 +78,7 @@ const Sidebar = ({ items, showFooter = true, ...rest }) => {
       <Brand component={NavLink} to="/home">
         {/* <BrandIcon />{" "} */}
         <img
+          alt="a1home"
           style={{ backgroundColor: "white", borderRadius: "4px" }}
           src="https://sos-at-vie-1.exo.io/a1portal/A1_01_08RED_3_L-1024x1024.png"
           width="30px"

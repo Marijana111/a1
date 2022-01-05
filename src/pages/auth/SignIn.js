@@ -33,6 +33,7 @@ function SignIn() {
   return (
     <React.Fragment>
       {/* <img
+      alt="logo"
         src="https://ssc.a1.hr/o/a1-theme/images/logo@2x.png"
         height="80px"
         width="80px"
@@ -46,6 +47,7 @@ function SignIn() {
           src="https://ssc.a1.hr/o/a1-theme/images/logo@2x.png"
         /> */}
         <img
+          alt="logo"
           style={{ marginLeft: "40%", textAlign: "center" }}
           src="https://ssc.a1.hr/o/a1-theme/images/logo@2x.png"
           height="92px"
