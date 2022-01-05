@@ -56,10 +56,10 @@ function SignIn() {
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string()
-          .email("Must be a valid email")
+          .email("Unesite validan email.")
           .max(255)
-          .required("Email is required"),
-        password: Yup.string().max(255).required("Password is required"),
+          .required("Obavezno polje."),
+        password: Yup.string().max(255).required("Obavezno polje."),
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
@@ -67,7 +67,7 @@ function SignIn() {
 
           navigate("/home");
         } catch (error) {
-          const message = error.message || "Something went wrong";
+          const message = error.message || "Dogodila se greška.";
 
           setStatus({ success: false });
           setErrors({ submit: message });

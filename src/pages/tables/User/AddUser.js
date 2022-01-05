@@ -36,6 +36,29 @@ const Button = styled(MuiButton)(spacing);
 
 const timeOut = (time) => new Promise((res) => setTimeout(res, time));
 
+const CssTextField = styled(TextField, {
+  shouldForwardProp: (props) => props !== "focusColor",
+})((p) => ({
+  // input label when focused
+  "& label.Mui-focused": {
+    color: p.focusColor,
+  },
+  // focused color for input with variant='standard'
+  "& .MuiInput-underline:after": {
+    borderBottomColor: p.focusColor,
+  },
+  // focused color for input with variant='filled'
+  "& .MuiFilledInput-underline:after": {
+    borderBottomColor: p.focusColor,
+  },
+  // focused color for input with variant='outlined'
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: p.focusColor,
+    },
+  },
+}));
+
 const initialValues = {
   firstName: "Lucy",
   lastName: "Lavender",
@@ -114,7 +137,8 @@ function BasicForm() {
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={6}>
                   <Grid item md={6}>
-                    <TextField
+                    <CssTextField
+                      focusColor="black"
                       name="firstName"
                       label="Ime"
                       //value={values.firstName}
@@ -128,7 +152,8 @@ function BasicForm() {
                     />
                   </Grid>
                   <Grid item md={6}>
-                    <TextField
+                    <CssTextField
+                      focusColor="black"
                       name="lastName"
                       label="Prezime"
                       //value={values.lastName}
@@ -142,7 +167,8 @@ function BasicForm() {
                     />
                   </Grid>
                 </Grid>
-                <TextField
+                <CssTextField
+                  focusColor="black"
                   name="email"
                   label="Email"
                   //value={values.email}
@@ -155,7 +181,8 @@ function BasicForm() {
                   variant="outlined"
                   my={2}
                 />
-                <TextField
+                <CssTextField
+                  focusColor="black"
                   name="password"
                   label="Lozinka"
                   //value={values.password}
@@ -168,7 +195,8 @@ function BasicForm() {
                   variant="outlined"
                   my={2}
                 />
-                <TextField
+                <CssTextField
+                  focusColor="black"
                   name="confirmPassword"
                   label="Potvrdi lozinku"
                   //value={values.confirmPassword}
