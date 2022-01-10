@@ -84,6 +84,7 @@ import Landing from "./pages/presentation/Landing";
 
 // Protected routes
 import ProtectedPage from "./pages/protected/ProtectedPage";
+import UpdateUser from "./pages/tables/User/UpdateUser";
 
 // Dashboard components
 const Default = async(() => import("./pages/dashboards/Default"));
@@ -393,6 +394,25 @@ const routes = [
       {
         path: "add-user",
         element: <AddUser />,
+      },
+      // {
+      //   path: "update-user/:id",
+      //   element: <UpdateUser />,
+      // },
+    ],
+  },
+
+  {
+    path: "/users/update-user",
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
+        element: <UpdateUser />,
       },
     ],
   },

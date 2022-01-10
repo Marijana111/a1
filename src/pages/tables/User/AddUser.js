@@ -125,7 +125,7 @@ function BasicForm() {
           <CardContent>
             {status && status.sent && (
               <Alert severity="success" my={3}>
-                [DEMO] Your data has been submitted successfully!
+                [DEMO] Uspješno ste dodali korisnika!
               </Alert>
             )}
 
