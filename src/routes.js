@@ -84,6 +84,7 @@ import Landing from "./pages/presentation/Landing";
 
 // Protected routes
 import ProtectedPage from "./pages/protected/ProtectedPage";
+import UpdateUser from "./pages/tables/User/UpdateUser";
 
 // Dashboard components
 const Default = async(() => import("./pages/dashboards/Default"));
@@ -141,7 +142,11 @@ const routes = [
   // },
   {
     path: "/home",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: "",
@@ -357,7 +362,11 @@ const routes = [
   // },
   {
     path: "tables",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       // {
       //   path: "simple-table",
@@ -376,18 +385,45 @@ const routes = [
 
   {
     path: "users",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: "add-user",
         element: <AddUser />,
+      },
+      // {
+      //   path: "update-user/:id",
+      //   element: <UpdateUser />,
+      // },
+    ],
+  },
+
+  {
+    path: "/users/update-user",
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
+        element: <UpdateUser />,
       },
     ],
   },
 
   {
     path: "requests",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: "requests-grid",
@@ -398,7 +434,11 @@ const routes = [
 
   {
     path: "fault-repairs",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: "fault-repairs-grid",
@@ -409,7 +449,11 @@ const routes = [
 
   {
     path: "reports",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: "reports-grid",
@@ -420,7 +464,11 @@ const routes = [
 
   {
     path: "configuration",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: "configuration-grid",
@@ -431,7 +479,11 @@ const routes = [
 
   {
     path: "notifications",
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: "notifications-grid",

@@ -125,7 +125,12 @@ function DataGridDemo() {
 
   const handleToUpdate = () => {
     if (selectedItems.length !== 1) return false;
-    alert("Update");
+    //alert("Update");
+    navigate(`/users/update-user`, {
+      state: {
+        userID: selectedItems,
+      },
+    });
   };
 
   const handleToDetail = () => {
