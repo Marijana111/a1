@@ -181,7 +181,7 @@ function DataGridDemo() {
     setSelectedItems([]);
     setCheckModal({ show: false });
     setUpdate(new Date());
-    navigate("/tables/data-grid");
+    navigate("/users");
   };
 
   const columns = [
@@ -218,9 +218,6 @@ function DataGridDemo() {
     },
   ];
 
-  // const rows = [users
-  // ];
-
   return (
     <>
       <Card mb={6}>
@@ -231,7 +228,7 @@ function DataGridDemo() {
                 <CssTextField
                   focusColor="black"
                   name="searchName"
-                  label="Pretraga po imenu"
+                  label="Ime i prezime"
                   //value={values.firstName}
                   //error={Boolean(touched.firstName && errors.firstName)}
                   fullWidth
@@ -246,7 +243,7 @@ function DataGridDemo() {
                 <CssTextField
                   focusColor="black"
                   name="searchPhone"
-                  label="Pretraga po telefonu"
+                  label="Telefon"
                   //value={values.lastName}
                   //error={Boolean(touched.lastName && errors.lastName)}
                   fullWidth
@@ -262,7 +259,7 @@ function DataGridDemo() {
                   <TextField
                     className={classes.root}
                     //value={age}
-                    onChange={(e) => console.log("ee", e.target.value)}
+                    //onChange={(e) => console.log("ee", e.target.value)}
                     variant="outlined"
                     label="Tvrtka"
                     select
@@ -295,14 +292,12 @@ function DataGridDemo() {
               checkboxSelection
               hideFooterSelectedRowCount
               onSelectionModelChange={(ids) => {
-                console.log("check", ids);
                 setSelectedItems(ids);
                 // const selectedIDs = new Set(ids);
                 // const selectedRow = users.filter((row) =>
                 //   selectedIDs.has(row.id)
                 // );
               }}
-              {...users}
             />
           </div>
         </Paper>

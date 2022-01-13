@@ -218,7 +218,7 @@ const elementsSection = [
   //   ],
   // },
   {
-    href: "/tables/data-grid",
+    href: "/users",
     icon: User,
     title: "Korisnici",
     // children: [
@@ -237,7 +237,7 @@ const elementsSection = [
     // ],
   },
   {
-    href: "/requests/requests-grid",
+    href: "/requests",
     icon: TableChartIcon,
     title: "Zahtjevi",
   },

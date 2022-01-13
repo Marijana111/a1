@@ -360,28 +360,28 @@ const routes = [
   //     },
   //   ],
   // },
-  {
-    path: "tables",
-    element: (
-      <AuthGuard>
-        <DashboardLayout />
-      </AuthGuard>
-    ),
-    children: [
-      // {
-      //   path: "simple-table",
-      //   element: <SimpleTable />,
-      // },
-      // {
-      //   path: "advanced-table",
-      //   element: <AdvancedTable />,
-      // },
-      {
-        path: "data-grid",
-        element: <DataGrid />,
-      },
-    ],
-  },
+  // {
+  //   path: "tables",
+  //   element: (
+  //     <AuthGuard>
+  //       <DashboardLayout />
+  //     </AuthGuard>
+  //   ),
+  //   children: [
+  //     // {
+  //     //   path: "simple-table",
+  //     //   element: <SimpleTable />,
+  //     // },
+  //     // {
+  //     //   path: "advanced-table",
+  //     //   element: <AdvancedTable />,
+  //     // },
+  //     {
+  //       path: "data-grid",
+  //       element: <DataGrid />,
+  //     },
+  //   ],
+  // },
 
   {
     path: "users",
@@ -392,26 +392,15 @@ const routes = [
     ),
     children: [
       {
+        path: "",
+        element: <DataGrid />,
+      },
+      {
         path: "add-user",
         element: <AddUser />,
       },
-      // {
-      //   path: "update-user/:id",
-      //   element: <UpdateUser />,
-      // },
-    ],
-  },
-
-  {
-    path: "/users/update-user",
-    element: (
-      <AuthGuard>
-        <DashboardLayout />
-      </AuthGuard>
-    ),
-    children: [
       {
-        path: "",
+        path: "update-user",
         element: <UpdateUser />,
       },
     ],
@@ -426,7 +415,7 @@ const routes = [
     ),
     children: [
       {
-        path: "requests-grid",
+        path: "",
         element: <DataGridRequests />,
       },
     ],
