@@ -130,7 +130,7 @@ const UpdateUser = () => {
         <Link component={NavLink} to="/">
           Naslovnica
         </Link>
-        <Link component={NavLink} to="/tables/data-grid">
+        <Link component={NavLink} to="/users">
           Korisnici
         </Link>
         <Typography>Uredi korisnika</Typography>

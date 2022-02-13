@@ -244,7 +244,7 @@ function FormikPage() {
         <Link component={NavLink} to="/">
           Naslovnica
         </Link>
-        <Link component={NavLink} to="/tables/data-grid">
+        <Link component={NavLink} to="/users">
           Korisnici
         </Link>
         <Typography>Novi korisnik</Typography>
