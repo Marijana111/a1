@@ -85,6 +85,7 @@ import Landing from "./pages/presentation/Landing";
 // Protected routes
 import ProtectedPage from "./pages/protected/ProtectedPage";
 import UpdateUser from "./pages/tables/User/UpdateUser";
+import RequestDetail from "./pages/tables/Requests/RequestDetail";
 
 // Dashboard components
 const Default = async(() => import("./pages/dashboards/Default"));
@@ -417,6 +418,10 @@ const routes = [
       {
         path: "",
         element: <DataGridRequests />,
+      },
+      {
+        path: "details/:id",
+        element: <RequestDetail />,
       },
     ],
   },

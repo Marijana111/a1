@@ -24,6 +24,7 @@ import { spacing } from "@mui/system";
 import HandleButtons from "../../components/Common/HandleButtons";
 import CheckModal from "../../components/Common/CheckModal";
 import { useNavigate } from "react-router-dom";
+import { requestService } from "../../Services/requestService";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -42,64 +43,6 @@ const FormControlSpacing = styled(MuiFormControl)(spacing);
 const FormControl = styled(FormControlSpacing)`
   min-width: 148px;
 `;
-
-const columns = [
-  { field: "id", headerName: "Case Id", width: 105 },
-  {
-    field: "firstName",
-    headerName: "GUID",
-    width: 180,
-    sortable: false,
-  },
-  {
-    field: "lastName",
-    headerName: "Operator",
-    width: 120,
-  },
-  {
-    field: "fullName",
-    headerName: "Vrsta",
-    //type: "number",
-    width: 110,
-  },
-  {
-    field: "category",
-    headerName: "Kategorija",
-    //type: "number",
-    width: 120,
-    sortable: false,
-  },
-  // {
-  //   field: "fullName",
-  //   headerName: "Kategorija",
-  //   description: "This column has a value getter and is not sortable.",
-  //   sortable: false,
-  //   width: 250,
-  //   valueGetter: (params) =>
-  //     `${params.getValue(params.id, "firstName") || ""} ${
-  //       params.getValue(params.id, "lastName") || ""
-  //     }`,
-  // },
-  {
-    field: "adapterId",
-    headerName: "Adapter Id",
-    //type: "number",
-    width: 130,
-    sortable: false,
-  },
-  {
-    field: "time",
-    headerName: "Vrijeme",
-    //type: "number",
-    width: 120,
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    //type: "number",
-    width: 130,
-  },
-];
 
 const useStyles = makeStyles({
   root: {
@@ -157,29 +100,91 @@ const CssTextField = styled(TextField, {
   },
 }));
 
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
-
 function DataGridDemo() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState([]);
   const [update, setUpdate] = useState(new Date());
+  const [requests, setRequests] = useState([]);
 
   const [checkModal, setCheckModal] = useState({
     title: "",
     text: "",
     show: false,
   });
+
+  useEffect(() => {
+    requestService
+      .getRequests()
+      .then((res) => {
+        setRequests(res.data.requestList);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const columns = [
+    { field: "requestId", headerName: "Case Id", width: 105 },
+    {
+      field: "requestGuid",
+      headerName: "GUID",
+      width: 170,
+      sortable: false,
+    },
+    {
+      field: "operatorName",
+      headerName: "Operator",
+      width: 120,
+    },
+    {
+      field: "requestType",
+      headerName: "Vrsta",
+      //type: "number",
+      width: 100,
+    },
+    {
+      field: "requestCategory",
+      headerName: "Kategorija",
+      //type: "number",
+      width: 120,
+      sortable: false,
+    },
+    // {
+    //   field: "fullName",
+    //   headerName: "Kategorija",
+    //   description: "This column has a value getter and is not sortable.",
+    //   sortable: false,
+    //   width: 250,
+    //   valueGetter: (params) =>
+    //     `${params.getValue(params.id, "firstName") || ""} ${
+    //       params.getValue(params.id, "lastName") || ""
+    //     }`,
+    // },
+    {
+      field: "adapterId",
+      headerName: "Adapter Id",
+      //type: "number",
+      width: 130,
+      sortable: false,
+    },
+    {
+      field: "requestDateInsert",
+      headerName: "Vrijeme",
+      type: "date",
+      width: 120,
+    },
+    {
+      field: "statusName",
+      headerName: "Status",
+      //type: "number",
+      width: 110,
+    },
+    {
+      field: "statusRef",
+      headerName: "Status interno",
+      //type: "number",
+      width: 150,
+    },
+  ];
 
   const handleToUpdate = () => {
     if (selectedItems.length !== 1) return false;
@@ -193,7 +198,11 @@ function DataGridDemo() {
 
   const handleToDetail = () => {
     if (selectedItems.length !== 1) return false;
-    alert("Detalji");
+    navigate(`/requests/details/${selectedItems}`, {
+      state: {
+        requestId: selectedItems,
+      },
+    });
   };
 
   const handleToDelete = () => {
@@ -315,17 +324,15 @@ function DataGridDemo() {
             <DataGrid
               disableColumnMenu
               rowsPerPageOptions={[5, 10, 25]}
-              rows={rows}
+              getRowId={(r) => r.requestId}
+              rows={requests}
               columns={columns}
               pageSize={5}
               checkboxSelection
               hideFooterSelectedRowCount
               onSelectionModelChange={(ids) => {
+                console.log("ids", ids);
                 setSelectedItems(ids);
-                // const selectedIDs = new Set(ids);
-                // const selectedRow = users.filter((row) =>
-                //   selectedIDs.has(row.id)
-                // );
               }}
             />
           </div>
