@@ -96,7 +96,7 @@ const DashboardTable = () => (
           <TableHead>
             <TableRow>
               <TableCell>Naziv</TableCell>
-              <TableCell>Datum kreiranje</TableCell>
+              <TableCell>Datum kreiranja</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Osoba</TableCell>
             </TableRow>

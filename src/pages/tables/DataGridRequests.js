@@ -18,6 +18,7 @@ import {
   FormControl as MuiFormControl,
   Select,
   InputLabel,
+  LinearProgress,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { spacing } from "@mui/system";
@@ -106,6 +107,7 @@ function DataGridDemo() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [update, setUpdate] = useState(new Date());
   const [requests, setRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [checkModal, setCheckModal] = useState({
     title: "",
@@ -118,6 +120,7 @@ function DataGridDemo() {
       .getRequests()
       .then((res) => {
         setRequests(res.data.requestList);
+        setIsLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -127,7 +130,7 @@ function DataGridDemo() {
     {
       field: "requestGuid",
       headerName: "GUID",
-      width: 270,
+      width: 310,
       sortable: false,
     },
     {
@@ -169,8 +172,9 @@ function DataGridDemo() {
     {
       field: "requestDateInsert",
       headerName: "Vrijeme",
-      type: "date",
-      width: 140,
+      type: "dateTime",
+      valueGetter: ({ value }) => value && new Date(value),
+      width: 180,
     },
     {
       field: "statusName",
@@ -321,20 +325,23 @@ function DataGridDemo() {
         <br />
         <Paper>
           <div style={{ height: 400, width: "100%" }}>
-            <DataGrid
-              disableColumnMenu
-              rowsPerPageOptions={[5, 10, 25]}
-              getRowId={(r) => r.requestId}
-              rows={requests}
-              columns={columns}
-              pageSize={5}
-              checkboxSelection
-              hideFooterSelectedRowCount
-              onSelectionModelChange={(ids) => {
-                console.log("ids", ids);
-                setSelectedItems(ids);
-              }}
-            />
+            {isLoading ? (
+              <LinearProgress />
+            ) : (
+              <DataGrid
+                disableColumnMenu
+                rowsPerPageOptions={[5, 10, 25]}
+                getRowId={(r) => r.requestId}
+                rows={requests}
+                columns={columns}
+                pageSize={5}
+                checkboxSelection
+                hideFooterSelectedRowCount
+                onSelectionModelChange={(ids) => {
+                  setSelectedItems(ids);
+                }}
+              />
+            )}
           </div>
         </Paper>
       </Card>
