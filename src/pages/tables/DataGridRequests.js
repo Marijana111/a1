@@ -127,25 +127,25 @@ function DataGridDemo() {
     {
       field: "requestGuid",
       headerName: "GUID",
-      width: 170,
+      width: 270,
       sortable: false,
     },
     {
       field: "operatorName",
       headerName: "Operator",
-      width: 120,
+      width: 150,
     },
     {
       field: "requestType",
       headerName: "Vrsta",
       //type: "number",
-      width: 100,
+      width: 120,
     },
     {
       field: "requestCategory",
       headerName: "Kategorija",
       //type: "number",
-      width: 120,
+      width: 170,
       sortable: false,
     },
     // {
@@ -170,19 +170,19 @@ function DataGridDemo() {
       field: "requestDateInsert",
       headerName: "Vrijeme",
       type: "date",
-      width: 120,
+      width: 140,
     },
     {
       field: "statusName",
       headerName: "Status",
       //type: "number",
-      width: 110,
+      width: 130,
     },
     {
       field: "statusRef",
       headerName: "Status interno",
       //type: "number",
-      width: 150,
+      width: 170,
     },
   ];
 
