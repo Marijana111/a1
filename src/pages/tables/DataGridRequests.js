@@ -19,13 +19,16 @@ import {
   Select,
   InputLabel,
   LinearProgress,
+  Chip as MuiChip,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { spacing } from "@mui/system";
 import HandleButtons from "../../components/Common/HandleButtons";
 import CheckModal from "../../components/Common/CheckModal";
 import { useNavigate } from "react-router-dom";
 import { requestService } from "../../Services/requestService";
+import { RemoveRedEye } from "@mui/icons-material";
+import { green, orange, red, grey } from "@mui/material/colors";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -43,6 +46,18 @@ const FormControlSpacing = styled(MuiFormControl)(spacing);
 
 const FormControl = styled(FormControlSpacing)`
   min-width: 148px;
+`;
+
+const Chip = styled(MuiChip)`
+  ${spacing};
+
+  background: ${(props) => props.status == "REALIZIRAN" && green[500]};
+  background: ${(props) => props.status == "PRIHVAĆEN" && orange[500]};
+  background: ${(props) => props.status == "ODBIJEN" && red[500]};
+  background: ${(props) => props.status == "STORNIRAN" && green[500]};
+  background: ${(props) => props.status == "INFO" && grey[500]};
+  background: ${(props) => props.status == "REALIZIRAN_OK" && green[500]};
+  background: ${(props) => props.status == "REALIZIRAN_NOK" && orange[500]};
 `;
 
 const useStyles = makeStyles({
@@ -182,11 +197,40 @@ function DataGridDemo() {
       //type: "number",
       width: 130,
     },
+
+    {
+      field: "statusName",
+      headerName: "Status",
+      width: 130,
+      renderCell: (params) => (
+        <Chip
+          size="small"
+          mr={1}
+          mb={1}
+          label={params.row.statusName}
+          status={params.row.statusName}
+        />
+      ),
+    },
+
     {
       field: "statusRef",
       headerName: "Status interno",
       //type: "number",
-      width: 170,
+      width: 150,
+    },
+    {
+      field: "actions",
+      headerName: "Akcije",
+      type: "actions",
+      width: 100,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<RemoveRedEye />}
+          label="Detalji"
+          onClick={() => handleToDetail(params.id)}
+        />,
+      ],
     },
   ];
 
@@ -200,11 +244,17 @@ function DataGridDemo() {
     // });
   };
 
-  const handleToDetail = () => {
-    if (selectedItems.length !== 1) return false;
-    navigate(`/requests/details/${selectedItems}`, {
+  const handleToDetail = (id) => {
+    // if (selectedItems.length !== 1) return false;
+    // navigate(`/requests/details/${selectedItems}`, {
+    //   state: {
+    //     requestId: selectedItems,
+    //   },
+    // });
+
+    navigate(`/requests/details/${id}`, {
       state: {
-        requestId: selectedItems,
+        requestId: id,
       },
     });
   };
