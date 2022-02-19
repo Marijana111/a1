@@ -20,6 +20,7 @@ import {
   InputLabel,
   LinearProgress,
   Chip as MuiChip,
+  Button,
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { spacing } from "@mui/system";
@@ -27,8 +28,9 @@ import HandleButtons from "../../components/Common/HandleButtons";
 import CheckModal from "../../components/Common/CheckModal";
 import { useNavigate } from "react-router-dom";
 import { requestService } from "../../Services/requestService";
-import { RemoveRedEye } from "@mui/icons-material";
+import { FilterList, RemoveRedEye } from "@mui/icons-material";
 import { green, orange, red, grey } from "@mui/material/colors";
+import { DatePicker, TimePicker } from "@mui/lab";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -123,6 +125,8 @@ function DataGridDemo() {
   const [update, setUpdate] = useState(new Date());
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isVisibleFilters, setIsVisibleFilter] = useState(false);
+  const [valueDate, setValueDate] = useState(null);
 
   const [checkModal, setCheckModal] = useState({
     title: "",
@@ -201,6 +205,7 @@ function DataGridDemo() {
     {
       field: "statusName",
       headerName: "Status",
+      sortable: false,
       width: 130,
       renderCell: (params) => (
         <Chip
@@ -218,10 +223,12 @@ function DataGridDemo() {
       headerName: "Status interno",
       //type: "number",
       width: 150,
+      sortable: false,
     },
     {
       field: "actions",
       headerName: "Akcije",
+      sortable: false,
       type: "actions",
       width: 100,
       getActions: (params) => [
@@ -233,16 +240,6 @@ function DataGridDemo() {
       ],
     },
   ];
-
-  const handleToUpdate = () => {
-    if (selectedItems.length !== 1) return false;
-    alert("Update");
-    // navigate(`/users/update-user`, {
-    //   state: {
-    //     userID: selectedItems,
-    //   },
-    // });
-  };
 
   const handleToDetail = (id) => {
     // if (selectedItems.length !== 1) return false;
@@ -259,18 +256,6 @@ function DataGridDemo() {
     });
   };
 
-  const handleToDelete = () => {
-    if (selectedItems.length == 0) return false;
-    setCheckModal({
-      show: true,
-      text:
-        selectedItems.length == 1
-          ? "Jeste li sigurni da želite izbrisati zahtjev?"
-          : "Jeste li sigurni da želite izbrisati zahtjeve?",
-      title: "Brisanje zahtjeva",
-    });
-  };
-
   const handleCloseCheckModal = () => {
     setCheckModal({ show: false });
   };
@@ -281,97 +266,173 @@ function DataGridDemo() {
     setUpdate(new Date());
     navigate("/requests");
   };
+
+  const toggleFilters = () => {
+    isVisibleFilters == false
+      ? setIsVisibleFilter(true)
+      : setIsVisibleFilter(false);
+  };
   return (
     <>
       <Card mb={6}>
         <CardContent pb={1}>
           <Typography variant="h6" gutterBottom>
-            <Grid container spacing={4}>
-              <Grid item md={2}>
-                <CssTextField
-                  focusColor="black"
-                  name="searchName"
-                  label="Case Id"
-                  //value={values.firstName}
-                  //error={Boolean(touched.firstName && errors.firstName)}
-                  fullWidth
-                  //helperText={touched.firstName && errors.firstName}
-                  //onBlur={handleBlur}
-                  //onChange={handleChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item md={2}>
-                <CssTextField
-                  focusColor="black"
-                  name="searchPhone"
-                  label="GUID"
-                  //value={values.lastName}
-                  //error={Boolean(touched.lastName && errors.lastName)}
-                  fullWidth
-                  //helperText={touched.lastName && errors.lastName}
-                  //onBlur={handleBlur}
-                  //onChange={handleChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item md={2}>
-                <CssTextField
-                  focusColor="black"
-                  name="searchPhone"
-                  label="Adapter Id"
-                  //value={values.lastName}
-                  //error={Boolean(touched.lastName && errors.lastName)}
-                  fullWidth
-                  //helperText={touched.lastName && errors.lastName}
-                  //onBlur={handleBlur}
-                  //onChange={handleChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item md={2}>
-                <FormControl>
-                  <TextField
-                    style={{ width: "152px" }}
-                    className={classes.root}
-                    //value={age}
-                    //onChange={(e) => console.log("ee", e.target.value)}
-                    variant="outlined"
-                    label="Operator"
-                    select
-                  >
-                    <MenuItem value={"Test 1"}>Operator 1</MenuItem>
-                    <MenuItem value={"Test 2"}>Operator 2</MenuItem>
-                  </TextField>
-                </FormControl>
-              </Grid>
-              <Grid item md={2}>
-                <FormControl>
-                  <TextField
-                    style={{ width: "152px", marginLeft: "-10px" }}
-                    className={classes.root}
-                    //value={age}
-                    //onChange={(e) => console.log("ee", e.target.value)}
-                    variant="outlined"
-                    label="Vrsta"
-                    select
-                  >
-                    <MenuItem value={"Test 1"}>Vrsta 1</MenuItem>
-                    <MenuItem value={"Test 2"}>Vrsta 2</MenuItem>
-                  </TextField>
-                </FormControl>
-              </Grid>
-            </Grid>
+            <Typography>
+              <Button onClick={() => toggleFilters()}>
+                <FilterList style={{ color: "black", fontSize: "25px" }} />
+              </Button>
+            </Typography>
+            {isVisibleFilters ? (
+              <>
+                <Grid style={{ marginTop: "5px" }} container spacing={4}>
+                  <Grid item md={2}>
+                    <CssTextField
+                      focusColor="black"
+                      name="searchName"
+                      label="Case Id"
+                      //value={values.firstName}
+                      //error={Boolean(touched.firstName && errors.firstName)}
+                      fullWidth
+                      //helperText={touched.firstName && errors.firstName}
+                      //onBlur={handleBlur}
+                      //onChange={handleChange}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid item md={2}>
+                    <CssTextField
+                      focusColor="black"
+                      name="searchPhone"
+                      label="GUID"
+                      //value={values.lastName}
+                      //error={Boolean(touched.lastName && errors.lastName)}
+                      fullWidth
+                      //helperText={touched.lastName && errors.lastName}
+                      //onBlur={handleBlur}
+                      //onChange={handleChange}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid item md={2}>
+                    <CssTextField
+                      focusColor="black"
+                      name="searchPhone"
+                      label="Adapter Id"
+                      //value={values.lastName}
+                      //error={Boolean(touched.lastName && errors.lastName)}
+                      fullWidth
+                      //helperText={touched.lastName && errors.lastName}
+                      //onBlur={handleBlur}
+                      //onChange={handleChange}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid item md={2}>
+                    <FormControl>
+                      <TextField
+                        style={{ width: "155px" }}
+                        className={classes.root}
+                        //value={age}
+                        //onChange={(e) => console.log("ee", e.target.value)}
+                        variant="outlined"
+                        label="Operator"
+                        select
+                      >
+                        <MenuItem value={"Test 1"}>Operator 1</MenuItem>
+                        <MenuItem value={"Test 2"}>Operator 2</MenuItem>
+                      </TextField>
+                    </FormControl>
+                  </Grid>
+                  <Grid item md={2}>
+                    <FormControl>
+                      <TextField
+                        style={{ width: "155px" }}
+                        className={classes.root}
+                        //value={age}
+                        //onChange={(e) => console.log("ee", e.target.value)}
+                        variant="outlined"
+                        label="Vrsta"
+                        select
+                      >
+                        <MenuItem value={"Test 1"}>Vrsta 1</MenuItem>
+                        <MenuItem value={"Test 2"}>Vrsta 2</MenuItem>
+                      </TextField>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                {/* +
+                +
+                +
+                +
+                +
+                +
+                + */}
+                <Grid style={{ marginTop: "10px" }} container spacing={4}>
+                  <Grid item md={2}>
+                    <FormControl>
+                      <TextField
+                        style={{ width: "155px" }}
+                        className={classes.root}
+                        //value={age}
+                        //onChange={(e) => console.log("ee", e.target.value)}
+                        variant="outlined"
+                        label="Kategorija"
+                        select
+                      >
+                        <MenuItem value={"Test 1"}>Kategorija 1</MenuItem>
+                        <MenuItem value={"Test 2"}>Kategorija 2</MenuItem>
+                      </TextField>
+                    </FormControl>
+                  </Grid>
+                  <Grid item md={2}>
+                    <FormControl>
+                      <TextField
+                        style={{ width: "155px" }}
+                        className={classes.root}
+                        //value={age}
+                        //onChange={(e) => console.log("ee", e.target.value)}
+                        variant="outlined"
+                        label="Status"
+                        select
+                      >
+                        <MenuItem value={"Test 1"}>Status 1</MenuItem>
+                        <MenuItem value={"Test 2"}>Status 2</MenuItem>
+                      </TextField>
+                    </FormControl>
+                  </Grid>
+                  <Grid item md={2}>
+                    <FormControl>
+                      <TextField
+                        style={{ width: "155px" }}
+                        className={classes.root}
+                        //value={age}
+                        //onChange={(e) => console.log("ee", e.target.value)}
+                        variant="outlined"
+                        label="Status interno"
+                        select
+                      >
+                        <MenuItem value={"Test 1"}>Status interno 1</MenuItem>
+                        <MenuItem value={"Test 2"}>Status interno 2</MenuItem>
+                      </TextField>
+                    </FormControl>
+                  </Grid>
+                  <Grid item md={2}>
+                    <DatePicker
+                      label="Vrijeme"
+                      value={valueDate}
+                      onChange={(newValue) => {
+                        setValueDate(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            ) : (
+              ""
+            )}
           </Typography>
         </CardContent>
-        <div style={{ marginLeft: "15px" }}>
-          <HandleButtons
-            handleUpdate={handleToUpdate}
-            handleDetail={handleToDetail}
-            handleDelete={handleToDelete}
-            selectedItemsLength={selectedItems.length}
-          />
-        </div>
         <br />
         <Paper>
           <div style={{ height: 400, width: "100%" }}>

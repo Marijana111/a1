@@ -3,6 +3,7 @@ import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import ErrorIcon from "@mui/icons-material/Error";
 import TableChartIcon from "@mui/icons-material/TableChart";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { FormatListNumbered, ListAlt, Settings } from "@mui/icons-material";
 
 const pagesSection = [
   {
@@ -218,28 +219,9 @@ const elementsSection = [
   //   ],
   // },
   {
-    href: "/users",
-    icon: User,
-    title: "Korisnici",
-    // children: [
-    //   // {
-    //   //   href: "/tables/simple-table",
-    //   //   title: "Simple Table",
-    //   // },
-    //   // {
-    //   //   href: "/tables/advanced-table",
-    //   //   title: "Advanced Table",
-    //   // },
-    //   {
-    //     href: "/tables/data-grid",
-    //     title: "Pregled korisnika",
-    //   },
-    // ],
-  },
-  {
-    href: "/requests",
-    icon: TableChartIcon,
-    title: "Zahtjevi",
+    href: "/daily-list",
+    icon: ListAlt,
+    title: "Dnevna lista",
   },
   {
     href: "/fault-repairs/fault-repairs-grid",
@@ -247,20 +229,45 @@ const elementsSection = [
     title: "Smetnje",
   },
   {
+    href: "/requests",
+    icon: TableChartIcon,
+    title: "Zahtjevi",
+  },
+  {
     href: "/reports/reports-grid",
     icon: Archive,
     title: "Izvještaji",
   },
   {
-    href: "/configuration/configuration-grid",
-    icon: VpnKeyIcon,
-    title: "Šifrarnik",
+    href: "/reporting-lists",
+    icon: FormatListNumbered,
+    title: "Izvještajne liste",
   },
   {
-    href: "/notifications/notifications-grid",
-    icon: NotificationsIcon,
-    title: "Obavijesti",
+    href: "/settings",
+    icon: Settings,
+    title: "Postavke",
+    children: [
+      {
+        href: "/settings/users",
+        title: "Korisnici",
+      },
+      {
+        href: "/settings/operators",
+        title: "Operatori",
+      },
+    ],
   },
+  // {
+  //   href: "/configuration/configuration-grid",
+  //   icon: VpnKeyIcon,
+  //   title: "Šifrarnik",
+  // },
+  // {
+  //   href: "/notifications/notifications-grid",
+  //   icon: NotificationsIcon,
+  //   title: "Obavijesti",
+  // },
   // {
   //   href: "/icons",
   //   icon: Heart,

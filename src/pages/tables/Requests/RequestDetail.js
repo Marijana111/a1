@@ -31,7 +31,7 @@ const Breadcrumbs = styled(MuiBreadcrumbs)(spacing);
 
 const CustomTableCell = styled(TableCell)`
   &.${tableCellClasses.head} {
-    background: ${(props) => props.theme.palette.common.black};
+    background: #233044;
     color: ${(props) => props.theme.palette.common.white};
     padding: 5px;
     margin-top: 10px;
@@ -117,7 +117,7 @@ function EmptyCard() {
           <Divider />
           <CardContent>
             <Typography gutterBottom display="inline">
-              <p>Parametri zahtjeva</p>
+              <h3>Parametri zahtjeva</h3>
             </Typography>
             <Table>
               <TableHead>
@@ -143,7 +143,7 @@ function EmptyCard() {
           <Divider />
           <CardContent>
             <Typography gutterBottom display="inline">
-              <p>Statusi zahtjeva</p>
+              <h3>Statusi zahtjeva</h3>
             </Typography>
             <Table>
               <TableHead>

@@ -384,8 +384,31 @@ const routes = [
   //   ],
   // },
 
+  // {
+  //   path: "users",
+  //   element: (
+  //     <AuthGuard>
+  //       <DashboardLayout />
+  //     </AuthGuard>
+  //   ),
+  //   children: [
+  //     {
+  //       path: "",
+  //       element: <DataGrid />,
+  //     },
+  //     {
+  //       path: "add-user",
+  //       element: <AddUser />,
+  //     },
+  //     {
+  //       path: "update-user",
+  //       element: <UpdateUser />,
+  //     },
+  //   ],
+  // },
+
   {
-    path: "users",
+    path: "settings",
     element: (
       <AuthGuard>
         <DashboardLayout />
@@ -393,16 +416,12 @@ const routes = [
     ),
     children: [
       {
-        path: "",
+        path: "users",
         element: <DataGrid />,
       },
       {
-        path: "add-user",
-        element: <AddUser />,
-      },
-      {
-        path: "update-user",
-        element: <UpdateUser />,
+        path: "operators",
+        element: <DataGrid />,
       },
     ],
   },
@@ -436,6 +455,36 @@ const routes = [
     children: [
       {
         path: "fault-repairs-grid",
+        element: <DataGridFaultRepair />,
+      },
+    ],
+  },
+
+  {
+    path: "reporting-lists",
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
+        element: <DataGridFaultRepair />,
+      },
+    ],
+  },
+
+  {
+    path: "daily-list",
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: "",
         element: <DataGridFaultRepair />,
       },
     ],
