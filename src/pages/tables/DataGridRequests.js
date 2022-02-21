@@ -48,8 +48,17 @@ const TextField = styled(MuiTextField)(spacing);
 const FormControlSpacing = styled(MuiFormControl)(spacing);
 
 const FormControl = styled(FormControlSpacing)`
-  width: 155px;
+  width: 250px;
 `;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      //maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 const Chip = styled(MuiChip)`
   ${spacing};
@@ -368,13 +377,9 @@ function DataGridDemo() {
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </Grid>
-                  <Grid
-                    style={{ marginTop: "10px", marginLeft: "1px" }}
-                    container
-                    spacing={4}
-                  >
+                  <Grid style={{ marginTop: "10px" }} container spacing={4}>
                     <Grid item md={2}>
-                      <FormControl sx={{ m: 1, width: 300 }}>
+                      <FormControl>
                         <InputLabel id="demo-multiple-name-label">
                           Name
                         </InputLabel>
@@ -384,7 +389,7 @@ function DataGridDemo() {
                           // value={personName}
                           // onChange={handleChange}
                           input={<OutlinedInput label="Name" />}
-                          //MenuProps={MenuProps}
+                          MenuProps={MenuProps}
                         >
                           {optionsStatus.map((status) => (
                             <MenuItem key={status.value} value={status.value}>
