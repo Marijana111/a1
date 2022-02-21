@@ -65,7 +65,7 @@ const Chip = styled(MuiChip)`
 
 const useStyles = makeStyles({
   root: {
-    width: "155px",
+    width: "250px",
     "& .MuiOutlinedInput-input": {
       color: "black",
     },
@@ -374,7 +374,7 @@ function DataGridDemo() {
                     spacing={4}
                   >
                     <Grid item md={2}>
-                      <FormControl className={classes.root}>
+                      <FormControl sx={{ width: 250 }}>
                         <TextField
                           //style={{ width: "155px" }}
                           className={classes.root}
