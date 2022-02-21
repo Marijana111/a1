@@ -368,98 +368,48 @@ function DataGridDemo() {
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </Grid>
+                  {/* {optionsStatus.map((status) => (
+                    <MenuItem key={status.value} value={status.value}>
+                      {status.name}
+                    </MenuItem>
+                  ))} */}
                   <Grid
                     style={{ marginTop: "10px", marginLeft: "1px" }}
                     container
                     spacing={4}
                   >
                     <Grid item md={2}>
-                      <FormControl sx={{ width: "250px" }}>
-                        <TextField
-                          //style={{ width: "155px" }}
-                          className={classes.root}
+                      <CssTextField
+                        focusColor="black"
+                        name="searchPhone"
+                        label="Adapter Id"
+                        //value={values.lastName}
+                        //error={Boolean(touched.lastName && errors.lastName)}
+                        fullWidth
+                        //helperText={touched.lastName && errors.lastName}
+                        //onBlur={handleBlur}
+                        //onChange={handleChange}
+                        variant="outlined"
+                        select
+                      >
+                        <MenuItem>Proradi vise</MenuItem>
+                      </CssTextField>
+                      {/* <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Age
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
                           //value={age}
-                          fullWidth
-                          //onChange={(e) => console.log("ee", e.target.value)}
-                          variant="outlined"
-                          label="Kategorija"
-                          select
+                          label="Age"
+                          //onChange={handleChange}
                         >
-                          <MenuItem value={"Test 1"}>Kategorija 1</MenuItem>
-                          <MenuItem value={"Test 2"}>Kategorija 2</MenuItem>
-                        </TextField>
-                      </FormControl>
-                    </Grid>
-                    <Grid item md={2}>
-                      <FormControl>
-                        <TextField
-                          //style={{ width: "155px" }}
-                          className={classes.root}
-                          //value={age}
-                          //onChange={(e) => console.log("ee", e.target.value)}
-                          variant="outlined"
-                          label="Status"
-                          select
-                        >
-                          {optionsStatus.map((status) => (
-                            <MenuItem key={status.value} value={status.value}>
-                              {status.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </FormControl>
-                    </Grid>
-                    <Grid item md={2}>
-                      <FormControl>
-                        <TextField
-                          //style={{ width: "155px" }}
-                          className={classes.root}
-                          //value={age}
-                          //onChange={(e) => console.log("ee", e.target.value)}
-                          variant="outlined"
-                          label="Status interno"
-                          select
-                        >
-                          {optionsStatusInt.map((status) => (
-                            <MenuItem key={status.value} value={status.value}>
-                              {status.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item md={2}>
-                      <FormControl>
-                        <TextField
-                          //style={{ width: "155px" }}
-                          //className={classes.root}
-                          //value={age}
-                          //onChange={(e) => console.log("ee", e.target.value)}
-                          variant="outlined"
-                          label="Operator"
-                          select
-                        >
-                          <MenuItem value={"Test 1"}>Operator 1</MenuItem>
-                          <MenuItem value={"Test 2"}>Operator 2</MenuItem>
-                        </TextField>
-                      </FormControl>
-                    </Grid>
-                    <Grid item md={2}>
-                      <FormControl>
-                        <TextField
-                          //style={{ width: "155px" }}
-                          className={classes.root}
-                          //value={age}
-                          //onChange={(e) => console.log("ee", e.target.value)}
-                          variant="outlined"
-                          label="Vrsta"
-                          select
-                        >
-                          <MenuItem value={"Test 1"}>Vrsta 1</MenuItem>
-                          <MenuItem value={"Test 2"}>Vrsta 2</MenuItem>
-                        </TextField>
-                      </FormControl>
+                          <MenuItem value={10}>Ten</MenuItem>
+                          <MenuItem value={20}>Twenty</MenuItem>
+                          <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                      </FormControl> */}
                     </Grid>
                   </Grid>
                 </Grid>
