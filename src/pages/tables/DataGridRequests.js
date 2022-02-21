@@ -51,15 +51,6 @@ const FormControl = styled(FormControlSpacing)`
   width: 250px;
 `;
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      //maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 const Chip = styled(MuiChip)`
   ${spacing};
 
@@ -377,32 +368,18 @@ function DataGridDemo() {
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </Grid>
-                  <Grid style={{ marginTop: "10px" }} container spacing={4}>
+                  <Grid
+                    style={{ marginTop: "10px", marginLeft: "1px" }}
+                    container
+                    spacing={4}
+                  >
                     <Grid item md={2}>
-                      <FormControl>
-                        <InputLabel id="demo-multiple-name-label">
-                          Name
-                        </InputLabel>
-                        <Select
-                          labelId="demo-multiple-name-label"
-                          id="demo-multiple-name"
-                          // value={personName}
-                          // onChange={handleChange}
-                          input={<OutlinedInput label="Name" />}
-                          MenuProps={MenuProps}
-                        >
-                          {optionsStatus.map((status) => (
-                            <MenuItem key={status.value} value={status.value}>
-                              {status.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      {/* <FormControl className={classes.root}>
+                      <FormControl className={classes.root}>
                         <TextField
                           //style={{ width: "155px" }}
                           className={classes.root}
                           //value={age}
+                          fullWidth
                           //onChange={(e) => console.log("ee", e.target.value)}
                           variant="outlined"
                           label="Kategorija"
@@ -411,7 +388,7 @@ function DataGridDemo() {
                           <MenuItem value={"Test 1"}>Kategorija 1</MenuItem>
                           <MenuItem value={"Test 2"}>Kategorija 2</MenuItem>
                         </TextField>
-                      </FormControl> */}
+                      </FormControl>
                     </Grid>
                     <Grid item md={2}>
                       <FormControl className={classes.root}>
