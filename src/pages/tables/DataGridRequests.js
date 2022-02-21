@@ -374,7 +374,7 @@ function DataGridDemo() {
                     spacing={4}
                   >
                     <Grid item md={2}>
-                      <FormControl sx={{ width: 250 }}>
+                      <FormControl sx={{ width: "250px" }}>
                         <TextField
                           //style={{ width: "155px" }}
                           className={classes.root}
@@ -391,7 +391,7 @@ function DataGridDemo() {
                       </FormControl>
                     </Grid>
                     <Grid item md={2}>
-                      <FormControl className={classes.root}>
+                      <FormControl>
                         <TextField
                           //style={{ width: "155px" }}
                           className={classes.root}
@@ -410,7 +410,7 @@ function DataGridDemo() {
                       </FormControl>
                     </Grid>
                     <Grid item md={2}>
-                      <FormControl className={classes.root}>
+                      <FormControl>
                         <TextField
                           //style={{ width: "155px" }}
                           className={classes.root}
@@ -430,9 +430,9 @@ function DataGridDemo() {
                     </Grid>
 
                     <Grid item md={2}>
-                      <FormControl className={classes.root}>
+                      <FormControl>
                         <TextField
-                          style={{ width: "155px" }}
+                          //style={{ width: "155px" }}
                           //className={classes.root}
                           //value={age}
                           //onChange={(e) => console.log("ee", e.target.value)}
@@ -446,7 +446,7 @@ function DataGridDemo() {
                       </FormControl>
                     </Grid>
                     <Grid item md={2}>
-                      <FormControl className={classes.root}>
+                      <FormControl>
                         <TextField
                           //style={{ width: "155px" }}
                           className={classes.root}
