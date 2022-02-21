@@ -32,6 +32,7 @@ import { FilterList, RemoveRedEye } from "@mui/icons-material";
 import { green, orange, red, grey } from "@mui/material/colors";
 import { DatePicker, TimePicker } from "@mui/lab";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import { selectService } from "../../Services/selectService";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -129,6 +130,13 @@ function DataGridDemo() {
   const [isVisibleFilters, setIsVisibleFilter] = useState(false);
   const [valueDateFrom, setValueDateFrom] = useState(null);
   const [valueDateTo, setValueDateTo] = useState(null);
+  const [statusValue, setStatusValue] = useState(null);
+  const [statusIntValue, setStatusIntValue] = useState(null);
+  const [categoryValue, setCategoryValue] = useState(null);
+  const [requestTypeValue, setRequestTypeValue] = useState(null);
+  const [operatorValue, setOperatorValue] = useState(null);
+  const [operatorsOptions, setOperatorsOptions] = useState([]);
+  const [requestTypesOptions, setRequestTypesOptions] = useState([]);
 
   const [checkModal, setCheckModal] = useState({
     title: "",
@@ -142,6 +150,20 @@ function DataGridDemo() {
       .then((res) => {
         setRequests(res.data.requestList);
         setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+
+    selectService
+      .getOperators()
+      .then((res) => {
+        setOperatorsOptions(res.data);
+      })
+      .catch((err) => console.log(err));
+
+    selectService
+      .getRequestTypes()
+      .then((res) => {
+        setRequestTypesOptions(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -274,6 +296,12 @@ function DataGridDemo() {
     { value: "Status 3", name: "Status 3" },
   ];
 
+  const optionsCategory = [
+    { value: "Kategorija 1", name: "Kategorija 1" },
+    { value: "Kategorija 2", name: "Kategorija 2" },
+    { value: "Kategorija 3", name: "Kategorija 3" },
+  ];
+
   const handleCloseCheckModal = () => {
     setCheckModal({ show: false });
   };
@@ -368,11 +396,7 @@ function DataGridDemo() {
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </Grid>
-                  {/* {optionsStatus.map((status) => (
-                    <MenuItem key={status.value} value={status.value}>
-                      {status.name}
-                    </MenuItem>
-                  ))} */}
+
                   <Grid
                     style={{ marginTop: "10px", marginLeft: "1px" }}
                     container
@@ -381,35 +405,114 @@ function DataGridDemo() {
                     <Grid item md={2}>
                       <CssTextField
                         focusColor="black"
-                        name="searchPhone"
-                        label="Adapter Id"
-                        //value={values.lastName}
+                        name="operator"
+                        label="Operator"
+                        value={operatorValue}
                         //error={Boolean(touched.lastName && errors.lastName)}
                         fullWidth
-                        //helperText={touched.lastName && errors.lastName}
-                        //onBlur={handleBlur}
-                        //onChange={handleChange}
+                        onChange={(event) => {
+                          setOperatorValue(event.target.value);
+                        }}
                         variant="outlined"
                         select
                       >
-                        <MenuItem>Proradi vise</MenuItem>
+                        {operatorsOptions.map((status) => (
+                          <MenuItem
+                            key={status.operatorName}
+                            value={status.operatorName}
+                          >
+                            {status.operatorName}
+                          </MenuItem>
+                        ))}
                       </CssTextField>
-                      {/* <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Age
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          //value={age}
-                          label="Age"
-                          //onChange={handleChange}
-                        >
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl> */}
+                    </Grid>
+
+                    <Grid item md={2}>
+                      <CssTextField
+                        focusColor="black"
+                        name="requestType"
+                        label="Vrsta"
+                        value={requestTypeValue}
+                        //error={Boolean(touched.lastName && errors.lastName)}
+                        fullWidth
+                        onChange={(event) => {
+                          setRequestTypeValue(event.target.value);
+                        }}
+                        variant="outlined"
+                        select
+                      >
+                        {requestTypesOptions.map((status) => (
+                          <MenuItem
+                            key={status.requestTypeName}
+                            value={status.requestTypeName}
+                          >
+                            {status.requestTypeDescription}
+                          </MenuItem>
+                        ))}
+                      </CssTextField>
+                    </Grid>
+                    <Grid item md={2}>
+                      <CssTextField
+                        focusColor="black"
+                        name="category"
+                        label="Kategorija"
+                        value={categoryValue}
+                        //error={Boolean(touched.lastName && errors.lastName)}
+                        fullWidth
+                        onChange={(event) => {
+                          setCategoryValue(event.target.value);
+                        }}
+                        variant="outlined"
+                        select
+                      >
+                        {optionsCategory.map((status) => (
+                          <MenuItem key={status.value} value={status.value}>
+                            {status.name}
+                          </MenuItem>
+                        ))}
+                      </CssTextField>
+                    </Grid>
+                    <Grid item md={2}>
+                      <CssTextField
+                        focusColor="black"
+                        name="status"
+                        label="Status"
+                        value={statusValue}
+                        //error={Boolean(touched.lastName && errors.lastName)}
+                        fullWidth
+                        onChange={(event) => {
+                          setStatusValue(event.target.value);
+                        }}
+                        variant="outlined"
+                        select
+                      >
+                        {optionsStatus.map((status) => (
+                          <MenuItem key={status.value} value={status.value}>
+                            {status.name}
+                          </MenuItem>
+                        ))}
+                      </CssTextField>
+                    </Grid>
+                    <Grid item md={2}>
+                      <CssTextField
+                        focusColor="black"
+                        name="statusInt"
+                        label="Status interno"
+                        value={statusIntValue}
+                        //error={Boolean(touched.lastName && errors.lastName)}
+                        fullWidth
+                        onChange={(event) => {
+                          setStatusIntValue(event.target.value);
+                        }}
+                        variant="outlined"
+                        select
+                      >
+                        {optionsStatusInt.map((status) => (
+                          <MenuItem key={status.value} value={status.value}>
+                            {status.name}
+                          </MenuItem>
+                        ))}
+                      </CssTextField>
                     </Grid>
                   </Grid>
                 </Grid>
