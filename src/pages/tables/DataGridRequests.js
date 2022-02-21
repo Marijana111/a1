@@ -246,7 +246,7 @@ function DataGridDemo() {
       field: "statusRef",
       headerName: "Status interno",
       //type: "number",
-      width: 150,
+      width: 140,
       sortable: false,
     },
     {
@@ -377,6 +377,7 @@ function DataGridDemo() {
                     <DatePicker
                       label="Datum od"
                       inputFormat="dd.MM.yyyy"
+                      fullWidth
                       value={valueDateFrom}
                       onChange={(newValue) => {
                         setValueDateFrom(newValue);
@@ -388,6 +389,7 @@ function DataGridDemo() {
                     <DatePicker
                       label="Datum do"
                       inputFormat="dd.MM.yyyy"
+                      fullWidth
                       minDate={valueDateFrom}
                       value={valueDateTo}
                       onChange={(newValue) => {
@@ -535,11 +537,7 @@ function DataGridDemo() {
                 rows={requests}
                 columns={columns}
                 pageSize={5}
-                checkboxSelection
                 hideFooterSelectedRowCount
-                onSelectionModelChange={(ids) => {
-                  setSelectedItems(ids);
-                }}
               />
             )}
           </div>
