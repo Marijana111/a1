@@ -31,6 +31,7 @@ import { requestService } from "../../Services/requestService";
 import { FilterList, RemoveRedEye } from "@mui/icons-material";
 import { green, orange, red, grey } from "@mui/material/colors";
 import { DatePicker, TimePicker } from "@mui/lab";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -373,7 +374,26 @@ function DataGridDemo() {
                     spacing={4}
                   >
                     <Grid item md={2}>
-                      <FormControl className={classes.root}>
+                      <FormControl sx={{ m: 1, width: 300 }}>
+                        <InputLabel id="demo-multiple-name-label">
+                          Name
+                        </InputLabel>
+                        <Select
+                          labelId="demo-multiple-name-label"
+                          id="demo-multiple-name"
+                          // value={personName}
+                          // onChange={handleChange}
+                          input={<OutlinedInput label="Name" />}
+                          //MenuProps={MenuProps}
+                        >
+                          {optionsStatus.map((status) => (
+                            <MenuItem key={status.value} value={status.value}>
+                              {status.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      {/* <FormControl className={classes.root}>
                         <TextField
                           //style={{ width: "155px" }}
                           className={classes.root}
@@ -386,7 +406,7 @@ function DataGridDemo() {
                           <MenuItem value={"Test 1"}>Kategorija 1</MenuItem>
                           <MenuItem value={"Test 2"}>Kategorija 2</MenuItem>
                         </TextField>
-                      </FormControl>
+                      </FormControl> */}
                     </Grid>
                     <Grid item md={2}>
                       <FormControl className={classes.root}>
