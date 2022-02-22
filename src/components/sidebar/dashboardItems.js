@@ -31,7 +31,7 @@ const elementsSection = [
   },
 
   {
-    href: "/reports/reports-grid",
+    href: "/report-orders",
     icon: Archive,
     title: "Izvještaji",
   },

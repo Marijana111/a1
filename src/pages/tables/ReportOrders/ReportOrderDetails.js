@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { tableCellClasses } from "@mui/material/TableCell";
-import { faultOrdersService } from "../../../Services/faultOrdersService";
+import { reportOrdersService } from "../../../Services/reportOrdersService";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -46,27 +46,30 @@ const CustomTableCell = styled(TableCell)`
 function EmptyCard() {
   const { state } = useLocation();
 
-  let requestId = state.requestId;
+  let reportId = state.reportId;
 
-  const [faultOrderDetails, setFaultOrderDetails] = useState({});
-  const [faultOrderStatuses, setFaultOrderStatuses] = useState([]);
-  const [faultOrderParams, setFaultOrderParams] = useState([]);
+  const [reportOrderDetails, setReportOrderDetails] = useState({});
+  const [reportParametersIn, setReportParametersIn] = useState([]);
+  const [reportParametersOut, setReportParametersOut] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    faultOrdersService
-      .getFaultOrderById(requestId)
+    reportOrdersService
+      .getReportOrderById(reportId)
       .then((res) => {
-        setFaultOrderDetails(res.data);
+        setReportOrderDetails(res.data);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
 
-    faultOrdersService
-      .getFaultOrderByIdDetails(requestId)
+    reportOrdersService
+      .getReportOrderByIdDetails(reportId)
       .then((res) => {
-        setFaultOrderParams(res.data.requestParams);
-        setFaultOrderStatuses(res.data.requestStatuses);
+        res.data.reportParams.map((param) => {
+          param.parameterDirection == "IN"
+            ? setReportParametersIn(res.data.reportParams)
+            : setReportParametersOut(res.data.reportParams);
+        });
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
@@ -79,41 +82,32 @@ function EmptyCard() {
       ) : (
         <Card mb={6}>
           <CardContent>
-            {faultOrderDetails && (
+            {reportOrderDetails && (
               <Grid container spacing={6}>
                 <Grid item md={6}>
                   <div>
-                    <b>Case Id:</b> {faultOrderDetails.requestId}
+                    <b>Case Id:</b> {reportOrderDetails.reportId}
                   </div>
                   <div>
-                    <b>GUID:</b> {faultOrderDetails.requestGuid}
+                    <b>GUID:</b> {reportOrderDetails.reportGuid}
                   </div>
                   <div>
-                    <b>Naziv operatora:</b> {faultOrderDetails.operatorName}
-                  </div>
-                  <div>
-                    <b>Identifikator operatora:</b>{" "}
-                    {faultOrderDetails.operatorRef}
-                  </div>
-                  <div>
-                    <b>Vrsta smetnje:</b> {faultOrderDetails.requestType}
+                    <b>Naziv operatora:</b> {reportOrderDetails.operatorName}
                   </div>
                 </Grid>
                 <Grid item md={6}>
                   <div>
-                    <b>Kategorija:</b> {faultOrderDetails.requestCategory}
+                    <b>Identifikator operatora:</b>{" "}
+                    {reportOrderDetails.operatorRef}
                   </div>
                   <div>
-                    <b>Vrijeme smetnje:</b>{" "}
+                    <b>Vrsta izvještaja:</b> {reportOrderDetails.reportType}
+                  </div>
+                  <div>
+                    <b>Vrijeme izvještaja:</b>{" "}
                     {dateHelper.formatUtcToDate(
-                      faultOrderDetails.requestDateInsert
+                      reportOrderDetails.reportDateInsert
                     )}
-                  </div>
-                  <div>
-                    <b>Adapter Id:</b> {faultOrderDetails.adapterId}
-                  </div>
-                  <div>
-                    <b>Status:</b> {faultOrderDetails.statusName}
                   </div>
                 </Grid>
               </Grid>
@@ -122,23 +116,21 @@ function EmptyCard() {
           <Divider />
           <CardContent>
             <Typography gutterBottom display="inline">
-              <h3>Parametri smetnje</h3>
+              <h3>Ulazni parametri</h3>
             </Typography>
             <Table>
               <TableHead>
                 <TableRow>
                   <CustomTableCell>Naziv</CustomTableCell>
-                  <CustomTableCell>Oznaka</CustomTableCell>
                   <CustomTableCell>Vrijednost</CustomTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {faultOrderParams.map((row) => (
+                {reportParametersIn.map((row) => (
                   <TableRow key={row.parameterName}>
                     <CustomTableCell component="th" scope="row">
-                      {row.parameterName}
+                      {row.parameterDescription}
                     </CustomTableCell>
-                    <CustomTableCell>{row.parameterRef}</CustomTableCell>
                     <CustomTableCell>{row.parameterValue}</CustomTableCell>
                   </TableRow>
                 ))}
@@ -148,26 +140,22 @@ function EmptyCard() {
           <Divider />
           <CardContent>
             <Typography gutterBottom display="inline">
-              <h3>Statusi smetnje</h3>
+              <h3>Izlazni parametri</h3>
             </Typography>
             <Table>
               <TableHead>
                 <TableRow>
-                  <CustomTableCell>Status</CustomTableCell>
-                  <CustomTableCell>Opis</CustomTableCell>
-                  <CustomTableCell>Vrijeme</CustomTableCell>
+                  <CustomTableCell>Naziv</CustomTableCell>
+                  <CustomTableCell>Vrijednost</CustomTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {faultOrderStatuses.map((row) => (
-                  <TableRow key={row.statusId}>
+                {reportParametersOut.map((row) => (
+                  <TableRow key={row.parameterDescription}>
                     <CustomTableCell component="th" scope="row">
-                      {row.statusRef}
+                      {row.parameterDescription}
                     </CustomTableCell>
-                    <CustomTableCell>{row.statusHref}</CustomTableCell>
-                    <CustomTableCell>
-                      {dateHelper.formatUtcToDate(row.statusInsertDate)}
-                    </CustomTableCell>
+                    <CustomTableCell>{row.parameterValue}</CustomTableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -179,20 +167,20 @@ function EmptyCard() {
   );
 }
 
-function FaultOrderDetail() {
+function ReportOrderDetail() {
   return (
     <React.Fragment>
       <Helmet title="Blank" />
       <Typography variant="h3" gutterBottom display="inline">
-        Detalji smetnje
+        Detalji izvještaja
       </Typography>
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
         <Link component={NavLink} to="/home">
           Naslovna
         </Link>
-        <Link component={NavLink} to="/fault-orders">
-          Smetnje
+        <Link component={NavLink} to="/report-orders">
+          Izvještaji
         </Link>
         <Typography>Detalji</Typography>
       </Breadcrumbs>
@@ -208,4 +196,4 @@ function FaultOrderDetail() {
   );
 }
 
-export default FaultOrderDetail;
+export default ReportOrderDetail;

@@ -51,6 +51,7 @@ import Landing from "./pages/presentation/Landing";
 import ProtectedPage from "./pages/protected/ProtectedPage";
 import RequestDetail from "./pages/tables/Requests/RequestDetail";
 import FaultOrderDetail from "./pages/tables/FaultOrders/FaultOrderDetail";
+import ReportOrderDetail from "./pages/tables/ReportOrders/ReportOrderDetails";
 
 const Default = async(() => import("./pages/dashboards/Default"));
 const Analytics = async(() => import("./pages/dashboards/Analytics"));
@@ -67,7 +68,9 @@ const DataGridFaultOrders = async(() =>
   import("./pages/tables/FaultOrders/DataGridFaultOrders")
 );
 
-const DataGridReports = async(() => import("./pages/tables/DataGridReports"));
+const DataGridReportOrders = async(() =>
+  import("./pages/tables/ReportOrders/DataGridReportOrders")
+);
 
 const DataGridConfiguration = async(() =>
   import("./pages/tables/DataGridConfiguration")
@@ -188,7 +191,7 @@ const routes = [
   },
 
   {
-    path: "reports",
+    path: "report-orders",
     element: (
       <AuthGuard>
         <DashboardLayout />
@@ -196,8 +199,12 @@ const routes = [
     ),
     children: [
       {
-        path: "reports-grid",
-        element: <DataGridReports />,
+        path: "",
+        element: <DataGridReportOrders />,
+      },
+      {
+        path: "details/:id",
+        element: <ReportOrderDetail />,
       },
     ],
   },

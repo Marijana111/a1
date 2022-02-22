@@ -9,7 +9,7 @@ export const requestService = {
 
 async function getRequests() {
   return axios
-    .get(`${requestsURL}`)
+    .get(`${requestsURL}?numRecords=10000&sortBy=-requestId`)
     .then((res) => res)
     .catch((err) => err);
 }
