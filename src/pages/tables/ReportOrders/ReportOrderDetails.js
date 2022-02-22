@@ -49,8 +49,7 @@ function EmptyCard() {
   let reportId = state.reportId;
 
   const [reportOrderDetails, setReportOrderDetails] = useState({});
-  const [reportParametersIn, setReportParametersIn] = useState([]);
-  const [reportParametersOut, setReportParametersOut] = useState([]);
+  const [reportParameters, setReportParameters] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -65,11 +64,7 @@ function EmptyCard() {
     reportOrdersService
       .getReportOrderByIdDetails(reportId)
       .then((res) => {
-        res.data.reportParams.map((param) => {
-          param.parameterDirection == "IN"
-            ? setReportParametersIn(res.data.reportParams)
-            : setReportParametersOut(res.data.reportParams);
-        });
+        setReportParameters(res.data.reportParams);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
@@ -126,14 +121,18 @@ function EmptyCard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {reportParametersIn.map((row) => (
-                  <TableRow key={row.parameterName}>
-                    <CustomTableCell component="th" scope="row">
-                      {row.parameterDescription}
-                    </CustomTableCell>
-                    <CustomTableCell>{row.parameterValue}</CustomTableCell>
-                  </TableRow>
-                ))}
+                {reportParameters.map((row) =>
+                  row.parameterDirection == "IN" ? (
+                    <TableRow key={row.parameterName}>
+                      <CustomTableCell component="th" scope="row">
+                        {row.parameterDescription}
+                      </CustomTableCell>
+                      <CustomTableCell>{row.parameterValue}</CustomTableCell>
+                    </TableRow>
+                  ) : (
+                    ""
+                  )
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -150,14 +149,18 @@ function EmptyCard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {reportParametersOut.map((row) => (
-                  <TableRow key={row.parameterDescription}>
-                    <CustomTableCell component="th" scope="row">
-                      {row.parameterDescription}
-                    </CustomTableCell>
-                    <CustomTableCell>{row.parameterValue}</CustomTableCell>
-                  </TableRow>
-                ))}
+                {reportParameters.map((row) =>
+                  row.parameterDirection == "OUT" ? (
+                    <TableRow key={row.parameterDescription}>
+                      <CustomTableCell component="th" scope="row">
+                        {row.parameterDescription}
+                      </CustomTableCell>
+                      <CustomTableCell>{row.parameterValue}</CustomTableCell>
+                    </TableRow>
+                  ) : (
+                    ""
+                  )
+                )}
               </TableBody>
             </Table>
           </CardContent>
