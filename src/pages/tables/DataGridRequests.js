@@ -378,6 +378,7 @@ function DataGridDemo() {
                       label="Datum od"
                       inputFormat="dd.MM.yyyy"
                       fullWidth
+                      classes={classes.root}
                       value={valueDateFrom}
                       onChange={(newValue) => {
                         setValueDateFrom(newValue);
@@ -389,6 +390,7 @@ function DataGridDemo() {
                     <DatePicker
                       label="Datum do"
                       inputFormat="dd.MM.yyyy"
+                      classes={classes.root}
                       fullWidth
                       minDate={valueDateFrom}
                       value={valueDateTo}
