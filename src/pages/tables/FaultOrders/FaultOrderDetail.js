@@ -21,8 +21,8 @@ import {
   LinearProgress,
 } from "@mui/material";
 import { spacing } from "@mui/system";
-import { requestService } from "../../../Services/requestService";
 import { tableCellClasses } from "@mui/material/TableCell";
+import { faultOrdersService } from "../../../Services/faultOrdersService";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -48,25 +48,25 @@ function EmptyCard() {
 
   let requestId = state.requestId;
 
-  const [requestDetails, setRequestDetails] = useState({});
-  const [requestStatuses, setRequestStatuses] = useState([]);
-  const [requestParams, setRequestParams] = useState([]);
+  const [faultOrderDetails, setFaultOrderDetails] = useState({});
+  const [faultOrderStatuses, setFaultOrderStatuses] = useState([]);
+  const [faultOrderParams, setFaultOrderParams] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    requestService
-      .getRequestById(requestId)
+    faultOrdersService
+      .getFaultOrderByIdDetails(requestId)
       .then((res) => {
-        setRequestDetails(res.data);
+        setFaultOrderDetails(res.data);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
 
-    requestService
-      .getRequestByIdDetails(requestId)
+    faultOrdersService
+      .getFaultOrderByIdDetails(requestId)
       .then((res) => {
-        setRequestParams(res.data.requestParams);
-        setRequestStatuses(res.data.requestStatuses);
+        setFaultOrderParams(res.data.requestParams);
+        setFaultOrderStatuses(res.data.requestStatuses);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
@@ -79,40 +79,41 @@ function EmptyCard() {
       ) : (
         <Card mb={6}>
           <CardContent>
-            {requestDetails && (
+            {faultOrderDetails && (
               <Grid container spacing={6}>
                 <Grid item md={6}>
                   <div>
-                    <b>Case Id:</b> {requestDetails.requestId}
+                    <b>Case Id:</b> {faultOrderDetails.requestId}
                   </div>
                   <div>
-                    <b>GUID:</b> {requestDetails.requestGuid}
+                    <b>GUID:</b> {faultOrderDetails.requestGuid}
                   </div>
                   <div>
-                    <b>Naziv operatora:</b> {requestDetails.operatorName}
+                    <b>Naziv operatora:</b> {faultOrderDetails.operatorName}
                   </div>
                   <div>
-                    <b>Identifikator operatora:</b> {requestDetails.operatorRef}
+                    <b>Identifikator operatora:</b>{" "}
+                    {faultOrderDetails.operatorRef}
                   </div>
                   <div>
-                    <b>Vrsta zahtjeva:</b> {requestDetails.requestType}
+                    <b>Vrsta smetnje:</b> {faultOrderDetails.requestType}
                   </div>
                 </Grid>
                 <Grid item md={6}>
                   <div>
-                    <b>Kategorija:</b> {requestDetails.requestCategory}
+                    <b>Kategorija:</b> {faultOrderDetails.requestCategory}
                   </div>
                   <div>
-                    <b>Vrijeme zahtjeva:</b>{" "}
+                    <b>Vrijeme smetnje:</b>{" "}
                     {dateHelper.formatUtcToDate(
-                      requestDetails.requestDateInsert
+                      faultOrderDetails.requestDateInsert
                     )}
                   </div>
                   <div>
-                    <b>Adapter Id:</b> {requestDetails.adapterId}
+                    <b>Adapter Id:</b> {faultOrderDetails.adapterId}
                   </div>
                   <div>
-                    <b>Status:</b> {requestDetails.statusName}
+                    <b>Status:</b> {faultOrderDetails.statusName}
                   </div>
                 </Grid>
               </Grid>
@@ -121,7 +122,7 @@ function EmptyCard() {
           <Divider />
           <CardContent>
             <Typography gutterBottom display="inline">
-              <h3>Parametri zahtjeva</h3>
+              <h3>Parametri smetnje</h3>
             </Typography>
             <Table>
               <TableHead>
@@ -132,7 +133,7 @@ function EmptyCard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {requestParams.map((row) => (
+                {faultOrderParams.map((row) => (
                   <TableRow key={row.parameterName}>
                     <CustomTableCell component="th" scope="row">
                       {row.parameterName}
@@ -147,7 +148,7 @@ function EmptyCard() {
           <Divider />
           <CardContent>
             <Typography gutterBottom display="inline">
-              <h3>Statusi zahtjeva</h3>
+              <h3>Statusi smetnje</h3>
             </Typography>
             <Table>
               <TableHead>
@@ -158,7 +159,7 @@ function EmptyCard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {requestStatuses.map((row) => (
+                {faultOrderStatuses.map((row) => (
                   <TableRow key={row.statusId}>
                     <CustomTableCell component="th" scope="row">
                       {row.statusRef}
@@ -178,20 +179,20 @@ function EmptyCard() {
   );
 }
 
-function RequestDetail() {
+function FaultOrderDetail() {
   return (
     <React.Fragment>
       <Helmet title="Blank" />
       <Typography variant="h3" gutterBottom display="inline">
-        Detalji zahtjeva
+        Detalji smetnje
       </Typography>
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
         <Link component={NavLink} to="/home">
           Naslovna
         </Link>
-        <Link component={NavLink} to="/requests">
-          Zahtjevi
+        <Link component={NavLink} to="/fault-orders">
+          Smetnje
         </Link>
         <Typography>Detalji</Typography>
       </Breadcrumbs>
@@ -207,4 +208,4 @@ function RequestDetail() {
   );
 }
 
-export default RequestDetail;
+export default FaultOrderDetail;

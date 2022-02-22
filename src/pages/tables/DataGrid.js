@@ -329,7 +329,7 @@ function DataGridPage() {
 
             <Breadcrumbs aria-label="Breadcrumb" mt={2}>
               <Link component={NavLink} to="/home">
-                Naslovnica
+                Naslovna
               </Link>
               <Typography>Korisnici</Typography>
             </Breadcrumbs>

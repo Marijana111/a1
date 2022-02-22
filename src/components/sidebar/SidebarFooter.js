@@ -70,14 +70,12 @@ const SidebarFooter = ({ ...rest }) => {
         <Grid item>
           {!!user && (
             <FooterText variant="body2">
-              Prijavljeni Korisnik
+              User Test
               {/* {user.displayName} */}
             </FooterText>
           )}
           {/* Demo data */}
-          {!user && (
-            <FooterText variant="body2">Prijavljeni Korisnik</FooterText>
-          )}
+          {!user && <FooterText variant="body2">User Test</FooterText>}
           <FooterSubText variant="caption">Admin</FooterSubText>
         </Grid>
       </Grid>

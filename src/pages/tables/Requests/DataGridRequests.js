@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components/macro";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { makeStyles } from "@mui/styles";
 
 import {
   Link,
@@ -16,23 +15,18 @@ import {
   Grid,
   TextField as MuiTextField,
   FormControl as MuiFormControl,
-  Select,
-  InputLabel,
   LinearProgress,
   Chip as MuiChip,
   Button,
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { spacing } from "@mui/system";
-import HandleButtons from "../../components/Common/HandleButtons";
-import CheckModal from "../../components/Common/CheckModal";
 import { useNavigate } from "react-router-dom";
-import { requestService } from "../../Services/requestService";
+import { requestService } from "../../../Services/requestService";
 import { FilterList, RemoveRedEye } from "@mui/icons-material";
 import { green, orange, red, grey } from "@mui/material/colors";
-import { DatePicker, TimePicker } from "@mui/lab";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import { selectService } from "../../Services/selectService";
+import { DatePicker } from "@mui/lab";
+import { selectService } from "../../../Services/selectService";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -46,12 +40,6 @@ const Paper = styled(MuiPaper)(spacing);
 
 const TextField = styled(MuiTextField)(spacing);
 
-const FormControlSpacing = styled(MuiFormControl)(spacing);
-
-const FormControl = styled(FormControlSpacing)`
-  width: 250px;
-`;
-
 const Chip = styled(MuiChip)`
   ${spacing};
 
@@ -64,55 +52,18 @@ const Chip = styled(MuiChip)`
   background: ${(props) => props.status == "REALIZIRAN_NOK" && orange[500]};
 `;
 
-const useStyles = makeStyles({
-  root: {
-    width: "250px",
-    "& .MuiOutlinedInput-input": {
-      color: "black",
-    },
-    "& .MuiInputLabel-root": {
-      color: "secondary",
-    },
-    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "secondary",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "black",
-    },
-    "&:hover .MuiInputLabel-root": {
-      color: "secondary",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "black",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "black",
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "black",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "black",
-    },
-  },
-});
-
 const CssTextField = styled(TextField, {
   shouldForwardProp: (props) => props !== "focusColor",
 })((p) => ({
-  // input label when focused
   "& label.Mui-focused": {
     color: p.focusColor,
   },
-  // focused color for input with variant='standard'
   "& .MuiInput-underline:after": {
     borderBottomColor: p.focusColor,
   },
-  // focused color for input with variant='filled'
   "& .MuiFilledInput-underline:after": {
     borderBottomColor: p.focusColor,
   },
-  // focused color for input with variant='outlined'
   "& .MuiOutlinedInput-root": {
     "&.Mui-focused fieldset": {
       borderColor: p.focusColor,
@@ -121,9 +72,7 @@ const CssTextField = styled(TextField, {
 }));
 
 function DataGridDemo() {
-  const classes = useStyles();
   const navigate = useNavigate();
-  const [selectedItems, setSelectedItems] = useState([]);
   const [update, setUpdate] = useState(new Date());
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -137,12 +86,6 @@ function DataGridDemo() {
   const [operatorValue, setOperatorValue] = useState(null);
   const [operatorsOptions, setOperatorsOptions] = useState([]);
   const [requestTypesOptions, setRequestTypesOptions] = useState([]);
-
-  const [checkModal, setCheckModal] = useState({
-    title: "",
-    text: "",
-    show: false,
-  });
 
   useEffect(() => {
     requestService
@@ -184,13 +127,11 @@ function DataGridDemo() {
     {
       field: "requestType",
       headerName: "Vrsta",
-      //type: "number",
       width: 120,
     },
     {
       field: "requestCategory",
       headerName: "Kategorija",
-      //type: "number",
       width: 170,
       sortable: false,
     },
@@ -208,7 +149,7 @@ function DataGridDemo() {
     {
       field: "adapterId",
       headerName: "Adapter Id",
-      //type: "number",
+
       width: 130,
       sortable: false,
     },
@@ -219,13 +160,6 @@ function DataGridDemo() {
       valueGetter: ({ value }) => value && new Date(value),
       width: 180,
     },
-    {
-      field: "statusName",
-      headerName: "Status",
-      //type: "number",
-      width: 130,
-    },
-
     {
       field: "statusName",
       headerName: "Status",
@@ -245,7 +179,6 @@ function DataGridDemo() {
     {
       field: "statusRef",
       headerName: "Status interno",
-      //type: "number",
       width: 140,
       sortable: false,
     },
@@ -266,13 +199,6 @@ function DataGridDemo() {
   ];
 
   const handleToDetail = (id) => {
-    // if (selectedItems.length !== 1) return false;
-    // navigate(`/requests/details/${selectedItems}`, {
-    //   state: {
-    //     requestId: selectedItems,
-    //   },
-    // });
-
     navigate(`/requests/details/${id}`, {
       state: {
         requestId: id,
@@ -301,17 +227,6 @@ function DataGridDemo() {
     { value: "Kategorija 2", name: "Kategorija 2" },
     { value: "Kategorija 3", name: "Kategorija 3" },
   ];
-
-  const handleCloseCheckModal = () => {
-    setCheckModal({ show: false });
-  };
-
-  const confirmDelete = () => {
-    setSelectedItems([]);
-    setCheckModal({ show: false });
-    setUpdate(new Date());
-    navigate("/requests");
-  };
 
   const toggleFilters = () => {
     isVisibleFilters == false
@@ -378,7 +293,6 @@ function DataGridDemo() {
                       label="Datum od"
                       inputFormat="dd.MM.yyyy"
                       fullWidth
-                      classes={classes.root}
                       value={valueDateFrom}
                       onChange={(newValue) => {
                         setValueDateFrom(newValue);
@@ -390,7 +304,6 @@ function DataGridDemo() {
                     <DatePicker
                       label="Datum do"
                       inputFormat="dd.MM.yyyy"
-                      classes={classes.root}
                       fullWidth
                       minDate={valueDateFrom}
                       value={valueDateTo}
@@ -534,7 +447,6 @@ function DataGridDemo() {
             ) : (
               <DataGrid
                 disableColumnMenu
-                // rowsPerPageOptions={[5, 10, 25]}
                 getRowId={(r) => r.requestId}
                 rows={requests}
                 columns={columns}
@@ -545,13 +457,6 @@ function DataGridDemo() {
           </div>
         </Paper>
       </Card>
-      <CheckModal
-        show={checkModal.show}
-        title={checkModal.title}
-        text={checkModal.text}
-        handleClose={handleCloseCheckModal}
-        confirmAction={confirmDelete}
-      />
     </>
   );
 }
@@ -566,7 +471,7 @@ function DataGridPage() {
 
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
         <Link component={NavLink} to="/home">
-          Naslovnica
+          Naslovna
         </Link>
         <Typography>Zahtjevi</Typography>
       </Breadcrumbs>
