@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import styled from "styled-components/macro";
 import { NavLink } from "react-router-dom";
 import { Formik } from "formik";
 import { Helmet } from "react-helmet-async";
-import { useNavigate, useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 import {
   Alert as MuiAlert,
@@ -19,8 +20,12 @@ import {
   Link,
   TextField as MuiTextField,
   Typography,
+  MenuItem,
 } from "@mui/material";
 import { spacing } from "@mui/system";
+import { DatePicker, DateTimePicker } from "@mui/lab";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 const Divider = styled(MuiDivider)(spacing);
 
@@ -87,6 +92,27 @@ const validationSchema = Yup.object().shape({
 });
 
 function BasicForm() {
+  const { state } = useLocation();
+  const [operatorValue, setOperatorValue] = useState(null);
+  const [valueDateFrom, setValueDateFrom] = useState(new Date());
+  const [counter, setCounter] = useState(0);
+  const [locale, setLocale] = useState("fr");
+
+  const optionsStatus = [
+    { value: "PRIHVAĆEN", name: "PRIHVAĆEN" },
+    { value: "REALIZIRAN", name: "REALIZIRAN" },
+    { value: "ODBIJEN", name: "ODBIJEN" },
+    { value: "STORNO", name: "STORNO" },
+    { value: "INFO", name: "INFO" },
+    { value: "REALIZIRAN_OK", name: "REALIZIRAN_OK" },
+    { value: "REALIZIRAN_NOK", name: "REALIZIRAN_NOK" },
+  ];
+
+  const optionsDescription = [
+    { value: "Opis 1", name: "Opis 1" },
+    { value: "Opis 2", name: "Opis 2" },
+  ];
+
   const handleSubmit = async (
     values,
     { resetForm, setErrors, setStatus, setSubmitting }
@@ -104,142 +130,269 @@ function BasicForm() {
   };
 
   const navigate = useNavigate();
-  const history = useHistory();
+
+  const handleClick = () => {
+    setCounter(counter + 1);
+    console.log(counter);
+  };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({
-        errors,
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        isSubmitting,
-        touched,
-        values,
-        status,
-      }) => (
-        <Card mb={6}>
-          <CardContent>
-            {status && status.sent && (
-              <Alert severity="success" my={3}>
-                [DEMO] Uspješno ste dodali korisnika!
-              </Alert>
-            )}
+    <>
+      <Card mb={6}>
+        <CardContent>
+          {state.requestDetails && (
+            <Grid container spacing={6}>
+              <Grid item md={6}>
+                <div>
+                  <b>GUID:</b> {state.requestDetails.requestGuid}
+                </div>
+                <div>
+                  <b>Naziv operatora:</b> {state.requestDetails.operatorName}
+                </div>
+                <div>
+                  <b>Identifikator operatora:</b>{" "}
+                  {state.requestDetails.operatorRef}
+                </div>
+                <div>
+                  <b>Vrsta zahtjeva:</b> {state.requestDetails.requestType}
+                </div>
+              </Grid>
+            </Grid>
+          )}
+        </CardContent>
+      </Card>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values,
+          status,
+        }) => (
+          <Card mb={6}>
+            <CardContent>
+              {status && status.sent && (
+                <Alert severity="success" my={3}>
+                  [DEMO] Uspješno ste dodali status!
+                </Alert>
+              )}
 
-            {isSubmitting ? (
-              <Box display="flex" justifyContent="center" my={6}>
-                <CircularProgress />
-              </Box>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={6}>
-                  <Grid item md={6}>
-                    <CssTextField
-                      focusColor="black"
-                      name="firstName"
-                      label="Ime"
-                      //value={values.firstName}
-                      error={Boolean(touched.firstName && errors.firstName)}
-                      fullWidth
-                      helperText={touched.firstName && errors.firstName}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      variant="outlined"
-                      my={2}
-                    />
+              {isSubmitting ? (
+                <Box display="flex" justifyContent="center" my={6}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <Grid item>
+                    <Typography gutterBottom display="inline">
+                      <h3>Status zahtjeva</h3>
+                    </Typography>
                   </Grid>
-                  <Grid item md={6}>
-                    <CssTextField
-                      focusColor="black"
-                      name="lastName"
-                      label="Prezime"
-                      //value={values.lastName}
-                      error={Boolean(touched.lastName && errors.lastName)}
-                      fullWidth
-                      helperText={touched.lastName && errors.lastName}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      variant="outlined"
-                      my={2}
-                    />
+                  <Grid container spacing={4}>
+                    <Grid item md={3}>
+                      <CssTextField
+                        focusColor="black"
+                        name="status"
+                        label="Status"
+                        value={operatorValue}
+                        //error={Boolean(touched.lastName && errors.lastName)}
+                        fullWidth
+                        onChange={(event) => {
+                          setOperatorValue(event.target.value);
+                        }}
+                        variant="outlined"
+                        select
+                      >
+                        {optionsStatus.map((status) => (
+                          <MenuItem key={status.value} value={status.name}>
+                            {status.name}
+                          </MenuItem>
+                        ))}
+                      </CssTextField>
+                    </Grid>
+                    <Grid item md={3}>
+                      <CssTextField
+                        focusColor="black"
+                        name="description"
+                        label="Opis"
+                        value={operatorValue}
+                        //error={Boolean(touched.lastName && errors.lastName)}
+                        fullWidth
+                        onChange={(event) => {
+                          setOperatorValue(event.target.value);
+                        }}
+                        variant="outlined"
+                        select
+                      >
+                        {optionsDescription.map((status) => (
+                          <MenuItem key={status.value} value={status.name}>
+                            {status.name}
+                          </MenuItem>
+                        ))}
+                      </CssTextField>
+                    </Grid>
+                    <Grid item md={3}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateTimePicker
+                          label="Datum"
+                          inputFormat="dd.MM.yyyy. hh:mm:ss"
+                          fullWidth
+                          ampm={false}
+                          ampmInClock={false}
+                          value={valueDateFrom}
+                          ampm
+                          onChange={(newValue) => {
+                            setValueDateFrom(newValue);
+                          }}
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+                      </LocalizationProvider>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <CssTextField
-                  focusColor="black"
-                  name="email"
-                  label="Email"
-                  //value={values.email}
-                  error={Boolean(touched.email && errors.email)}
-                  fullWidth
-                  helperText={touched.email && errors.email}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="email"
-                  variant="outlined"
-                  my={2}
-                />
-                <CssTextField
-                  focusColor="black"
-                  name="password"
-                  label="Lozinka"
-                  //value={values.password}
-                  error={Boolean(touched.password && errors.password)}
-                  fullWidth
-                  helperText={touched.password && errors.password}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="password"
-                  variant="outlined"
-                  my={2}
-                />
-                <CssTextField
-                  focusColor="black"
-                  name="confirmPassword"
-                  label="Potvrdi lozinku"
-                  //value={values.confirmPassword}
-                  error={Boolean(
-                    touched.confirmPassword && errors.confirmPassword
-                  )}
-                  fullWidth
-                  helperText={touched.confirmPassword && errors.confirmPassword}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="password"
-                  variant="outlined"
-                  my={2}
-                />
-                <Button type="submit" variant="contained" color="error" mt={3}>
-                  Spremi
-                </Button>
-                &nbsp; &nbsp;
-                <Button
-                  onClick={() => navigate("/tables/data-grid")}
-                  style={{ backgroundColor: "black" }}
-                  type="button"
-                  variant="contained"
-                  mt={3}
-                >
-                  Odustani
-                </Button>
-              </form>
-            )}
-          </CardContent>
-        </Card>
-      )}
-    </Formik>
+                  <Divider style={{ marginTop: "20px" }} />
+                  <Grid item>
+                    <Typography gutterBottom display="inline">
+                      <h3>Parametri zahtjeva</h3>
+                    </Typography>
+                  </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="name"
+                        label="Naziv"
+                        //value={values.firstName}
+                        error={Boolean(touched.firstName && errors.firstName)}
+                        fullWidth
+                        helperText={touched.firstName && errors.firstName}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="value"
+                        label="Vrijednost"
+                        //value={values.firstName}
+                        error={Boolean(touched.firstName && errors.firstName)}
+                        fullWidth
+                        helperText={touched.firstName && errors.firstName}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                    <Grid item md={2}>
+                      <Button
+                        onClick={handleClick}
+                        variant="contained"
+                        type="button"
+                        color="error"
+                        style={{ marginTop: "14px" }}
+                      >
+                        <AddIcon />
+                        Dodaj
+                      </Button>
+                    </Grid>
+                    {Array.from(Array(counter)).map((c, index) => {
+                      return (
+                        <>
+                          <Grid
+                            style={{ marginLeft: "1px" }}
+                            container
+                            spacing={6}
+                          >
+                            <Grid item md={4}>
+                              <CssTextField
+                                focusColor="black"
+                                name="name"
+                                label="Naziv"
+                                //value={values.firstName}
+                                error={Boolean(
+                                  touched.firstName && errors.firstName
+                                )}
+                                fullWidth
+                                helperText={
+                                  touched.firstName && errors.firstName
+                                }
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                variant="outlined"
+                                my={2}
+                              />
+                            </Grid>
+                            <Grid item md={4}>
+                              <CssTextField
+                                focusColor="black"
+                                name="value"
+                                label="Vrijednost"
+                                //value={values.firstName}
+                                error={Boolean(
+                                  touched.firstName && errors.firstName
+                                )}
+                                fullWidth
+                                helperText={
+                                  touched.firstName && errors.firstName
+                                }
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                variant="outlined"
+                                my={2}
+                              />
+                            </Grid>
+                          </Grid>
+                        </>
+                      );
+                    })}
+                  </Grid>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="error"
+                    mt={3}
+                  >
+                    Spremi
+                  </Button>
+                  &nbsp; &nbsp;
+                  <Button
+                    onClick={() => navigate("/requests")}
+                    style={{ backgroundColor: "black" }}
+                    type="button"
+                    variant="contained"
+                    mt={3}
+                  >
+                    Odustani
+                  </Button>
+                </form>
+              )}
+            </CardContent>
+          </Card>
+        )}
+      </Formik>
+    </>
   );
 }
 
 function FormikPage() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
   return (
     <React.Fragment>
       <Helmet title="Formik" />
       <Typography variant="h3" gutterBottom display="inline">
-        Novi korisnik
+        Status
       </Typography>
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
         <Link component={NavLink} to="/home">
@@ -248,10 +401,10 @@ function FormikPage() {
         <Link component={NavLink} to="/requests">
           Zahtjevi
         </Link>
-        <Link component={NavLink} onClick={() => history.goBack()}>
-          Detalji zahtjeva
-        </Link>
-        <Typography>status</Typography>
+        {/* <Link component={NavLink} to={() => navigate.goBack()}>
+          Detalji 
+        </Link> */}
+        <Typography>Status</Typography>
       </Breadcrumbs>
 
       <Divider my={6} />

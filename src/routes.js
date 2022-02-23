@@ -64,6 +64,8 @@ const DataGridRequests = async(() =>
   import("./pages/tables/Requests/DataGridRequests")
 );
 
+const AddStatus = async(() => import("./pages/tables/Requests/AddStatus"));
+
 const DataGridFaultOrders = async(() =>
   import("./pages/tables/FaultOrders/DataGridFaultOrders")
 );
@@ -137,6 +139,10 @@ const routes = [
       {
         path: "details/:id",
         element: <RequestDetail />,
+      },
+      {
+        path: "add-status",
+        element: <AddStatus />,
       },
     ],
   },
