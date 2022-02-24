@@ -132,7 +132,7 @@ function BasicForm() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    navigate("/requests");
+    navigate(-1);
   };
 
   return (
@@ -415,9 +415,9 @@ function FormikPage() {
         <Link component={NavLink} to="/requests">
           Zahtjevi
         </Link>
-        {/* <Link component={NavLink} to={() => navigate.goBack()}>
-          Detalji 
-        </Link> */}
+        <Link component={NavLink} to={-1}>
+          Detalji
+        </Link>
         <Typography>Status</Typography>
       </Breadcrumbs>
 
