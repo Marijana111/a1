@@ -24,8 +24,19 @@ import {
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { DatePicker, DateTimePicker } from "@mui/lab";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const Divider = styled(MuiDivider)(spacing);
 
@@ -65,38 +76,22 @@ const CssTextField = styled(TextField, {
 }));
 
 const initialValues = {
-  firstName: "Lucy",
-  lastName: "Lavender",
-  email: "lucylavender@gmail.com",
-  password: "mypassword123",
-  confirmPassword: "mypassword123",
+  name: "",
+  value: "",
 };
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required("Obavezno polje!"),
-  lastName: Yup.string().required("Obavezno polje!"),
-  email: Yup.string()
-    .email("Unesite validan email.")
-    .required("Obavezno polje!"),
-  password: Yup.string()
-    .min(12, "Minimalno 12 znakova.")
-    .max(255)
-    .required("Obavezno polje!"),
-  confirmPassword: Yup.string().when("password", {
-    is: (val) => (val && val.length > 0 ? true : false),
-    then: Yup.string().oneOf(
-      [Yup.ref("password")],
-      "Lozinke trebaju biti iste."
-    ),
-  }),
+  name: Yup.string().required("Obavezno polje!"),
+  value: Yup.string().required("Obavezno polje!"),
 });
 
 function BasicForm() {
   const { state } = useLocation();
-  const [operatorValue, setOperatorValue] = useState(null);
   const [valueDateFrom, setValueDateFrom] = useState(new Date());
   const [counter, setCounter] = useState(0);
-  const [locale, setLocale] = useState("fr");
+  const [statusValue, setStatusValue] = useState(null);
+  const [descriptionValue, setDescriptionValue] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const optionsStatus = [
     { value: "PRIHVAĆEN", name: "PRIHVAĆEN" },
@@ -119,9 +114,9 @@ function BasicForm() {
   ) => {
     try {
       await timeOut(1500);
-      resetForm();
       setStatus({ sent: true });
       setSubmitting(false);
+      setOpenDialog(true);
     } catch (error) {
       setStatus({ sent: false });
       setErrors({ submit: error.message });
@@ -133,7 +128,11 @@ function BasicForm() {
 
   const handleClick = () => {
     setCounter(counter + 1);
-    console.log(counter);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate("/requests");
   };
 
   return (
@@ -141,7 +140,7 @@ function BasicForm() {
       <Card mb={6}>
         <CardContent>
           {state.requestDetails && (
-            <Grid container spacing={6}>
+            <Grid style={{ fontSize: "14px" }} container spacing={6}>
               <Grid item md={6}>
                 <div>
                   <b>GUID:</b> {state.requestDetails.requestGuid}
@@ -179,9 +178,25 @@ function BasicForm() {
           <Card mb={6}>
             <CardContent>
               {status && status.sent && (
-                <Alert severity="success" my={3}>
-                  [DEMO] Uspješno ste dodali status!
-                </Alert>
+                <>
+                  <BootstrapDialog
+                    onClose={handleCloseDialog}
+                    aria-labelledby="customized-dialog-title"
+                    open={openDialog}
+                  >
+                    <DialogTitle>Uspješno</DialogTitle>
+                    <DialogContent dividers>
+                      <Alert severity="success" my={3}>
+                        Uspješno ste dodali status!{" "}
+                      </Alert>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button autoFocus onClick={handleCloseDialog}>
+                        OK
+                      </Button>
+                    </DialogActions>
+                  </BootstrapDialog>
+                </>
               )}
 
               {isSubmitting ? (
@@ -201,11 +216,10 @@ function BasicForm() {
                         focusColor="black"
                         name="status"
                         label="Status"
-                        value={operatorValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
                         fullWidth
+                        value={statusValue}
                         onChange={(event) => {
-                          setOperatorValue(event.target.value);
+                          setStatusValue(event.target.value);
                         }}
                         variant="outlined"
                         select
@@ -222,12 +236,11 @@ function BasicForm() {
                         focusColor="black"
                         name="description"
                         label="Opis"
-                        value={operatorValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
+                        value={descriptionValue}
                         onChange={(event) => {
-                          setOperatorValue(event.target.value);
+                          setDescriptionValue(event.target.value);
                         }}
+                        fullWidth
                         variant="outlined"
                         select
                       >
@@ -239,21 +252,18 @@ function BasicForm() {
                       </CssTextField>
                     </Grid>
                     <Grid item md={3}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                          label="Datum"
-                          inputFormat="dd.MM.yyyy. hh:mm:ss"
-                          fullWidth
-                          ampm={false}
-                          ampmInClock={false}
-                          value={valueDateFrom}
-                          ampm
-                          onChange={(newValue) => {
-                            setValueDateFrom(newValue);
-                          }}
-                          renderInput={(params) => <TextField {...params} />}
-                        />
-                      </LocalizationProvider>
+                      <DateTimePicker
+                        name="date"
+                        label="Datum"
+                        inputFormat="dd.MM.yyyy. hh:mm:ss a"
+                        fullWidth
+                        value={valueDateFrom}
+                        ampm
+                        onChange={(newValue) => {
+                          setValueDateFrom(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
                     </Grid>
                   </Grid>
                   <Divider style={{ marginTop: "20px" }} />
@@ -268,10 +278,12 @@ function BasicForm() {
                         focusColor="black"
                         name="name"
                         label="Naziv"
-                        //value={values.firstName}
-                        error={Boolean(touched.firstName && errors.firstName)}
+                        value={values.name}
+                        error={Boolean(errors.name)}
                         fullWidth
-                        helperText={touched.firstName && errors.firstName}
+                        helperText={
+                          touched.name && values.name == "" && errors.name
+                        }
                         onBlur={handleBlur}
                         onChange={handleChange}
                         variant="outlined"
@@ -283,10 +295,12 @@ function BasicForm() {
                         focusColor="black"
                         name="value"
                         label="Vrijednost"
-                        //value={values.firstName}
-                        error={Boolean(touched.firstName && errors.firstName)}
+                        value={values.value}
+                        error={Boolean(errors.value)}
                         fullWidth
-                        helperText={touched.firstName && errors.firstName}
+                        helperText={
+                          touched.value && values.value == "" && errors.value
+                        }
                         onBlur={handleBlur}
                         onChange={handleChange}
                         variant="outlined"

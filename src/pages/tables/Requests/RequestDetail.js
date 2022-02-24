@@ -83,7 +83,7 @@ function EmptyCard() {
         <Card mb={6}>
           <CardContent>
             {requestDetails && (
-              <Grid container spacing={6}>
+              <Grid style={{ fontSize: "14px" }} container spacing={6}>
                 <Grid item md={6}>
                   <div>
                     <b>Case Id:</b> {requestDetails.requestId}
