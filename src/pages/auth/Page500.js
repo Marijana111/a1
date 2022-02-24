@@ -35,7 +35,7 @@ function Page500() {
 
       <Button
         component={Link}
-        to="/"
+        to="/home"
         variant="contained"
         color="secondary"
         mt={2}

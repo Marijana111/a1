@@ -11,7 +11,7 @@ const users = [
   {
     id: "a8553063-7bd5-45ed-adbe-db6f069a3802",
     displayName: "Lucy Lavender",
-    email: "demo@bootlab.io",
+    email: "test@test.com",
     password: "1234",
     avatar: "/static/img/avatars/avatar-1.jpg",
   },

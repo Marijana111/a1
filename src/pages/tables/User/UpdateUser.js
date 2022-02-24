@@ -128,7 +128,7 @@ const UpdateUser = () => {
       </Typography>
       <Breadcrumbs aria-label="Breadcrumb" mt={2}>
         <Link component={NavLink} to="/">
-          Naslovnica
+          Naslovna
         </Link>
         <Link component={NavLink} to="/users">
           Korisnici

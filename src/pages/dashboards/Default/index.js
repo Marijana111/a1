@@ -28,7 +28,7 @@ function Default() {
       <Grid justifyContent="space-between" container spacing={6}>
         <Grid item>
           <Typography variant="h3" gutterBottom>
-            Naslovnica
+            Naslovna
           </Typography>
         </Grid>
 
