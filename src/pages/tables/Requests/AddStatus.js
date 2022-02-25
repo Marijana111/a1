@@ -28,6 +28,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import Delete from "@mui/icons-material/Delete";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -76,13 +77,13 @@ const CssTextField = styled(TextField, {
 }));
 
 const initialValues = {
-  name: "",
-  value: "",
+  name: null,
+  value: null,
 };
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Obavezno polje!"),
-  value: Yup.string().required("Obavezno polje!"),
+  name: Yup.string(),
+  value: Yup.string(),
 });
 
 function BasicForm() {
@@ -92,6 +93,12 @@ function BasicForm() {
   const [statusValue, setStatusValue] = useState(null);
   const [descriptionValue, setDescriptionValue] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [valuesForm, setValuesForm] = useState([
+    {
+      name: null,
+      value: null,
+    },
+  ]);
 
   const optionsStatus = [
     { value: "PRIHVAĆEN", name: "PRIHVAĆEN" },
@@ -112,6 +119,8 @@ function BasicForm() {
     values,
     { resetForm, setErrors, setStatus, setSubmitting }
   ) => {
+    valuesForm.shift();
+    console.log("valuesForm", valuesForm);
     try {
       await timeOut(1500);
       setStatus({ sent: true });
@@ -126,13 +135,36 @@ function BasicForm() {
 
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = (values) => {
+    setValuesForm([
+      ...valuesForm,
+      {
+        name: values.name,
+        value: values.value,
+      },
+    ]);
+    valuesForm.shift();
+
+    values.name = "";
+    values.value = "";
     setCounter(counter + 1);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     navigate(-1);
+  };
+
+  const handleDeleteParameter = (i) => {
+    console.log("iiiii", i);
+    // let index = i;
+    // if (i > 1) {
+    //   index = i - 1;
+    // }
+
+    // let newArray = [];
+    // newArray = valuesForm.splice(index, 1);
+    // setValuesForm(newArray);
   };
 
   return (
@@ -279,11 +311,11 @@ function BasicForm() {
                         name="name"
                         label="Naziv"
                         value={values.name}
-                        error={Boolean(errors.name)}
+                        //error={Boolean(errors.name)}
                         fullWidth
-                        helperText={
-                          touched.name && values.name == "" && errors.name
-                        }
+                        // helperText={
+                        //   touched.name && values.name == "" && errors.name
+                        // }
                         onBlur={handleBlur}
                         onChange={handleChange}
                         variant="outlined"
@@ -296,11 +328,11 @@ function BasicForm() {
                         name="value"
                         label="Vrijednost"
                         value={values.value}
-                        error={Boolean(errors.value)}
+                        //error={Boolean(errors.value)}
                         fullWidth
-                        helperText={
-                          touched.value && values.value == "" && errors.value
-                        }
+                        // helperText={
+                        //   touched.value && values.value == "" && errors.value
+                        // }
                         onBlur={handleBlur}
                         onChange={handleChange}
                         variant="outlined"
@@ -309,7 +341,7 @@ function BasicForm() {
                     </Grid>
                     <Grid item md={2}>
                       <Button
-                        onClick={handleClick}
+                        onClick={() => handleClick(values, initialValues)}
                         variant="contained"
                         type="button"
                         color="error"
@@ -319,56 +351,62 @@ function BasicForm() {
                         Dodaj
                       </Button>
                     </Grid>
-                    {Array.from(Array(counter)).map((c, index) => {
-                      return (
-                        <>
-                          <Grid
-                            style={{ marginLeft: "1px" }}
-                            container
-                            spacing={6}
-                          >
-                            <Grid item md={4}>
-                              <CssTextField
-                                focusColor="black"
-                                name="name"
-                                label="Naziv"
-                                //value={values.firstName}
-                                error={Boolean(
-                                  touched.firstName && errors.firstName
-                                )}
-                                fullWidth
-                                helperText={
-                                  touched.firstName && errors.firstName
-                                }
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                variant="outlined"
-                                my={2}
-                              />
+                    {/* {Array.from(Array(counter)).map((c, index) => {
+                      return ( */}
+                    <>
+                      {valuesForm &&
+                        valuesForm.map((element, i) =>
+                          element.name !== null ? (
+                            <Grid
+                              style={{ marginLeft: "1px" }}
+                              container
+                              spacing={6}
+                            >
+                              <Grid item md={4}>
+                                <CssTextField
+                                  disabled
+                                  focusColor="black"
+                                  name="name"
+                                  label="Naziv"
+                                  value={element.name}
+                                  fullWidth
+                                  variant="outlined"
+                                  my={2}
+                                />
+                              </Grid>
+                              <Grid item md={4}>
+                                <CssTextField
+                                  disabled
+                                  focusColor="black"
+                                  name="value"
+                                  label="Vrijednost"
+                                  value={element.value}
+                                  fullWidth
+                                  variant="outlined"
+                                  my={2}
+                                />
+                              </Grid>
+                              <Grid style={{ paddingLeft: "0px" }} item md={1}>
+                                <Button
+                                  type="button"
+                                  onClick={() => handleDeleteParameter(i)}
+                                >
+                                  <Delete
+                                    style={{
+                                      color: "black",
+                                      marginTop: "13px",
+                                    }}
+                                  />
+                                </Button>
+                              </Grid>
                             </Grid>
-                            <Grid item md={4}>
-                              <CssTextField
-                                focusColor="black"
-                                name="value"
-                                label="Vrijednost"
-                                //value={values.firstName}
-                                error={Boolean(
-                                  touched.firstName && errors.firstName
-                                )}
-                                fullWidth
-                                helperText={
-                                  touched.firstName && errors.firstName
-                                }
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                variant="outlined"
-                                my={2}
-                              />
-                            </Grid>
-                          </Grid>
-                        </>
-                      );
-                    })}
+                          ) : (
+                            ""
+                          )
+                        )}
+                    </>
+                    {/* );
+                     })} */}
                   </Grid>
                   <Button
                     type="submit"
