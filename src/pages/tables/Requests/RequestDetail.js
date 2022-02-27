@@ -136,7 +136,7 @@ function EmptyCard() {
               </TableHead>
               <TableBody>
                 {requestParams.map((row) => (
-                  <TableRow key={row.parameterName}>
+                  <TableRow key={row.statusId}>
                     <CustomTableCell component="th" scope="row">
                       {row.parameterName}
                     </CustomTableCell>

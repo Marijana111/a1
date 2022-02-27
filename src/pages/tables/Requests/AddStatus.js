@@ -89,10 +89,11 @@ const validationSchema = Yup.object().shape({
 function BasicForm() {
   const { state } = useLocation();
   const [valueDateFrom, setValueDateFrom] = useState(new Date());
-  const [counter, setCounter] = useState(0);
+
   const [statusValue, setStatusValue] = useState(null);
   const [descriptionValue, setDescriptionValue] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [message, setMessage] = useState("");
   const [valuesForm, setValuesForm] = useState([
     {
       name: null,
@@ -120,7 +121,6 @@ function BasicForm() {
     { resetForm, setErrors, setStatus, setSubmitting }
   ) => {
     valuesForm.shift();
-    console.log("valuesForm", valuesForm);
     try {
       await timeOut(1500);
       setStatus({ sent: true });
@@ -136,35 +136,30 @@ function BasicForm() {
   const navigate = useNavigate();
 
   const handleClick = (values) => {
-    setValuesForm([
-      ...valuesForm,
-      {
-        name: values.name,
-        value: values.value,
-      },
-    ]);
-    valuesForm.shift();
+    let index;
 
-    values.name = "";
-    values.value = "";
-    setCounter(counter + 1);
+    index = valuesForm.findIndex((x) => x.name === values.name);
+
+    if (index == -1 && (values.name !== "" || values.value !== "")) {
+      setValuesForm([
+        ...valuesForm,
+        {
+          name: values.name,
+          value: values.value,
+        },
+      ]);
+      valuesForm.shift();
+      setMessage("");
+      values.name = "";
+      values.value = "";
+    } else {
+      setMessage("Parametar s tim nazivom već postoji.");
+    }
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     navigate(-1);
-  };
-
-  const handleDeleteParameter = (i) => {
-    console.log("iiiii", i);
-    // let index = i;
-    // if (i > 1) {
-    //   index = i - 1;
-    // }
-
-    // let newArray = [];
-    // newArray = valuesForm.splice(index, 1);
-    // setValuesForm(newArray);
   };
 
   return (
@@ -311,16 +306,24 @@ function BasicForm() {
                         name="name"
                         label="Naziv"
                         value={values.name}
-                        //error={Boolean(errors.name)}
                         fullWidth
-                        // helperText={
-                        //   touched.name && values.name == "" && errors.name
-                        // }
-                        onBlur={handleBlur}
                         onChange={handleChange}
                         variant="outlined"
                         my={2}
                       />
+                      {message ? (
+                        <p
+                          style={{
+                            fontSize: "10px",
+                            color: "red",
+                            marginTop: "0px",
+                          }}
+                        >
+                          {message}
+                        </p>
+                      ) : (
+                        ""
+                      )}
                     </Grid>
                     <Grid item md={4}>
                       <CssTextField
@@ -341,7 +344,8 @@ function BasicForm() {
                     </Grid>
                     <Grid item md={2}>
                       <Button
-                        onClick={() => handleClick(values, initialValues)}
+                        disabled={values.name == "" || values.value == ""}
+                        onClick={() => handleClick(values)}
                         variant="contained"
                         type="button"
                         color="error"
@@ -351,11 +355,9 @@ function BasicForm() {
                         Dodaj
                       </Button>
                     </Grid>
-                    {/* {Array.from(Array(counter)).map((c, index) => {
-                      return ( */}
                     <>
                       {valuesForm &&
-                        valuesForm.map((element, i) =>
+                        valuesForm.map((element) =>
                           element.name !== null ? (
                             <Grid
                               style={{ marginLeft: "1px" }}
@@ -389,7 +391,13 @@ function BasicForm() {
                               <Grid style={{ paddingLeft: "0px" }} item md={1}>
                                 <Button
                                   type="button"
-                                  onClick={() => handleDeleteParameter(i)}
+                                  onClick={() => {
+                                    let filteredArrayParams;
+                                    filteredArrayParams = valuesForm.filter(
+                                      (param) => param.name !== element.name
+                                    );
+                                    setValuesForm(filteredArrayParams);
+                                  }}
                                 >
                                   <Delete
                                     style={{
@@ -405,8 +413,6 @@ function BasicForm() {
                           )
                         )}
                     </>
-                    {/* );
-                     })} */}
                   </Grid>
                   <Button
                     type="submit"
@@ -418,7 +424,7 @@ function BasicForm() {
                   </Button>
                   &nbsp; &nbsp;
                   <Button
-                    onClick={() => navigate("/requests")}
+                    onClick={() => navigate(-1)}
                     style={{ backgroundColor: "black" }}
                     type="button"
                     variant="contained"
