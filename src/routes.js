@@ -68,6 +68,9 @@ const AddStatus = async(() => import("./pages/tables/Requests/AddStatus"));
 const DataGridFaultOrders = async(() =>
   import("./pages/tables/FaultOrders/DataGridFaultOrders")
 );
+const AddStatusFaulOrders = async(() =>
+  import("./pages/tables/FaultOrders/AddStatus")
+);
 
 const DataGridReportOrders = async(() =>
   import("./pages/tables/ReportOrders/DataGridReportOrders")
@@ -161,6 +164,10 @@ const routes = [
       {
         path: "details/:id",
         element: <FaultOrderDetail />,
+      },
+      {
+        path: "add-status",
+        element: <AddStatusFaulOrders />,
       },
     ],
   },

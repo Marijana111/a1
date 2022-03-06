@@ -168,21 +168,21 @@ function BasicForm() {
     <>
       <Card mb={6}>
         <CardContent>
-          {state.requestDetails && (
+          {state.faultOrderDetails && (
             <Grid style={{ fontSize: "14px" }} container spacing={6}>
               <Grid item md={6}>
                 <div>
-                  <b>GUID:</b> {state.requestDetails.requestGuid}
+                  <b>GUID:</b> {state.faultOrderDetails.requestGuid}
                 </div>
                 <div>
-                  <b>Naziv operatora:</b> {state.requestDetails.operatorName}
+                  <b>Naziv operatora:</b> {state.faultOrderDetails.operatorName}
                 </div>
                 <div>
                   <b>Identifikator operatora:</b>{" "}
-                  {state.requestDetails.operatorRef}
+                  {state.faultOrderDetails.operatorRef}
                 </div>
                 <div>
-                  <b>Vrsta zahtjeva:</b> {state.requestDetails.requestType}
+                  <b>Vrsta zahtjeva:</b> {state.faultOrderDetails.requestType}
                 </div>
               </Grid>
             </Grid>
@@ -474,8 +474,8 @@ function FormikPage() {
         <Link component={NavLink} to="/home">
           Naslovna
         </Link>
-        <Link component={NavLink} to="/requests">
-          Zahtjevi
+        <Link component={NavLink} to="/fault-orders">
+          Smetnje
         </Link>
         <Link component={NavLink} to={-1}>
           Detalji
