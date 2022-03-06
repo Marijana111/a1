@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as dateHelper from "../../../components/Config/DateHelper";
+import AddIcon from "@mui/icons-material/Add";
 
 import {
   CardContent,
@@ -19,6 +20,7 @@ import {
   TableHead,
   TableRow,
   LinearProgress,
+  Button,
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { tableCellClasses } from "@mui/material/TableCell";
@@ -45,6 +47,7 @@ const CustomTableCell = styled(TableCell)`
 
 function EmptyCard() {
   const { state } = useLocation();
+  const navigate = useNavigate();
 
   let requestId = state.requestId;
 
@@ -147,9 +150,31 @@ function EmptyCard() {
           </CardContent>
           <Divider />
           <CardContent>
-            <Typography gutterBottom display="inline">
-              <h3>Statusi smetnje</h3>
-            </Typography>
+            <Grid justifyContent="space-between" container spacing={10}>
+              <Grid item>
+                <Typography gutterBottom display="inline">
+                  <h3>Statusi smetnje</h3>
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={() =>
+                    navigate(`/fault-orders/add-status`, {
+                      state: {
+                        faultOrderDetails: faultOrderDetails,
+                      },
+                    })
+                  }
+                  variant="contained"
+                  type="button"
+                  color="error"
+                  style={{ float: "right" }}
+                >
+                  <AddIcon />
+                  Dodaj status
+                </Button>
+              </Grid>
+            </Grid>
             <Table>
               <TableHead>
                 <TableRow>
