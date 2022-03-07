@@ -87,6 +87,18 @@ function DataGridDemo() {
   const [operatorValue, setOperatorValue] = useState(null);
   const [operatorsOptions, setOperatorsOptions] = useState([]);
   const [requestTypesOptions, setRequestTypesOptions] = useState([]);
+  const [search, setSearch] = useState({
+    caseId: "",
+    guid: "",
+    adapterId: "",
+    dateFrom: null,
+    dateTo: null,
+    operator: 0,
+    type: 0,
+    category: 0,
+    status: 0,
+    statusInt: 0,
+  });
 
   useEffect(() => {
     faultOrdersService
@@ -110,7 +122,7 @@ function DataGridDemo() {
         setRequestTypesOptions(res.data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [search, update]);
 
   const columns = [
     { field: "requestId", headerName: "Case Id", width: 105 },
@@ -242,11 +254,10 @@ function DataGridDemo() {
                       name="searchName"
                       label="Case Id"
                       //value={values.firstName}
-                      //error={Boolean(touched.firstName && errors.firstName)}
                       fullWidth
-                      //helperText={touched.firstName && errors.firstName}
-                      //onBlur={handleBlur}
-                      //onChange={handleChange}
+                      onChange={(event) => {
+                        setSearch({ ...search, caseId: event.target.value });
+                      }}
                       variant="outlined"
                     />
                   </Grid>
@@ -256,11 +267,10 @@ function DataGridDemo() {
                       name="searchPhone"
                       label="GUID"
                       //value={values.lastName}
-                      //error={Boolean(touched.lastName && errors.lastName)}
                       fullWidth
-                      //helperText={touched.lastName && errors.lastName}
-                      //onBlur={handleBlur}
-                      //onChange={handleChange}
+                      onChange={(event) => {
+                        setSearch({ ...search, guid: event.target.value });
+                      }}
                       variant="outlined"
                     />
                   </Grid>
@@ -270,11 +280,10 @@ function DataGridDemo() {
                       name="searchPhone"
                       label="Adapter Id"
                       //value={values.lastName}
-                      //error={Boolean(touched.lastName && errors.lastName)}
                       fullWidth
-                      //helperText={touched.lastName && errors.lastName}
-                      //onBlur={handleBlur}
-                      //onChange={handleChange}
+                      onChange={(event) => {
+                        setSearch({ ...search, adapterId: event.target.value });
+                      }}
                       variant="outlined"
                     />
                   </Grid>
@@ -286,6 +295,7 @@ function DataGridDemo() {
                       value={valueDateFrom}
                       onChange={(newValue) => {
                         setValueDateFrom(newValue);
+                        setSearch({ ...search, dateFrom: newValue });
                       }}
                       renderInput={(params) => <TextField {...params} />}
                     />
@@ -299,6 +309,7 @@ function DataGridDemo() {
                       value={valueDateTo}
                       onChange={(newValue) => {
                         setValueDateTo(newValue);
+                        setSearch({ ...search, dateTo: newValue });
                       }}
                       renderInput={(params) => <TextField {...params} />}
                     />
@@ -319,10 +330,15 @@ function DataGridDemo() {
                         fullWidth
                         onChange={(event) => {
                           setOperatorValue(event.target.value);
+                          setSearch({
+                            ...search,
+                            operator: event.target.value,
+                          });
                         }}
                         variant="outlined"
                         select
                       >
+                        <MenuItem value={0}>Odaberite operatora</MenuItem>
                         {operatorsOptions.map((status) => (
                           <MenuItem
                             key={status.operatorName}
@@ -344,10 +360,15 @@ function DataGridDemo() {
                         fullWidth
                         onChange={(event) => {
                           setRequestTypeValue(event.target.value);
+                          setSearch({
+                            ...search,
+                            type: event.target.value,
+                          });
                         }}
                         variant="outlined"
                         select
                       >
+                        <MenuItem value={0}>Odaberite vrstu</MenuItem>
                         {requestTypesOptions.map((status) => (
                           <MenuItem
                             key={status.requestTypeName}
@@ -368,10 +389,15 @@ function DataGridDemo() {
                         fullWidth
                         onChange={(event) => {
                           setCategoryValue(event.target.value);
+                          setSearch({
+                            ...search,
+                            category: event.target.value,
+                          });
                         }}
                         variant="outlined"
                         select
                       >
+                        <MenuItem value={0}>Odaberite kategoriju</MenuItem>
                         {optionsCategory.map((status) => (
                           <MenuItem key={status.value} value={status.value}>
                             {status.name}
@@ -389,10 +415,15 @@ function DataGridDemo() {
                         fullWidth
                         onChange={(event) => {
                           setStatusValue(event.target.value);
+                          setSearch({
+                            ...search,
+                            status: event.target.value,
+                          });
                         }}
                         variant="outlined"
                         select
                       >
+                        <MenuItem value={0}>Odaberite status</MenuItem>
                         {optionsStatus.map((status) => (
                           <MenuItem key={status.value} value={status.value}>
                             {status.name}
@@ -410,10 +441,15 @@ function DataGridDemo() {
                         fullWidth
                         onChange={(event) => {
                           setStatusIntValue(event.target.value);
+                          setSearch({
+                            ...search,
+                            statusInt: event.target.value,
+                          });
                         }}
                         variant="outlined"
                         select
                       >
+                        <MenuItem value={0}>Odaberite status interno</MenuItem>
                         {optionsStatusInt.map((status) => (
                           <MenuItem key={status.value} value={status.value}>
                             {status.name}
