@@ -5,6 +5,7 @@ export const requestService = {
   getRequests,
   getRequestById,
   getRequestByIdDetails,
+  createStatus,
 };
 
 async function getRequests(
@@ -72,6 +73,25 @@ async function getRequestById(id) {
 async function getRequestByIdDetails(id) {
   return axios
     .get(`${requestsURL}/${id}/details`)
+    .then((res) => res)
+    .catch((err) => err);
+}
+
+async function createStatus({
+  attachments,
+  data,
+  operator,
+  requestId,
+  status,
+}) {
+  return axios
+    .post(`${requestsURL}`, {
+      attachments,
+      data,
+      operator,
+      requestId,
+      status,
+    })
     .then((res) => res)
     .catch((err) => err);
 }
