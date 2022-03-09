@@ -20,45 +20,11 @@ async function getRequests(
   status,
   statusInt
 ) {
-  //   let getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId`;
-  //   switch (getUrl) {
-  //     case caseId:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&caseID=${caseId}`;
-  //       break;
-  //     case guid:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&requestGuid=${guid}`;
-  //       break;
-  //     case adapterId:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&adapterId=${adapterId}`;
-  //       break;
-  //     case dateFrom:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&requestDateInsert=${dateFrom}`;
-  //       break;
-  //     case dateTo:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&requestDateFinish=${dateTo}`;
-  //       break;
-  //     case operator:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&operatorName=${operator}`;
-  //       break;
-  //     case type:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&requestType=${type}`;
-  //       break;
-  //     case category:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&requestCategory=${category}`;
-  //       break;
-  //     case status:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&statusName=${status}`;
-  //       break;
-  //     case statusInt:
-  //       getUrl = `${requestsURL}?numRecords=10000&sortBy=-requestId&statusRef=${statusInt}`;
-  //       break;
-  //     default:
-  //       getUrl = getUrl;
-  //   }
+  let url = `${requestsURL}?numRecords=10000&sortBy=-requestId&caseId=${caseId}&requestGuid=${guid}&adapterId=${adapterId}&requestDateInsert=${dateFrom}&requestDateFinish=${dateTo}&operatorName=${operator}&requestType=${type}&requestCategory=${category}&statusName=${status}&statusRef=${statusInt}`;
+  url.replace(/[^=&]+=(?:&|$)/g, "");
+  console.log("url", url);
   return axios
-    .get(
-      `${requestsURL}?numRecords=10000&sortBy=-requestId&caseId=${caseId}&requestGuid=${guid}&adapterId=${adapterId}&requestDateInsert=${dateFrom}&requestDateFinish=${dateTo}&operatorName=${operator}&requestType=${type}&requestCategory=${category}&statusName=${status}&statusRef=${statusInt}`
-    )
+    .get(url)
     .then((res) => res)
     .catch((err) => err);
 }

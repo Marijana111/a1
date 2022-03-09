@@ -86,6 +86,7 @@ function DataGridDemo() {
   const [operatorValue, setOperatorValue] = useState(null);
   const [operatorsOptions, setOperatorsOptions] = useState([]);
   const [requestTypesOptions, setRequestTypesOptions] = useState([]);
+  const [pageSize, setPageSize] = useState(5);
   const [search, setSearch] = useState({
     caseId: "",
     guid: "",
@@ -497,10 +498,12 @@ function DataGridDemo() {
             ) : (
               <DataGrid
                 disableColumnMenu
+                rowsPerPageOptions={[5, 10, 15, 20]}
                 getRowId={(r) => r.requestId}
                 rows={requests}
                 columns={columns}
-                pageSize={5}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                pageSize={pageSize}
                 hideFooterSelectedRowCount
               />
             )}
