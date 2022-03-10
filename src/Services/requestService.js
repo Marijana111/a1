@@ -20,8 +20,45 @@ async function getRequests(
   status,
   statusInt
 ) {
-  let url = `${requestsURL}?numRecords=10000&sortBy=-requestId&caseId=${caseId}&requestGuid=${guid}&adapterId=${adapterId}&requestDateInsert=${dateFrom}&requestDateFinish=${dateTo}&operatorName=${operator}&requestType=${type}&requestCategory=${category}&statusName=${status}&statusRef=${statusInt}`;
-  url.replace(/[^=&]+=(?:&|$)/g, "");
+  /////// dodatno
+  const x = {
+    requestId: caseId,
+    guid: guid,
+    adapterId: adapterId,
+    dateFrom: dateFrom,
+    dateTo: dateTo,
+    operator: operator,
+    type: type,
+    category: category,
+    status: status,
+    statusInt: statusInt,
+  };
+
+  let params = new URLSearchParams(x);
+  let keysForDel = [];
+  params.forEach((value, key) => {
+    if (value == "") {
+      keysForDel.push(key);
+    }
+    if (value == 0) {
+      keysForDel.push(key);
+    }
+    if (value == "null") {
+      keysForDel.push(key);
+    }
+  });
+
+  keysForDel.forEach((key) => {
+    params.delete(key);
+  });
+
+  console.log(params.toString());
+
+  let myParams = params == "" ? "" : "&" + params.toString();
+  ////dodatno
+
+  //let url = `${requestsURL}?numRecords=10000&sortBy=requestId&requestId=${caseId}&requestGuid=${guid}&adapterId=${adapterId}&requestDateInsert=${dateFrom}&requestDateFinish=${dateTo}&operatorName=${operator}&requestType=${type}&requestCategory=${category}&statusName=${status}&statusRef=${statusInt}`;
+  let url = `${requestsURL}?numRecords=10000&sortBy=requestId${myParams}`;
   console.log("url", url);
   return axios
     .get(url)
