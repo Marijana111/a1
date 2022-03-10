@@ -28,6 +28,7 @@ import { green, orange, red, grey } from "@mui/material/colors";
 import { DatePicker } from "@mui/lab";
 import { selectService } from "../../../Services/selectService";
 import { faultOrdersService } from "../../../Services/faultOrdersService";
+import * as dateHelper from "../../../components/Config/DateHelper";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -159,7 +160,7 @@ function DataGridDemo() {
       field: "requestDateInsert",
       headerName: "Vrijeme",
       type: "dateTime",
-      valueGetter: ({ value }) => value && new Date(value),
+      valueGetter: ({ value }) => value && dateHelper.formatUtcToDate(value),
       width: 180,
     },
     {

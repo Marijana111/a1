@@ -20,7 +20,6 @@ async function getRequests(
   status,
   statusInt
 ) {
-  /////// dodatno
   const x = {
     requestId: caseId,
     guid: guid,
@@ -55,9 +54,7 @@ async function getRequests(
   console.log(params.toString());
 
   let myParams = params == "" ? "" : "&" + params.toString();
-  ////dodatno
 
-  //let url = `${requestsURL}?numRecords=10000&sortBy=requestId&requestId=${caseId}&requestGuid=${guid}&adapterId=${adapterId}&requestDateInsert=${dateFrom}&requestDateFinish=${dateTo}&operatorName=${operator}&requestType=${type}&requestCategory=${category}&statusName=${status}&statusRef=${statusInt}`;
   let url = `${requestsURL}?numRecords=10000&sortBy=requestId${myParams}`;
   console.log("url", url);
   return axios

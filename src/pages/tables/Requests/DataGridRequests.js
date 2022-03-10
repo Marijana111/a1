@@ -27,6 +27,7 @@ import { FilterList, RemoveRedEye } from "@mui/icons-material";
 import { green, orange, red, grey } from "@mui/material/colors";
 import { DatePicker } from "@mui/lab";
 import { selectService } from "../../../Services/selectService";
+import * as dateHelper from "../../../components/Config/DateHelper";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -181,7 +182,7 @@ function DataGridDemo() {
       field: "requestDateInsert",
       headerName: "Vrijeme",
       type: "dateTime",
-      valueGetter: ({ value }) => value && new Date(value),
+      valueGetter: ({ value }) => value && dateHelper.formatUtcToDate(value),
       width: 180,
     },
     {
@@ -320,7 +321,10 @@ function DataGridDemo() {
                       value={valueDateFrom}
                       onChange={(newValue) => {
                         setValueDateFrom(newValue);
-                        setSearch({ ...search, dateFrom: newValue });
+                        setSearch({
+                          ...search,
+                          dateFrom: dateHelper.formatUtcToDateApi(newValue),
+                        });
                       }}
                       renderInput={(params) => <TextField {...params} />}
                     />
@@ -334,7 +338,10 @@ function DataGridDemo() {
                       value={valueDateTo}
                       onChange={(newValue) => {
                         setValueDateTo(newValue);
-                        setSearch({ ...search, dateTo: newValue });
+                        setSearch({
+                          ...search,
+                          dateTo: dateHelper.formatUtcToDateApi(newValue),
+                        });
                       }}
                       renderInput={(params) => <TextField {...params} />}
                     />
