@@ -512,6 +512,11 @@ function DataGridDemo() {
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 pageSize={pageSize}
                 hideFooterSelectedRowCount
+                componentsProps={{
+                  pagination: {
+                    labelRowsPerPage: "Redaka po stranici",
+                  },
+                }}
               />
             )}
           </div>
