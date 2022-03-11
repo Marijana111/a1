@@ -28,6 +28,7 @@ import { green, orange, red, grey } from "@mui/material/colors";
 import { DatePicker } from "@mui/lab";
 import { selectService } from "../../../Services/selectService";
 import { faultOrdersService } from "../../../Services/faultOrdersService";
+import * as dateHelper from "../../../components/Config/DateHelper";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -87,6 +88,7 @@ function DataGridDemo() {
   const [operatorValue, setOperatorValue] = useState(null);
   const [operatorsOptions, setOperatorsOptions] = useState([]);
   const [requestTypesOptions, setRequestTypesOptions] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState({
     caseId: "",
     guid: "",
@@ -130,7 +132,6 @@ function DataGridDemo() {
       field: "requestGuid",
       headerName: "GUID",
       width: 310,
-      sortable: false,
     },
     {
       field: "operatorName",
@@ -146,26 +147,22 @@ function DataGridDemo() {
       field: "requestCategory",
       headerName: "Kategorija",
       width: 170,
-      sortable: false,
     },
     {
       field: "adapterId",
       headerName: "Adapter Id",
-
       width: 130,
-      sortable: false,
     },
     {
       field: "requestDateInsert",
       headerName: "Vrijeme",
       type: "dateTime",
-      valueGetter: ({ value }) => value && new Date(value),
+      valueGetter: ({ value }) => value && dateHelper.formatUtcToDate(value),
       width: 180,
     },
     {
       field: "statusName",
       headerName: "Status",
-      sortable: false,
       width: 130,
       renderCell: (params) => (
         <Chip
@@ -182,7 +179,6 @@ function DataGridDemo() {
       field: "statusRef",
       headerName: "Status interno",
       width: 140,
-      sortable: false,
     },
     {
       field: "actions",
@@ -475,9 +471,16 @@ function DataGridDemo() {
                 disableColumnMenu
                 getRowId={(r) => r.requestId}
                 rows={faultOrders}
+                rowsPerPageOptions={[5, 10, 15, 20]}
                 columns={columns}
-                pageSize={5}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                pageSize={pageSize}
                 hideFooterSelectedRowCount
+                componentsProps={{
+                  pagination: {
+                    labelRowsPerPage: "Redaka po stranici",
+                  },
+                }}
               />
             )}
           </div>
