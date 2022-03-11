@@ -55,7 +55,7 @@ async function getRequests(
 
   let myParams = params == "" ? "" : "&" + params.toString();
 
-  let url = `${requestsURL}?numRecords=10000&sortBy=requestId${myParams}`;
+  let url = `${requestsURL}?numRecords=10000&sortBy=-requestId${myParams}`;
   console.log("url", url);
   return axios
     .get(url)

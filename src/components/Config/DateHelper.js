@@ -7,6 +7,13 @@ export const formatUtcToDate = (date) => {
   return format(gtmDate, "dd.MM.yyyy. hh:mm:ss");
 };
 
+export const formatUtcToDateNoTime = (date) => {
+  if (!date) return date;
+
+  const gtmDate = new Date(date);
+  return format(gtmDate, "dd.MM.yyyy.");
+};
+
 export const formatUtcToDateApi = (date) => {
   if (!date) return date;
 

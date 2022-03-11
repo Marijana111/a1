@@ -173,7 +173,7 @@ function EmptyCard() {
 function ReportOrderDetail() {
   return (
     <React.Fragment>
-      <Helmet title="Blank" />
+      <Helmet title="Detalji" />
       <Typography variant="h3" gutterBottom display="inline">
         Detalji izvještaja
       </Typography>

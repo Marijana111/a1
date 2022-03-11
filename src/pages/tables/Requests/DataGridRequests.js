@@ -87,7 +87,7 @@ function DataGridDemo() {
   const [operatorValue, setOperatorValue] = useState(null);
   const [operatorsOptions, setOperatorsOptions] = useState([]);
   const [requestTypesOptions, setRequestTypesOptions] = useState([]);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState({
     caseId: "",
     guid: "",
@@ -142,7 +142,6 @@ function DataGridDemo() {
       field: "requestGuid",
       headerName: "GUID",
       width: 310,
-      sortable: false,
     },
     {
       field: "operatorName",
@@ -158,7 +157,6 @@ function DataGridDemo() {
       field: "requestCategory",
       headerName: "Kategorija",
       width: 170,
-      sortable: false,
     },
     // {
     //   field: "fullName",
@@ -174,9 +172,7 @@ function DataGridDemo() {
     {
       field: "adapterId",
       headerName: "Adapter Id",
-
       width: 130,
-      sortable: false,
     },
     {
       field: "requestDateInsert",
@@ -188,7 +184,6 @@ function DataGridDemo() {
     {
       field: "statusName",
       headerName: "Status",
-      sortable: false,
       width: 130,
       renderCell: (params) => (
         <Chip
@@ -205,7 +200,6 @@ function DataGridDemo() {
       field: "statusRef",
       headerName: "Status interno",
       width: 140,
-      sortable: false,
     },
     {
       field: "actions",

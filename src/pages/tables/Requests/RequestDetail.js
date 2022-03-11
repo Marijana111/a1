@@ -206,7 +206,7 @@ function EmptyCard() {
 function RequestDetail() {
   return (
     <React.Fragment>
-      <Helmet title="Detalji zahtjeva" />
+      <Helmet title="Detalji" />
       <Typography variant="h3" gutterBottom display="inline">
         Detalji zahtjeva
       </Typography>

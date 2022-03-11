@@ -29,6 +29,7 @@ import { DatePicker } from "@mui/lab";
 import { selectService } from "../../../Services/selectService";
 import { faultOrdersService } from "../../../Services/faultOrdersService";
 import { reportOrdersService } from "../../../Services/reportOrdersService";
+import * as dateHelper from "../../../components/Config/DateHelper";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -84,6 +85,7 @@ function DataGridDemo() {
   const [reportTypeValue, setReportTypeValue] = useState(null);
   const [operatorValue, setOperatorValue] = useState(null);
   const [operatorsOptions, setOperatorsOptions] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     reportOrdersService
@@ -103,7 +105,7 @@ function DataGridDemo() {
   }, []);
 
   const columns = [
-    { field: "reportId", headerName: "Case ID", width: 105 },
+    { field: "reportId", headerName: "Case Id", width: 105 },
     {
       field: "reportGuid",
       headerName: "GUID",
@@ -129,7 +131,7 @@ function DataGridDemo() {
       field: "reportDateInsert",
       headerName: "Vrijeme",
       type: "dateTime",
-      valueGetter: ({ value }) => value && new Date(value),
+      valueGetter: ({ value }) => value && dateHelper.formatUtcToDate(value),
       width: 190,
     },
     {
@@ -314,11 +316,18 @@ function DataGridDemo() {
             ) : (
               <DataGrid
                 disableColumnMenu
+                rowsPerPageOptions={[5, 10, 15, 20]}
                 getRowId={(r) => r.reportId}
                 rows={reportOrders}
                 columns={columns}
-                pageSize={5}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                pageSize={pageSize}
                 hideFooterSelectedRowCount
+                componentsProps={{
+                  pagination: {
+                    labelRowsPerPage: "Redaka po stranici",
+                  },
+                }}
               />
             )}
           </div>

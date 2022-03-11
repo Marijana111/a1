@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
+import * as dateHelper from "../../../components/Config/DateHelper";
 
 import { Button as MuiButton, Menu, MenuItem } from "@mui/material";
 import {
@@ -46,7 +47,7 @@ function Actions() {
         aria-haspopup="true"
         disabled
       >
-        {new Date().toLocaleDateString()}
+        {dateHelper.formatUtcToDateNoTime(new Date())}
       </Button>
       {/* <Menu
         id="simple-menu"
