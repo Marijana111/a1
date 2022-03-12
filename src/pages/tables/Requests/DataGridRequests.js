@@ -48,6 +48,7 @@ const Chip = styled(MuiChip)`
   background: ${(props) => props.status == "PRIHVAĆEN" && orange[500]};
   background: ${(props) => props.status == "ODBIJEN" && red[500]};
   background: ${(props) => props.status == "STORNIRAN" && green[500]};
+  background: ${(props) => props.status == "INITIAL" && green[500]};
   background: ${(props) => props.status == "INFO" && grey[500]};
   background: ${(props) => props.status == "REALIZIRAN_OK" && green[500]};
   background: ${(props) => props.status == "REALIZIRAN_NOK" && orange[500]};
