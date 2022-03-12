@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components/macro";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
@@ -7,6 +7,7 @@ import {
   Grid,
   Divider as MuiDivider,
   Typography as MuiTypography,
+  LinearProgress,
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { green, red } from "@mui/material/colors";
@@ -14,6 +15,8 @@ import { green, red } from "@mui/material/colors";
 import Actions from "./Actions";
 import Stats from "./Stats";
 import Table from "./Table";
+import { homeService } from "../../../Services/homeService";
+import * as dateHelper from "../../../components/Config/DateHelper";
 
 const Divider = styled(MuiDivider)(spacing);
 
@@ -21,6 +24,45 @@ const Typography = styled(MuiTypography)(spacing);
 
 function Default() {
   const { t } = useTranslation();
+  const [requestsTodayTotal, setRequestsTodayTotal] = useState(0);
+  const [requestsActive, setRequestsActive] = useState(0);
+  const [faultOrdersTodayTotal, setFaultOrdersTodayTotal] = useState(0);
+  const [faultOrdersActive, setFaultOrdersActive] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    homeService
+      .getTodayRequests(dateHelper.formatUtcToDateApiNoTime(new Date()))
+      .then((res) => {
+        setRequestsTodayTotal(res.data.total);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+
+    homeService
+      .getRequestsActive()
+      .then((res) => {
+        setRequestsActive(res.data.total);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+
+    homeService
+      .getTodayFaultOrders(dateHelper.formatUtcToDateApiNoTime(new Date()))
+      .then((res) => {
+        setFaultOrdersTodayTotal(res.data.total);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+
+    homeService
+      .getFaultOrdersActive()
+      .then((res) => {
+        setFaultOrdersActive(res.data.total);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <React.Fragment>
@@ -43,36 +85,31 @@ function Default() {
         <Grid item xs={12} sm={12} md={6} lg={3} xl>
           <Stats
             title="Zahtjevi danas"
-            amount="30"
+            amount={isLoading ? <LinearProgress /> : requestsTodayTotal}
             chip="Danas"
-            percentagetext="+28%"
             percentagecolor={green[500]}
           />
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={3} xl>
           <Stats
-            title="Ukupno zahtjeva"
-            amount="248"
-            chip="Mjesečno"
-            percentagetext="-14%"
+            title="Otvoreni zahtjevi"
+            amount={isLoading ? <LinearProgress /> : requestsActive}
             percentagecolor={red[500]}
+            illustration="/static/img/illustrations/waiting.png"
           />
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={3} xl>
           <Stats
-            title="Ukupno smetnje"
-            amount="17"
-            chip="Mjesečno"
-            percentagetext="+18%"
+            title="Smetnje danas"
+            amount={isLoading ? <LinearProgress /> : faultOrdersTodayTotal}
+            chip="Danas"
             percentagecolor={green[500]}
           />
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={3} xl>
           <Stats
             title="Aktivne smetnje"
-            amount="45"
-            chip="Yearly"
-            percentagetext="-9%"
+            amount={isLoading ? <LinearProgress /> : faultOrdersActive}
             percentagecolor={red[500]}
             illustration="/static/img/illustrations/waiting.png"
           />

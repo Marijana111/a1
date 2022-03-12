@@ -37,9 +37,6 @@ function Actions() {
       <SmallButton size="small" mr={2}>
         <LoopIcon style={{ color: "black" }} />
       </SmallButton>
-      <SmallButton size="small" mr={2}>
-        <FilterListIcon style={{ color: "black" }} />
-      </SmallButton>
       <Button
         style={{ color: "white", backgroundColor: "black" }}
         variant="contained"
@@ -49,19 +46,6 @@ function Actions() {
       >
         {dateHelper.formatUtcToDateNoTime(new Date())}
       </Button>
-      {/* <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>Today</MenuItem>
-        <MenuItem onClick={handleClose}>Yesterday</MenuItem>
-        <MenuItem onClick={handleClose}>Last 7 days</MenuItem>
-        <MenuItem onClick={handleClose}>Last 30 days</MenuItem>
-        <MenuItem onClick={handleClose}>This month</MenuItem>
-        <MenuItem onClick={handleClose}>Last month</MenuItem>
-      </Menu> */}
     </React.Fragment>
   );
 }

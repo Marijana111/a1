@@ -6,3 +6,4 @@ export const businessPersistenceURL = `${a1Url}/business/persistence`;
 export const requestsURL = `${a1Url}/business/persistence/orders`;
 export const faultOrdersURL = `${a1Url}/business/persistence/faultOrders`;
 export const reportOrdersURL = `${a1Url}/business/persistence/reportOrders`;
+export const homeURL = `${a1Url}/business/persistence`;

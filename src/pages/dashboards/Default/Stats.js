@@ -107,9 +107,7 @@ const Stats = ({
           color="textSecondary"
           percentagecolor={percentagecolor}
           illustration={illustration}
-        >
-          <span>{percentagetext}</span> Od prošlog mjeseca
-        </Percentage>
+        ></Percentage>
         {!illustration && (
           <Chip style={{ backgroundColor: "black" }} label={chip} />
         )}

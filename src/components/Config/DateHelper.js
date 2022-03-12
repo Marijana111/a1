@@ -20,3 +20,10 @@ export const formatUtcToDateApi = (date) => {
   const gtmDate = new Date(date);
   return format(gtmDate, "yyyy-MM-dd hh:mm:ss");
 };
+
+export const formatUtcToDateApiNoTime = (date) => {
+  if (!date) return date;
+
+  const gtmDate = new Date(date);
+  return format(gtmDate, "yyyy-MM-dd");
+};
