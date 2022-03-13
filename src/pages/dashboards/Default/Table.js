@@ -16,6 +16,7 @@ import {
   MenuItem,
   Menu,
   LinearProgress,
+  Link,
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import * as dateHelper from "../../../components/Config/DateHelper";
@@ -151,8 +152,19 @@ function DashboardTable() {
                 <TableBody>
                   {requests.map((row) => (
                     <TableRow key={row.requestId}>
-                      <TableCell component="th" scope="row">
-                        {row.requestId}
+                      <TableCell
+                        style={{ cursor: "pointer" }}
+                        component="th"
+                        scope="row"
+                        onClick={() =>
+                          navigate(`/requests/details/${row.requestId}`, {
+                            state: {
+                              requestId: row.requestId,
+                            },
+                          })
+                        }
+                      >
+                        <Link>{row.requestId}</Link>
                       </TableCell>
                       <TableCell>{row.requestGuid}</TableCell>
                       <TableCell>{row.operatorName}</TableCell>
@@ -234,8 +246,19 @@ function DashboardTable() {
                 <TableBody>
                   {faultOrders.map((row) => (
                     <TableRow key={row.requestId}>
-                      <TableCell component="th" scope="row">
-                        {row.requestId}
+                      <TableCell
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          navigate(`/fault-orders/details/${row.requestId}`, {
+                            state: {
+                              requestId: row.requestId,
+                            },
+                          })
+                        }
+                        component="th"
+                        scope="row"
+                      >
+                        <Link>{row.requestId}</Link>
                       </TableCell>
                       <TableCell>{row.requestGuid}</TableCell>
                       <TableCell>{row.operatorName}</TableCell>
