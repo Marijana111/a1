@@ -5,7 +5,8 @@ export const requestService = {
   getRequests,
   getRequestById,
   getRequestByIdDetails,
-  createStatus,
+  createStatusWithParameters,
+  createStatusNoParameters,
 };
 
 async function getRequests(
@@ -77,21 +78,29 @@ async function getRequestByIdDetails(id) {
     .catch((err) => err);
 }
 
-async function createStatus({
-  attachments,
-  data,
-  operator,
-  requestId,
-  status,
-}) {
+async function createStatusWithParameters({ data, requestId, status }) {
   return axios
-    .post(`${requestsURL}`, {
-      attachments,
-      data,
-      operator,
-      requestId,
-      status,
-    })
+    .post(
+      `http://a560d6f4-56bb-49b7-a524-4021c4a7580e.mock.pstmn.io/api/v1/business/orderStatus`,
+      {
+        data,
+        requestId,
+        status,
+      }
+    )
+    .then((res) => res)
+    .catch((err) => err);
+}
+
+async function createStatusNoParameters({ requestId, status }) {
+  return axios
+    .post(
+      `a560d6f4-56bb-49b7-a524-4021c4a7580e.mock.pstmn.io/api/v1/business/orderStatus`,
+      {
+        requestId,
+        status,
+      }
+    )
     .then((res) => res)
     .catch((err) => err);
 }
