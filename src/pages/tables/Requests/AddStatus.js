@@ -125,29 +125,52 @@ function BasicForm() {
   ) => {
     valuesForm.shift();
 
-    let parameter = valuesForm;
-    requestService
-      .createStatusWithParameters({
-        data: {
-          parameter,
-        },
-        requestId: state.requestDetails.requestId,
-        status: {
-          date: dateHelper.formatUtcToDateApi(valueDateFrom),
-          description: descriptionValue,
-          type: statusValue,
-        },
-      })
-      .then((res) => {
-        setOpenDialog(true);
-        setSubmitting(false);
-        setStatus({ sent: true });
-      })
-      .catch((err) => {
-        console.log(err);
-        setStatus({ sent: false });
-        setSubmitting(false);
-      });
+    if (valuesForm.length > 0) {
+      let parameter = valuesForm;
+      requestService
+        .createStatusWithParameters({
+          data: {
+            parameter,
+          },
+          requestId: state.requestDetails.requestId,
+          status: {
+            date: dateHelper.formatUtcToDateApi(valueDateFrom),
+            description: descriptionValue,
+            type: statusValue,
+          },
+        })
+        .then((res) => {
+          setOpenDialog(true);
+          setSubmitting(false);
+          setStatus({ sent: true });
+        })
+        .catch((err) => {
+          console.log(err);
+          setStatus({ sent: false });
+          setSubmitting(false);
+        });
+    } else if (valuesForm.length == 0) {
+      requestService
+        .createStatusNoParameters({
+          requestId: state.requestDetails.requestId,
+          status: {
+            date: dateHelper.formatUtcToDateApi(valueDateFrom),
+            description: descriptionValue,
+            type: statusValue,
+          },
+        })
+        .then((res) => {
+          setOpenDialog(true);
+          setSubmitting(false);
+          setStatus({ sent: true });
+        })
+        .catch((err) => {
+          console.log(err);
+          setStatus({ sent: false });
+          setSubmitting(false);
+        });
+    }
+
     // try {
     //   await timeOut(1500);
     //   setStatus({ sent: true });

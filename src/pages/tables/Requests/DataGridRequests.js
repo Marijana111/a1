@@ -494,7 +494,7 @@ function DataGridDemo() {
         </CardContent>
         <br />
         <Paper>
-          <div style={{ height: 400, width: "100%" }}>
+          <div style={{ width: "100%" }}>
             {isLoading ? (
               <LinearProgress />
             ) : (
@@ -507,6 +507,7 @@ function DataGridDemo() {
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 pageSize={pageSize}
                 hideFooterSelectedRowCount
+                autoHeight="true"
                 componentsProps={{
                   pagination: {
                     labelRowsPerPage: "Redaka po stranici",
