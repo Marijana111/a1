@@ -426,11 +426,6 @@ function BasicForm() {
                       ) : (
                         ""
                       )}
-                      {/* <Grid item md={12}>
-                        <Typography gutterBottom>
-                          <h3>Uneseni parametri</h3>
-                        </Typography>
-                      </Grid> */}
                       {valuesForm &&
                         valuesForm.map((element) =>
                           element.name !== null ? (

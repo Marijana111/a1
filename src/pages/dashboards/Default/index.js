@@ -8,10 +8,11 @@ import {
   Divider as MuiDivider,
   Typography as MuiTypography,
   LinearProgress,
+  Button as MuiButton,
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { green, red } from "@mui/material/colors";
-
+import { Loop as LoopIcon } from "@mui/icons-material";
 import Actions from "./Actions";
 import Stats from "./Stats";
 import Table from "./Table";
@@ -22,6 +23,18 @@ const Divider = styled(MuiDivider)(spacing);
 
 const Typography = styled(MuiTypography)(spacing);
 
+const Button = styled(MuiButton)(spacing);
+
+const SmallButton = styled(Button)`
+  padding: 4px;
+  min-width: 0;
+
+  svg {
+    width: 0.9em;
+    height: 0.9em;
+  }
+`;
+
 function Default() {
   const { t } = useTranslation();
   const [requestsTodayTotal, setRequestsTodayTotal] = useState(0);
@@ -29,6 +42,7 @@ function Default() {
   const [faultOrdersTodayTotal, setFaultOrdersTodayTotal] = useState(0);
   const [faultOrdersActive, setFaultOrdersActive] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [reloadData, setReloadData] = useState(false);
 
   useEffect(() => {
     homeService
@@ -62,7 +76,7 @@ function Default() {
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [reloadData]);
 
   return (
     <React.Fragment>
@@ -75,7 +89,18 @@ function Default() {
         </Grid>
 
         <Grid item>
-          <Actions />
+          {/* <Actions /> */}
+          <SmallButton onClick={() => setReloadData(true)} size="small" mr={2}>
+            <LoopIcon style={{ color: "black" }} />
+          </SmallButton>
+          <Button
+            style={{ color: "white", backgroundColor: "black" }}
+            variant="contained"
+            aria-haspopup="true"
+            disabled
+          >
+            {dateHelper.formatUtcToDateNoTime(new Date())}
+          </Button>
         </Grid>
       </Grid>
 

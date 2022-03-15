@@ -17,9 +17,11 @@ import {
   Menu,
   LinearProgress,
   Link,
+  Button as MuiButton,
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import * as dateHelper from "../../../components/Config/DateHelper";
+import { Loop as LoopIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { homeService } from "../../../Services/homeService";
 import { green, orange, red, grey } from "@mui/material/colors";
@@ -48,6 +50,18 @@ const TableWrapper = styled.div`
   max-width: calc(100vw - ${(props) => props.theme.spacing(12)});
 `;
 
+const Button = styled(MuiButton)(spacing);
+
+const SmallButton = styled(Button)`
+  padding: 4px;
+  min-width: 0;
+
+  svg {
+    width: 0.9em;
+    height: 0.9em;
+  }
+`;
+
 // Data
 let id = 0;
 function createData(name, start, end, state, assignee) {
@@ -62,6 +76,7 @@ function DashboardTable() {
   const [anchorMenu, setAnchorMenu] = useState(null);
   const [anchorMenuReq, setAnchorMenuReq] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [reloadData, setReloadData] = useState(false);
 
   useEffect(() => {
     homeService
@@ -79,7 +94,7 @@ function DashboardTable() {
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [reloadData]);
 
   const toggleMenuReq = (event) => {
     setAnchorMenuReq(event.currentTarget);
@@ -103,6 +118,13 @@ function DashboardTable() {
         <CardHeader
           action={
             <>
+              <SmallButton
+                onClick={() => setReloadData(true)}
+                size="small"
+                mr={2}
+              >
+                <LoopIcon style={{ color: "black" }} />
+              </SmallButton>
               <IconButton
                 aria-owns={
                   Boolean(anchorMenuReq) ? "menu-appbar-req" : undefined
@@ -199,6 +221,13 @@ function DashboardTable() {
         <CardHeader
           action={
             <>
+              <SmallButton
+                onClick={() => setReloadData(true)}
+                size="small"
+                mr={2}
+              >
+                <LoopIcon style={{ color: "black" }} />
+              </SmallButton>
               <IconButton
                 aria-owns={Boolean(anchorMenu) ? "menu-appbar" : undefined}
                 aria-haspopup="true"

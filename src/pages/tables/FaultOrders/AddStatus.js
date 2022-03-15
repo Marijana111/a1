@@ -31,6 +31,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Delete from "@mui/icons-material/Delete";
 import { CheckCircleOutline } from "@mui/icons-material";
+import { requestService } from "../../../Services/requestService";
+import * as dateHelper from "../../../components/Config/DateHelper";
+import { faultOrdersService } from "../../../Services/faultOrdersService";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -83,15 +86,14 @@ const initialValues = {
   value: null,
 };
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string(),
-  value: Yup.string(),
-});
+// const validationSchema = Yup.object().shape({
+//   name: Yup.string(),
+//   value: Yup.string(),
+// });
 
 function BasicForm() {
   const { state } = useLocation();
   const [valueDateFrom, setValueDateFrom] = useState(new Date());
-
   const [statusValue, setStatusValue] = useState(null);
   const [descriptionValue, setDescriptionValue] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -122,17 +124,65 @@ function BasicForm() {
     values,
     { resetForm, setErrors, setStatus, setSubmitting }
   ) => {
+    alert("tu");
     valuesForm.shift();
-    try {
-      await timeOut(1500);
-      setStatus({ sent: true });
-      setSubmitting(false);
-      setOpenDialog(true);
-    } catch (error) {
-      setStatus({ sent: false });
-      setErrors({ submit: error.message });
-      setSubmitting(false);
+
+    if (valuesForm.length > 0) {
+      let parameter = valuesForm;
+      faultOrdersService
+        .createStatusWithParameters({
+          data: {
+            parameter,
+          },
+          requestId: state.faultOrderDetails.requestId,
+          status: {
+            date: dateHelper.formatUtcToDateApi(valueDateFrom),
+            description: descriptionValue,
+            type: statusValue,
+          },
+        })
+        .then((res) => {
+          setOpenDialog(true);
+          setSubmitting(false);
+          setStatus({ sent: true });
+        })
+        .catch((err) => {
+          console.log(err);
+          setStatus({ sent: false });
+          setSubmitting(false);
+        });
+    } else if (valuesForm.length == 0) {
+      faultOrdersService
+        .createStatusNoParameters({
+          requestId: state.faultOrderDetails.requestId,
+          status: {
+            date: dateHelper.formatUtcToDateApi(valueDateFrom),
+            description: descriptionValue,
+            type: statusValue,
+          },
+        })
+        .then((res) => {
+          setOpenDialog(true);
+          setSubmitting(false);
+          setStatus({ sent: true });
+        })
+        .catch((err) => {
+          console.log(err);
+          setStatus({ sent: false });
+          setSubmitting(false);
+        });
     }
+
+    // try {
+    //   await timeOut(1500);
+    //   setStatus({ sent: true });
+    //   setSubmitting(false);
+    //   setOpenDialog(true);
+    // } catch (error) {
+    //   setStatus({ sent: false });
+    //   setErrors({ submit: error.message });
+    //   setSubmitting(false);
+    // }
   };
 
   const navigate = useNavigate();
@@ -182,7 +232,7 @@ function BasicForm() {
                   {state.faultOrderDetails.operatorRef}
                 </div>
                 <div>
-                  <b>Vrsta zahtjeva:</b> {state.faultOrderDetails.requestType}
+                  <b>Vrsta smetnje:</b> {state.faultOrderDetails.requestType}
                 </div>
               </Grid>
             </Grid>
@@ -191,7 +241,7 @@ function BasicForm() {
       </Card>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        //validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         {({
@@ -251,7 +301,7 @@ function BasicForm() {
                   </Alert>
                   <Grid item>
                     <Typography gutterBottom display="inline">
-                      <h3>Status zahtjeva</h3>
+                      <h3>Status smetnje</h3>
                     </Typography>
                   </Grid>
                   <Grid container spacing={4}>
@@ -313,7 +363,7 @@ function BasicForm() {
                   <Divider style={{ marginTop: "20px" }} />
                   <Grid item>
                     <Typography gutterBottom display="inline">
-                      <h3>Parametri zahtjeva</h3>
+                      <h3>Dodaj parametar</h3>
                     </Typography>
                   </Grid>
                   <Grid container spacing={6}>
@@ -348,11 +398,7 @@ function BasicForm() {
                         name="value"
                         label="Vrijednost"
                         value={values.value}
-                        //error={Boolean(errors.value)}
                         fullWidth
-                        // helperText={
-                        //   touched.value && values.value == "" && errors.value
-                        // }
                         onBlur={handleBlur}
                         onChange={handleChange}
                         variant="outlined"
@@ -373,58 +419,73 @@ function BasicForm() {
                       </Button>
                     </Grid>
                     <>
+                      {valuesForm.length > 1 ? (
+                        <Grid item md={12}>
+                          <Typography gutterBottom>
+                            <h3>Uneseni parametri</h3>
+                          </Typography>
+                        </Grid>
+                      ) : (
+                        ""
+                      )}
                       {valuesForm &&
                         valuesForm.map((element) =>
                           element.name !== null ? (
-                            <Grid
-                              style={{ marginLeft: "1px" }}
-                              container
-                              spacing={6}
-                            >
-                              <Grid item md={4}>
-                                <CssTextField
-                                  disabled
-                                  focusColor="black"
-                                  name="name"
-                                  label="Naziv"
-                                  value={element.name}
-                                  fullWidth
-                                  variant="outlined"
-                                  my={2}
-                                />
-                              </Grid>
-                              <Grid item md={4}>
-                                <CssTextField
-                                  disabled
-                                  focusColor="black"
-                                  name="value"
-                                  label="Vrijednost"
-                                  value={element.value}
-                                  fullWidth
-                                  variant="outlined"
-                                  my={2}
-                                />
-                              </Grid>
-                              <Grid style={{ paddingLeft: "0px" }} item md={1}>
-                                <Button
-                                  type="button"
-                                  onClick={() => {
-                                    let filteredArrayParams;
-                                    filteredArrayParams = valuesForm.filter(
-                                      (param) => param.name !== element.name
-                                    );
-                                    setValuesForm(filteredArrayParams);
-                                  }}
-                                >
-                                  <Delete
-                                    style={{
-                                      color: "black",
-                                      marginTop: "13px",
-                                    }}
+                            <>
+                              <Grid
+                                style={{ marginLeft: "1px" }}
+                                container
+                                spacing={6}
+                              >
+                                <Grid item md={4}>
+                                  <CssTextField
+                                    disabled
+                                    focusColor="black"
+                                    name="name"
+                                    label="Naziv"
+                                    value={element.name}
+                                    fullWidth
+                                    variant="outlined"
+                                    my={2}
                                   />
-                                </Button>
+                                </Grid>
+                                <Grid item md={4}>
+                                  <CssTextField
+                                    disabled
+                                    focusColor="black"
+                                    name="value"
+                                    label="Vrijednost"
+                                    value={element.value}
+                                    fullWidth
+                                    variant="outlined"
+                                    my={2}
+                                  />
+                                </Grid>
+                                <Grid
+                                  style={{ paddingLeft: "0px" }}
+                                  item
+                                  md={1}
+                                >
+                                  <Button
+                                    type="button"
+                                    onClick={() => {
+                                      let filteredArrayParams;
+                                      filteredArrayParams = valuesForm.filter(
+                                        (param) => param.name !== element.name
+                                      );
+                                      setValuesForm(filteredArrayParams);
+                                    }}
+                                  >
+                                    <Delete
+                                      style={{
+                                        color: "black",
+                                        marginTop: "13px",
+                                      }}
+                                    />
+                                  </Button>
+                                </Grid>
                               </Grid>
-                            </Grid>
+                            </>
                           ) : (
                             ""
                           )
@@ -461,9 +522,6 @@ function BasicForm() {
 }
 
 function FormikPage() {
-  const { state } = useLocation();
-  const navigate = useNavigate();
-
   return (
     <React.Fragment>
       <Helmet title="Status" />
