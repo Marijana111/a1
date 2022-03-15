@@ -17,9 +17,10 @@ import {
   FormControl as MuiFormControl,
   LinearProgress,
   Chip as MuiChip,
-  Button,
+  Button as MuiButton,
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { Loop as LoopIcon } from "@mui/icons-material";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { requestService } from "../../../Services/requestService";
@@ -55,6 +56,18 @@ const Chip = styled(MuiChip)`
   background: ${(props) => props.status == "REALIZIRAN_NOK" && orange[500]};
 `;
 
+const Button = styled(MuiButton)(spacing);
+
+const SmallButton = styled(Button)`
+  padding: 4px;
+  min-width: 0;
+
+  svg {
+    width: 0.9em;
+    height: 0.9em;
+  }
+`;
+
 const CssTextField = styled(TextField, {
   shouldForwardProp: (props) => props !== "focusColor",
 })((p) => ({
@@ -86,6 +99,7 @@ function DataGridDemo() {
   const [operatorValue, setOperatorValue] = useState(null);
   const [operatorsOptions, setOperatorsOptions] = useState([]);
   const [pageSize, setPageSize] = useState(10);
+  const [reloadData, setReloadData] = useState(false);
 
   useEffect(() => {
     reportOrdersService
@@ -102,7 +116,7 @@ function DataGridDemo() {
         setOperatorsOptions(res.data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [reloadData]);
 
   const columns = [
     { field: "reportId", headerName: "Case Id", width: 105 },
@@ -187,11 +201,16 @@ function DataGridDemo() {
       <Card mb={6}>
         <CardContent pb={1}>
           <Typography variant="h6" gutterBottom>
-            <Typography>
-              <Button onClick={() => toggleFilters()}>
-                <FilterList style={{ color: "black", fontSize: "25px" }} />
-              </Button>
-            </Typography>
+            <SmallButton
+              onClick={() => setReloadData(true)}
+              size="small"
+              mr={2}
+            >
+              <LoopIcon style={{ color: "black" }} />
+            </SmallButton>
+            <Button onClick={() => toggleFilters()}>
+              <FilterList style={{ color: "black", fontSize: "25px" }} />
+            </Button>
             {isVisibleFilters ? (
               <>
                 <Grid style={{ marginTop: "5px" }} container spacing={4}>
