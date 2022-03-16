@@ -118,7 +118,18 @@ function DataGridDemo() {
 
   useEffect(() => {
     faultOrdersService
-      .getFaultOrders()
+      .getFaultOrders(
+        search.caseId,
+        search.guid,
+        search.adapterId,
+        search.dateFrom,
+        search.dateTo,
+        search.operator,
+        search.type,
+        search.category,
+        search.status,
+        search.statusInt
+      )
       .then((res) => {
         setFaultOrders(res.data.requestList);
         setIsLoading(false);

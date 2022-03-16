@@ -100,10 +100,25 @@ function DataGridDemo() {
   const [operatorsOptions, setOperatorsOptions] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   const [reloadData, setReloadData] = useState(false);
+  const [search, setSearch] = useState({
+    caseId: "",
+    guid: "",
+    operator: 0,
+    type: 0,
+    dateFrom: null,
+    dateTo: null,
+  });
 
   useEffect(() => {
     reportOrdersService
-      .getReportOrders()
+      .getReportOrders(
+        search.caseId,
+        search.guid,
+        search.operator,
+        search.type,
+        search.dateFrom,
+        search.dateTo
+      )
       .then((res) => {
         setReportOrders(res.data.reportList);
         setIsLoading(false);
@@ -220,11 +235,10 @@ function DataGridDemo() {
                       name="CaseID"
                       label="Case ID"
                       //value={values.firstName}
-                      //error={Boolean(touched.firstName && errors.firstName)}
                       fullWidth
-                      //helperText={touched.firstName && errors.firstName}
-                      //onBlur={handleBlur}
-                      //onChange={handleChange}
+                      onChange={(event) => {
+                        setSearch({ ...search, caseId: event.target.value });
+                      }}
                       variant="outlined"
                     />
                   </Grid>
@@ -234,11 +248,10 @@ function DataGridDemo() {
                       name="GUID"
                       label="GUID"
                       //value={values.lastName}
-                      //error={Boolean(touched.lastName && errors.lastName)}
                       fullWidth
-                      //helperText={touched.lastName && errors.lastName}
-                      //onBlur={handleBlur}
-                      //onChange={handleChange}
+                      onChange={(event) => {
+                        setSearch({ ...search, guid: event.target.value });
+                      }}
                       variant="outlined"
                     />
                   </Grid>
@@ -248,10 +261,13 @@ function DataGridDemo() {
                       name="operator"
                       label="Operator"
                       value={operatorValue}
-                      //error={Boolean(touched.lastName && errors.lastName)}
                       fullWidth
                       onChange={(event) => {
                         setOperatorValue(event.target.value);
+                        setSearch({
+                          ...search,
+                          operator: event.target.value,
+                        });
                       }}
                       variant="outlined"
                       select
@@ -277,6 +293,10 @@ function DataGridDemo() {
                       fullWidth
                       onChange={(event) => {
                         setReportTypeValue(event.target.value);
+                        setSearch({
+                          ...search,
+                          type: event.target.value,
+                        });
                       }}
                       variant="outlined"
                       select
@@ -302,6 +322,10 @@ function DataGridDemo() {
                         value={valueDateFrom}
                         onChange={(newValue) => {
                           setValueDateFrom(newValue);
+                          setSearch({
+                            ...search,
+                            dateFrom: dateHelper.formatUtcToDateApi(newValue),
+                          });
                         }}
                         renderInput={(params) => <TextField {...params} />}
                       />
@@ -315,6 +339,10 @@ function DataGridDemo() {
                         value={valueDateTo}
                         onChange={(newValue) => {
                           setValueDateTo(newValue);
+                          setSearch({
+                            ...search,
+                            dateTo: dateHelper.formatUtcToDateApi(newValue),
+                          });
                         }}
                         renderInput={(params) => <TextField {...params} />}
                       />
