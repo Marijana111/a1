@@ -30,7 +30,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Delete from "@mui/icons-material/Delete";
-import { CheckCircleOutline } from "@mui/icons-material";
+import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
 import { requestService } from "../../../Services/requestService";
 import * as dateHelper from "../../../components/Config/DateHelper";
 
@@ -97,6 +97,8 @@ function BasicForm() {
   const [descriptionValue, setDescriptionValue] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSuccessfull, setIsSuccessfull] = useState(true);
   const [valuesForm, setValuesForm] = useState([
     {
       name: null,
@@ -134,40 +136,46 @@ function BasicForm() {
           },
           requestId: state.requestDetails.requestId,
           status: {
-            date: dateHelper.formatUtcToDateApi(valueDateFrom),
+            date: dateHelper.formatUtcToDateApiMiliSec(valueDateFrom),
             description: descriptionValue,
             type: statusValue,
           },
         })
         .then((res) => {
+          if (res.data.responseStatus.code == 0) {
+            setIsSuccessfull(true);
+          } else if (res.data.responseStatus.code !== 0) {
+            setIsSuccessfull(false);
+            setErrorMessage(res.data.responseStatus.message);
+          }
           setOpenDialog(true);
-          setSubmitting(false);
           setStatus({ sent: true });
         })
         .catch((err) => {
           console.log(err);
-          setStatus({ sent: false });
-          setSubmitting(false);
         });
     } else if (valuesForm.length == 0) {
       requestService
         .createStatusNoParameters({
           requestId: state.requestDetails.requestId,
           status: {
-            date: dateHelper.formatUtcToDateApi(valueDateFrom),
+            date: dateHelper.formatUtcToDateApiMiliSec(valueDateFrom),
             description: descriptionValue,
             type: statusValue,
           },
         })
         .then((res) => {
+          if (res.data.responseStatus.code == 0) {
+            setIsSuccessfull(true);
+          } else if (res.data.responseStatus.code !== 0) {
+            setIsSuccessfull(false);
+            setErrorMessage(res.data.responseStatus.message);
+          }
           setOpenDialog(true);
-          setSubmitting(false);
           setStatus({ sent: true });
         })
         .catch((err) => {
           console.log(err);
-          setStatus({ sent: false });
-          setSubmitting(false);
         });
     }
 
@@ -237,11 +245,7 @@ function BasicForm() {
           )}
         </CardContent>
       </Card>
-      <Formik
-        initialValues={initialValues}
-        //validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({
           errors,
           handleBlur,
@@ -257,22 +261,57 @@ function BasicForm() {
               {status && status.sent && (
                 <>
                   <BootstrapDialog
+                    PaperProps={{ sx: { width: "30%", height: "40%" } }}
                     onClose={handleCloseDialog}
                     aria-labelledby="customized-dialog-title"
                     open={openDialog}
                   >
-                    <DialogTitle>Uspješno</DialogTitle>
+                    <DialogTitle>
+                      {isSuccessfull == true ? (
+                        <strong>Uspješno</strong>
+                      ) : (
+                        <strong>Greška</strong>
+                      )}
+                    </DialogTitle>
                     <DialogContent
                       dividers
                       style={{ textAlign: "center", padding: "20px" }}
                     >
-                      <CheckCircleOutline
-                        style={{ color: "green", fontSize: "40px" }}
-                      />
-                      <br />
-                      <span style={{ fontWeight: "bold" }}>
-                        Uspješno ste dodali status!
-                      </span>
+                      {isSuccessfull == true ? (
+                        <>
+                          <CheckCircleOutline
+                            style={{ color: "green", fontSize: "80px" }}
+                          />
+                          <br />
+                          <br />
+                          <br />
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                              fontSize: "17px",
+                            }}
+                          >
+                            Uspješno ste dodali status!
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <ErrorOutline
+                            style={{ color: "red", fontSize: "80px" }}
+                          />
+                          <br />
+                          <br />
+                          <br />
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                              fontSize: "17px",
+                            }}
+                          >
+                            {errorMessage && errorMessage}
+                          </span>
+                        </>
+                      )}
                     </DialogContent>
                     <DialogActions>
                       <Button autoFocus onClick={handleCloseDialog}>
@@ -336,6 +375,7 @@ function BasicForm() {
                         variant="outlined"
                         select
                       >
+                        <MenuItem value={0}>Odaberite opis</MenuItem>
                         {optionsDescription.map((status) => (
                           <MenuItem key={status.value} value={status.name}>
                             {status.name}
@@ -491,7 +531,7 @@ function BasicForm() {
                     </>
                   </Grid>
                   <Button
-                    disabled={statusValue == null || descriptionValue == null}
+                    disabled={statusValue == null}
                     type="submit"
                     variant="contained"
                     color="error"
