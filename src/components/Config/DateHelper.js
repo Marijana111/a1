@@ -21,6 +21,13 @@ export const formatUtcToDateApi = (date) => {
   return format(gtmDate, "yyyy-MM-dd hh:mm:ss");
 };
 
+export const formatUtcToDateApiMiliSec = (date) => {
+  if (!date) return date;
+
+  const gtmDate = new Date(date);
+  return format(gtmDate, "yyyy-MM-dd hh:mm:ss.sss");
+};
+
 export const formatUtcToDateApiNoTime = (date) => {
   if (!date) return date;
 

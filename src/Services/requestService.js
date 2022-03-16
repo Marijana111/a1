@@ -23,15 +23,15 @@ async function getRequests(
 ) {
   const x = {
     requestId: caseId,
-    guid: guid,
+    requestGuid: guid,
     adapterId: adapterId,
     dateFrom: dateFrom,
     dateTo: dateTo,
-    operator: operator,
+    operatorName: operator,
     type: type,
     category: category,
-    status: status,
-    statusInt: statusInt,
+    statusName: status,
+    internalStatusName: statusInt,
   };
 
   let params = new URLSearchParams(x);

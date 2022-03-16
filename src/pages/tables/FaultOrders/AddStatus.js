@@ -136,7 +136,7 @@ function BasicForm() {
           },
           requestId: state.faultOrderDetails.requestId,
           status: {
-            date: dateHelper.formatUtcToDateApi(valueDateFrom),
+            date: dateHelper.formatUtcToDateApiMiliSec(valueDateFrom),
             description: descriptionValue,
             type: statusValue,
           },
@@ -156,7 +156,7 @@ function BasicForm() {
         .createStatusNoParameters({
           requestId: state.faultOrderDetails.requestId,
           status: {
-            date: dateHelper.formatUtcToDateApi(valueDateFrom),
+            date: dateHelper.formatUtcToDateApiMiliSec(valueDateFrom),
             description: descriptionValue,
             type: statusValue,
           },
@@ -239,11 +239,7 @@ function BasicForm() {
           )}
         </CardContent>
       </Card>
-      <Formik
-        initialValues={initialValues}
-        //validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({
           errors,
           handleBlur,
@@ -259,20 +255,30 @@ function BasicForm() {
               {status && status.sent && (
                 <>
                   <BootstrapDialog
+                    PaperProps={{ sx: { width: "30%", height: "40%" } }}
                     onClose={handleCloseDialog}
                     aria-labelledby="customized-dialog-title"
                     open={openDialog}
                   >
-                    <DialogTitle>Uspješno</DialogTitle>
+                    <DialogTitle>
+                      <strong>Uspješno</strong>
+                    </DialogTitle>
                     <DialogContent
                       dividers
                       style={{ textAlign: "center", padding: "20px" }}
                     >
                       <CheckCircleOutline
-                        style={{ color: "green", fontSize: "40px" }}
+                        style={{ color: "green", fontSize: "80px" }}
                       />
                       <br />
-                      <span style={{ fontWeight: "bold" }}>
+                      <br />
+                      <br />
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: "17px",
+                        }}
+                      >
                         Uspješno ste dodali status!
                       </span>
                     </DialogContent>
@@ -338,6 +344,7 @@ function BasicForm() {
                         variant="outlined"
                         select
                       >
+                        <MenuItem value={0}>Odaberite opis</MenuItem>
                         {optionsDescription.map((status) => (
                           <MenuItem key={status.value} value={status.name}>
                             {status.name}
