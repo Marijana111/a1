@@ -191,10 +191,8 @@ function DashboardTable() {
                       <TableCell>{row.requestGuid}</TableCell>
                       <TableCell>{row.operatorName}</TableCell>
                       <TableCell>{row.requestType}</TableCell>
-                      <TableCell>{row.requestCategory}</TableCell>
-                      <TableCell>
-                        {row.adapterId ? row.adapterId : "/"}
-                      </TableCell>
+                      <TableCell>{row.categoryName}</TableCell>
+                      <TableCell>{row.requestAdapterId}</TableCell>
                       <TableCell>
                         {dateHelper.formatUtcToDate(row.requestDateInsert)}
                       </TableCell>
@@ -292,10 +290,8 @@ function DashboardTable() {
                       <TableCell>{row.requestGuid}</TableCell>
                       <TableCell>{row.operatorName}</TableCell>
                       <TableCell>{row.requestType}</TableCell>
-                      <TableCell>{row.requestCategory}</TableCell>
-                      <TableCell>
-                        {row.adapterId ? row.adapterId : "/"}
-                      </TableCell>
+                      <TableCell>{row.categoryName}</TableCell>
+                      <TableCell>{row.requestAdapterId}</TableCell>
                       <TableCell>
                         {dateHelper.formatUtcToDate(row.requestDateInsert)}
                       </TableCell>

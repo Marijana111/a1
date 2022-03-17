@@ -169,7 +169,7 @@ function DataGridDemo() {
       width: 120,
     },
     {
-      field: "requestCategory",
+      field: "categoryName",
       headerName: "Kategorija",
       width: 170,
     },
@@ -185,7 +185,7 @@ function DataGridDemo() {
     //     }`,
     // },
     {
-      field: "adapterId",
+      field: "requestAdapterId",
       headerName: "Adapter Id",
       width: 130,
     },
