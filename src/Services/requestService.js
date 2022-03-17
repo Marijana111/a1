@@ -28,8 +28,8 @@ async function getRequests(
     dateFrom: dateFrom,
     dateTo: dateTo,
     operatorName: operator,
-    type: type,
-    category: category,
+    requestType: type,
+    requestCategory: category,
     statusName: status,
     internalStatusName: statusInt,
   };

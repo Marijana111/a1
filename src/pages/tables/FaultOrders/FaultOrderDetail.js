@@ -131,7 +131,6 @@ function EmptyCard() {
               <TableHead>
                 <TableRow>
                   <CustomTableCell>Naziv</CustomTableCell>
-                  <CustomTableCell>Oznaka</CustomTableCell>
                   <CustomTableCell>Vrijednost</CustomTableCell>
                 </TableRow>
               </TableHead>
@@ -141,7 +140,6 @@ function EmptyCard() {
                     <CustomTableCell component="th" scope="row">
                       {row.parameterName}
                     </CustomTableCell>
-                    <CustomTableCell>{row.parameterRef}</CustomTableCell>
                     <CustomTableCell>{row.parameterValue}</CustomTableCell>
                   </TableRow>
                 ))}
@@ -179,7 +177,6 @@ function EmptyCard() {
               <TableHead>
                 <TableRow>
                   <CustomTableCell>Status</CustomTableCell>
-                  <CustomTableCell>Opis</CustomTableCell>
                   <CustomTableCell>Vrijeme</CustomTableCell>
                 </TableRow>
               </TableHead>
@@ -187,9 +184,8 @@ function EmptyCard() {
                 {faultOrderStatuses.map((row) => (
                   <TableRow key={row.statusId}>
                     <CustomTableCell component="th" scope="row">
-                      {row.statusRef}
+                      {row.statusType}
                     </CustomTableCell>
-                    <CustomTableCell>{row.statusHref}</CustomTableCell>
                     <CustomTableCell>
                       {dateHelper.formatUtcToDate(row.statusInsertDate)}
                     </CustomTableCell>

@@ -130,7 +130,6 @@ function EmptyCard() {
               <TableHead>
                 <TableRow>
                   <CustomTableCell>Naziv</CustomTableCell>
-                  <CustomTableCell>Oznaka</CustomTableCell>
                   <CustomTableCell>Vrijednost</CustomTableCell>
                 </TableRow>
               </TableHead>
@@ -140,14 +139,54 @@ function EmptyCard() {
                     <CustomTableCell component="th" scope="row">
                       {row.parameterName}
                     </CustomTableCell>
-                    <CustomTableCell>{row.parameterRef}</CustomTableCell>
                     <CustomTableCell>{row.parameterValue}</CustomTableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </CardContent>
-          <Divider />
+        </Card>
+      )}
+    </>
+  );
+}
+
+function RequestStatusCard() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
+  let requestId = state.requestId;
+
+  const [requestDetails, setRequestDetails] = useState({});
+  const [requestStatuses, setRequestStatuses] = useState([]);
+  const [requestParams, setRequestParams] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    requestService
+      .getRequestById(requestId)
+      .then((res) => {
+        setRequestDetails(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+
+    requestService
+      .getRequestByIdDetails(requestId)
+      .then((res) => {
+        setRequestParams(res.data.requestParams);
+        setRequestStatuses(res.data.requestStatuses);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  return (
+    <>
+      {isLoading ? (
+        <LinearProgress />
+      ) : (
+        <Card mb={6}>
           <CardContent>
             <Grid justifyContent="space-between" container spacing={10}>
               <Grid item>
@@ -174,29 +213,27 @@ function EmptyCard() {
                 </Button>
               </Grid>
             </Grid>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <CustomTableCell>Status</CustomTableCell>
-                  <CustomTableCell>Opis</CustomTableCell>
-                  <CustomTableCell>Vrijeme</CustomTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {requestStatuses.map((row) => (
-                  <TableRow key={row.statusId}>
-                    <CustomTableCell component="th" scope="row">
-                      {row.statusRef}
-                    </CustomTableCell>
-                    <CustomTableCell>{row.statusHref}</CustomTableCell>
-                    <CustomTableCell>
-                      {dateHelper.formatUtcToDate(row.statusInsertDate)}
-                    </CustomTableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
           </CardContent>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <CustomTableCell>Status</CustomTableCell>
+                <CustomTableCell align="right">Vrijeme</CustomTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {requestStatuses.map((row) => (
+                <TableRow key={row.statusId}>
+                  <CustomTableCell component="th" scope="row">
+                    {row.statusType}
+                  </CustomTableCell>
+                  <CustomTableCell align="right">
+                    {dateHelper.formatUtcToDate(row.statusInsertDate)}
+                  </CustomTableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </Card>
       )}
     </>
@@ -226,6 +263,7 @@ function RequestDetail() {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <EmptyCard />
+          <RequestStatusCard />
         </Grid>
       </Grid>
     </React.Fragment>
