@@ -3,6 +3,7 @@ import styled, { withTheme } from "styled-components/macro";
 import { darken } from "polished";
 import { Search as SearchIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
+import "./search.css";
 
 import {
   Grid,
@@ -11,14 +12,17 @@ import {
   AppBar as MuiAppBar,
   IconButton as MuiIconButton,
   Toolbar,
+  List,
+  ListItem,
 } from "@mui/material";
 
-import { Menu as MenuIcon } from "@mui/icons-material";
+import { Close, Menu as MenuIcon } from "@mui/icons-material";
 
 import NavbarNotificationsDropdown from "./NavbarNotificationsDropdown";
 import NavbarMessagesDropdown from "./NavbarMessagesDropdown";
 import NavbarLanguagesDropdown from "./NavbarLanguagesDropdown";
 import NavbarUserDropdown from "./NavbarUserDropdown";
+import { useNavigate } from "react-router-dom";
 
 const AppBar = styled(MuiAppBar)`
   background: ${(props) => props.theme.header.background};
@@ -78,7 +82,51 @@ const Input = styled(InputBase)`
 `;
 
 const Navbar = ({ onDrawerToggle }) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
+  const [filteredData, setFilteredData] = React.useState([]);
+  const [wordEntered, setWordEntered] = React.useState("");
+
+  let data = [
+    {
+      name: "Zahtjevi",
+      link: "/requests",
+    },
+    {
+      name: "Smetnje",
+      link: "/fault-orders",
+    },
+    {
+      name: "Izvještaji",
+      link: "/report-orders",
+    },
+  ];
+
+  const handleFilter = (event) => {
+    const searchWord = event.target.value;
+    setWordEntered(searchWord);
+    const newFilter = data.filter((value) => {
+      return value.name.toLowerCase().includes(searchWord.toLowerCase());
+    });
+
+    if (searchWord === "") {
+      setFilteredData([]);
+    } else {
+      setFilteredData(newFilter);
+    }
+  };
+
+  const clearInput = () => {
+    setFilteredData([]);
+    setWordEntered("");
+  };
+
+  const handleClickItem = (link) => {
+    setFilteredData([]);
+    setWordEntered("");
+    navigate(link);
+  };
+
   return (
     <React.Fragment>
       <AppBar position="sticky" elevation={0}>
@@ -97,12 +145,50 @@ const Navbar = ({ onDrawerToggle }) => {
               </Grid>
             </Hidden>
             <Grid item>
-              <Search>
+              {/* <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
-                <Input placeholder={t("Search")} />
-              </Search>
+                <Input placeholder="Pretraga" />
+              </Search> */}
+              <div className="search">
+                <div className="searchInputs">
+                  <Search>
+                    <IconButton>
+                      {filteredData.length === 0 ? (
+                        <SearchIcon
+                          style={{
+                            color: "black",
+                          }}
+                        />
+                      ) : (
+                        <Close
+                          id="clearBtn"
+                          style={{
+                            color: "black",
+                          }}
+                          onClick={clearInput}
+                        />
+                      )}
+                    </IconButton>
+                    {/* <SearchIconWrapper></SearchIconWrapper> */}
+                    <Input
+                      style={{ width: "350px" }}
+                      placeholder="Pretraga"
+                      value={wordEntered}
+                      onChange={handleFilter}
+                    />
+                  </Search>
+
+                  {/* <div className="searchIcon">
+                    {filteredData.length === 0 ? (
+                      <SearchIcon />
+                    ) : (
+                      <CloseIcon id="clearBtn" onClick={clearInput} />
+                    )}
+                  </div> */}
+                </div>
+              </div>
             </Grid>
             <Grid item xs />
             <Grid item>
@@ -111,6 +197,23 @@ const Navbar = ({ onDrawerToggle }) => {
           </Grid>
         </Toolbar>
       </AppBar>
+      {filteredData.length != 0 && (
+        <div className="dataResult">
+          {filteredData.slice(0, 15).map((value, key) => {
+            return (
+              <List>
+                <ListItem
+                  className="dataItem"
+                  target="_blank"
+                  onClick={() => handleClickItem(value.link)}
+                >
+                  {value.name}
+                </ListItem>
+              </List>
+            );
+          })}
+        </div>
+      )}
     </React.Fragment>
   );
 };
