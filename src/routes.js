@@ -173,21 +173,6 @@ const routes = [
   },
 
   {
-    path: "reporting-lists",
-    element: (
-      <AuthGuard>
-        <DashboardLayout />
-      </AuthGuard>
-    ),
-    children: [
-      {
-        path: "",
-        //element: <DataGridFaultRepair />,
-      },
-    ],
-  },
-
-  {
     path: "daily-list",
     element: (
       <AuthGuard>

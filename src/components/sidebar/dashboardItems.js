@@ -36,11 +36,6 @@ const elementsSection = [
     title: "Izvještaji",
   },
   {
-    href: "/reporting-lists",
-    icon: FormatListNumbered,
-    title: "Izvještajne liste",
-  },
-  {
     href: "/settings",
     icon: Settings,
     title: "Postavke",
