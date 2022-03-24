@@ -9,13 +9,6 @@ export const faultOrdersService = {
   createStatusNoParameters,
 };
 
-// async function getFaultOrders() {
-//   return axios
-//     .get(`${faultOrdersURL}?numRecords=10000&sortBy=-requestId`)
-//     .then((res) => res)
-//     .catch((err) => err);
-// }
-
 async function getFaultOrders(
   caseId,
   guid,
