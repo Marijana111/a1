@@ -61,6 +61,9 @@ const DataGrid = async(() => import("./pages/tables/DataGrid"));
 const DataGridOperators = async(() =>
   import("./pages/tables/Settings/Operators/DataGridOperators")
 );
+const AddOperator = async(() =>
+  import("./pages/tables/Settings/Operators/AddOperator")
+);
 const AddUser = async(() => import("./pages/tables/User/AddUser"));
 
 const DataGridRequests = async(() =>
@@ -125,6 +128,10 @@ const routes = [
       {
         path: "operators",
         element: <DataGridOperators />,
+      },
+      {
+        path: "operators/add-operator",
+        element: <AddOperator />,
       },
     ],
   },

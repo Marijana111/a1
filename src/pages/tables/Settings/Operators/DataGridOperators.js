@@ -232,7 +232,7 @@ function DataGridPage() {
           <Grid item>
             <div>
               <Button
-                onClick={() => navigate("/home")}
+                onClick={() => navigate("/settings/operators/add-operator")}
                 variant="contained"
                 type="button"
                 color="error"
