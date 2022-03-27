@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
 import styled from "styled-components/macro";
 import { NavLink } from "react-router-dom";
@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { pink } from "@mui/material/colors";
+import { operatorsService } from "../../../../Services/operatorsService";
 
 const Divider = styled(MuiDivider)(spacing);
 
@@ -120,6 +121,16 @@ function BasicForm() {
   const [isEnabledBSND, setIsEnabledBSND] = useState(false);
   const [isEnabledSNN, setIsEnabledSNN] = useState(false);
   const [isEnabledSBSN, setIsEnabledSBSN] = useState(false);
+  const [requestTypes, setRequestTypes] = useState([]);
+
+  useEffect(() => {
+    operatorsService
+      .getRequestTypes()
+      .then((res) => {
+        setRequestTypes(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Formik
