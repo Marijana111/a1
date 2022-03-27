@@ -99,7 +99,6 @@ function DataGridDemo() {
   const [operatorValue, setOperatorValue] = useState(null);
   const [operatorsOptions, setOperatorsOptions] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const [reloadData, setReloadData] = useState(false);
   const [search, setSearch] = useState({
     caseId: "",
     guid: "",
@@ -131,7 +130,25 @@ function DataGridDemo() {
         setOperatorsOptions(res.data);
       })
       .catch((err) => console.log(err));
-  }, [reloadData]);
+  }, [search]);
+
+  const reloadData = () => {
+    setIsLoading(true);
+    reportOrdersService
+      .getReportOrders(
+        search.caseId,
+        search.guid,
+        search.operator,
+        search.type,
+        search.dateFrom,
+        search.dateTo
+      )
+      .then((res) => {
+        setReportOrders(res.data.reportList);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const columns = [
     { field: "reportId", headerName: "Case Id", width: 105 },
@@ -216,11 +233,7 @@ function DataGridDemo() {
       <Card mb={6}>
         <CardContent pb={1}>
           <Typography variant="h6" gutterBottom>
-            <SmallButton
-              onClick={() => setReloadData(true)}
-              size="small"
-              mr={2}
-            >
+            <SmallButton onClick={() => reloadData()} size="small" mr={2}>
               <LoopIcon style={{ color: "black" }} />
             </SmallButton>
             <Button onClick={() => toggleFilters()}>

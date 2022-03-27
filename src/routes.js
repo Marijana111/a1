@@ -58,6 +58,12 @@ const Analytics = async(() => import("./pages/dashboards/Analytics"));
 const SaaS = async(() => import("./pages/dashboards/SaaS"));
 
 const DataGrid = async(() => import("./pages/tables/DataGrid"));
+const DataGridOperators = async(() =>
+  import("./pages/tables/Settings/Operators/DataGridOperators")
+);
+const AddOperator = async(() =>
+  import("./pages/tables/Settings/Operators/AddOperator")
+);
 const AddUser = async(() => import("./pages/tables/User/AddUser"));
 
 const DataGridRequests = async(() =>
@@ -121,7 +127,11 @@ const routes = [
       },
       {
         path: "operators",
-        element: <DataGrid />,
+        element: <DataGridOperators />,
+      },
+      {
+        path: "operators/add-operator",
+        element: <AddOperator />,
       },
     ],
   },
@@ -168,21 +178,6 @@ const routes = [
       {
         path: "add-status",
         element: <AddStatusFaulOrders />,
-      },
-    ],
-  },
-
-  {
-    path: "reporting-lists",
-    element: (
-      <AuthGuard>
-        <DashboardLayout />
-      </AuthGuard>
-    ),
-    children: [
-      {
-        path: "",
-        //element: <DataGridFaultRepair />,
       },
     ],
   },

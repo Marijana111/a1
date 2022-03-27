@@ -42,7 +42,6 @@ function Default() {
   const [faultOrdersTodayTotal, setFaultOrdersTodayTotal] = useState(0);
   const [faultOrdersActive, setFaultOrdersActive] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [reloadData, setReloadData] = useState(false);
 
   useEffect(() => {
     homeService
@@ -76,7 +75,42 @@ function Default() {
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
-  }, [reloadData]);
+  }, []);
+
+  const reloadData = () => {
+    setIsLoading(true);
+    homeService
+      .getTodayRequests(dateHelper.formatUtcToDateApiNoTime(new Date()))
+      .then((res) => {
+        setRequestsTodayTotal(res.data.total);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+
+    homeService
+      .getRequestsActive()
+      .then((res) => {
+        setRequestsActive(res.data.total);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+
+    homeService
+      .getTodayFaultOrders(dateHelper.formatUtcToDateApiNoTime(new Date()))
+      .then((res) => {
+        setFaultOrdersTodayTotal(res.data.total);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+
+    homeService
+      .getFaultOrdersActive()
+      .then((res) => {
+        setFaultOrdersActive(res.data.total);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <React.Fragment>
@@ -90,7 +124,7 @@ function Default() {
 
         <Grid item>
           {/* <Actions /> */}
-          <SmallButton onClick={() => setReloadData(true)} size="small" mr={2}>
+          <SmallButton onClick={() => reloadData()} size="small" mr={2}>
             <LoopIcon style={{ color: "black" }} />
           </SmallButton>
           <Button

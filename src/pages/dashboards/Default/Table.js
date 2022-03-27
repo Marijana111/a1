@@ -75,15 +75,15 @@ function DashboardTable() {
   const [faultOrders, setFaultOrders] = useState([]);
   const [anchorMenu, setAnchorMenu] = useState(null);
   const [anchorMenuReq, setAnchorMenuReq] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [reloadData, setReloadData] = useState(false);
+  const [isLoadingRequests, setIsLoadingRequests] = useState(true);
+  const [isLoadingFaults, setIsLoadingFaults] = useState(true);
 
   useEffect(() => {
     homeService
       .getLastFiveRequests()
       .then((res) => {
         setRequests(res.data.requestList.slice(0, 5));
-        setIsLoading(false);
+        setIsLoadingRequests(false);
       })
       .catch((err) => console.log(err));
 
@@ -91,10 +91,32 @@ function DashboardTable() {
       .getLastFiveFaultOrders()
       .then((res) => {
         setFaultOrders(res.data.requestList.slice(0, 5));
-        setIsLoading(false);
+        setIsLoadingFaults(false);
       })
       .catch((err) => console.log(err));
-  }, [reloadData]);
+  }, []);
+
+  const reloadData = (typeOfTable) => {
+    if (typeOfTable == 1) {
+      setIsLoadingRequests(true);
+      homeService
+        .getLastFiveRequests()
+        .then((res) => {
+          setRequests(res.data.requestList.slice(0, 5));
+          setIsLoadingRequests(false);
+        })
+        .catch((err) => console.log(err));
+    } else if (typeOfTable == 2) {
+      setIsLoadingFaults(true);
+      homeService
+        .getLastFiveFaultOrders()
+        .then((res) => {
+          setFaultOrders(res.data.requestList.slice(0, 5));
+          setIsLoadingFaults(false);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   const toggleMenuReq = (event) => {
     setAnchorMenuReq(event.currentTarget);
@@ -118,11 +140,7 @@ function DashboardTable() {
         <CardHeader
           action={
             <>
-              <SmallButton
-                onClick={() => setReloadData(true)}
-                size="small"
-                mr={2}
-              >
+              <SmallButton onClick={() => reloadData(1)} size="small" mr={2}>
                 <LoopIcon style={{ color: "black" }} />
               </SmallButton>
               <IconButton
@@ -155,7 +173,7 @@ function DashboardTable() {
         />
         <Paper>
           <TableWrapper>
-            {isLoading ? (
+            {isLoadingRequests ? (
               <LinearProgress />
             ) : (
               <Table>
@@ -219,11 +237,7 @@ function DashboardTable() {
         <CardHeader
           action={
             <>
-              <SmallButton
-                onClick={() => setReloadData(true)}
-                size="small"
-                mr={2}
-              >
+              <SmallButton onClick={() => reloadData(2)} size="small" mr={2}>
                 <LoopIcon style={{ color: "black" }} />
               </SmallButton>
               <IconButton
@@ -254,7 +268,7 @@ function DashboardTable() {
         />
         <Paper>
           <TableWrapper>
-            {isLoading ? (
+            {isLoadingFaults ? (
               <LinearProgress />
             ) : (
               <Table>
