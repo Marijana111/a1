@@ -134,7 +134,7 @@ function DataGridDemo() {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<RemoveRedEye label="Detalji" />}
-          onClick={() => handleToDetail(params.operatorRef)}
+          onClick={() => handleToDetail(params.row.operatorRef)}
         />,
         <GridActionsCellItem
           icon={<Edit />}
@@ -160,10 +160,10 @@ function DataGridDemo() {
     }
   };
 
-  const handleToDetail = (id) => {
-    navigate(`/requests/details/${id}`, {
+  const handleToDetail = (ref) => {
+    navigate(`/settings/operators/details/${ref}`, {
       state: {
-        requestId: id,
+        operatorRef: ref,
       },
     });
   };
