@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useLocation } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import "./operators.css";
 
 import {
   CardContent,
@@ -23,6 +22,7 @@ import {
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { operatorsService } from "../../../../Services/operatorsService";
+import "./operators.css";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -66,8 +66,10 @@ function EmptyCard() {
   const navigate = useNavigate();
 
   let operatorRef = state.operatorRef;
+  let filteredTypes = [];
 
   const [operatorDetails, setOperatorDetails] = useState({});
+  const [possibleRequestTypes, setPossibleRequestTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -78,10 +80,27 @@ function EmptyCard() {
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
+
+    operatorsService
+      .getRequestTypes()
+      .then((res) => {
+        setPossibleRequestTypes(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
+  filteredTypes = possibleRequestTypes.filter((el) => {
+    return operatorDetails.operatorRequestTypes.some((f) => {
+      return f.requestType.typeName !== el.requestTypeName;
+    });
+  });
+
   const setRequestTypeInputsEnabled = (typeName, checked) => {
-    console.log("typeName", typeName, checked);
+    document.getElementById(typeName).disabled = !checked;
+  };
+
+  const setPossibleRequestTypeInputsEnabled = (typeName, checked) => {
     document.getElementById(typeName).disabled = !checked;
   };
 
@@ -100,11 +119,10 @@ function EmptyCard() {
             </Grid>
             <Grid item md={5}>
               <CssTextField
-                disabled
                 focusColor="black"
                 name="name"
                 label="Naziv"
-                value={operatorDetails.operatorName}
+                defaultValue={operatorDetails.operatorName}
                 fullWidth
                 variant="outlined"
                 my={2}
@@ -112,11 +130,10 @@ function EmptyCard() {
             </Grid>
             <Grid item md={5}>
               <CssTextField
-                disabled
                 focusColor="black"
                 name="oib"
                 label="OIB"
-                value={operatorDetails.operatorReferenceId}
+                defaultValue={operatorDetails.operatorReferenceId}
                 fullWidth
                 variant="outlined"
                 my={2}
@@ -134,6 +151,7 @@ function EmptyCard() {
                   <FormControlLabel
                     control={
                       <StyledSwitch
+                        key={type.requestType.typeId}
                         defaultChecked
                         onChange={(event) => {
                           setRequestTypeInputsEnabled(
@@ -149,9 +167,9 @@ function EmptyCard() {
                   />
                   <fieldset id={type.requestType.typeName}>
                     <CssTextField
+                      key={type.wholesaleAccount.sblAccountId}
                       focusColor="black"
                       defaultValue={type.wholesaleAccount.sblAccountId}
-                      //   value={type.wholesaleAccount.sblAccountId}
                       name="AccountId"
                       label="AccountId"
                       fullWidth
@@ -159,28 +177,31 @@ function EmptyCard() {
                       my={2}
                     />
                     <CssTextField
+                      key={type.wholesaleAccount.sblBillingAccountId}
                       focusColor="black"
                       name="BillingAccountId"
                       label="BillingAccountId"
-                      value={type.wholesaleAccount.sblBillingAccountId}
+                      defaultValue={type.wholesaleAccount.sblBillingAccountId}
                       fullWidth
                       variant="outlined"
                       my={2}
                     />
                     <CssTextField
+                      key={type.wholesaleAccount.sblBillingProfileId}
                       focusColor="black"
                       name="BillingProfileId"
                       label="BillingProfileId"
-                      value={type.wholesaleAccount.sblBillingProfileId}
+                      defaultValue={type.wholesaleAccount.sblBillingProfileId}
                       fullWidth
                       variant="outlined"
                       my={2}
                     />
                     <CssTextField
+                      key={type.wholesaleAccount.sblBillingProfileName}
                       focusColor="black"
                       name="BillingProfileName"
                       label="BillingProfileName"
-                      value={type.wholesaleAccount.sblBillingProfileName}
+                      defaultValue={type.wholesaleAccount.sblBillingProfileName}
                       fullWidth
                       variant="outlined"
                       my={2}
@@ -188,6 +209,64 @@ function EmptyCard() {
                   </fieldset>
                 </Grid>
               ))}
+            {filteredTypes &&
+              filteredTypes.map((filType) => {
+                return (
+                  <Grid item md={4}>
+                    <FormControlLabel
+                      control={
+                        <StyledSwitch
+                          key={filType.requestTypeId}
+                          defaultChecked={false}
+                          onChange={(event) => {
+                            setPossibleRequestTypeInputsEnabled(
+                              filType.requestTypeName,
+                              event.target.checked
+                            );
+                          }}
+                          style={{ color: "#233044" }}
+                          name={filType.requestTypeName}
+                        />
+                      }
+                      label={filType.requestTypeDescription}
+                    />
+                    <fieldset disabled id={filType.requestTypeName}>
+                      <CssTextField
+                        focusColor="black"
+                        name="AccountId"
+                        label="AccountId"
+                        fullWidth
+                        variant="outlined"
+                        my={2}
+                      />
+                      <CssTextField
+                        focusColor="black"
+                        name="BillingAccountId"
+                        label="BillingAccountId"
+                        fullWidth
+                        variant="outlined"
+                        my={2}
+                      />
+                      <CssTextField
+                        focusColor="black"
+                        name="BillingProfileId"
+                        label="BillingProfileId"
+                        fullWidth
+                        variant="outlined"
+                        my={2}
+                      />
+                      <CssTextField
+                        focusColor="black"
+                        name="BillingProfileName"
+                        label="BillingProfileName"
+                        fullWidth
+                        variant="outlined"
+                        my={2}
+                      />
+                    </fieldset>
+                  </Grid>
+                );
+              })}
             <Grid item md={12}>
               <h4>
                 <strong>Izvještaji</strong>
@@ -200,7 +279,9 @@ function EmptyCard() {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={repType.report.reportId > 0 ? true : false}
+                        defaultChecked
+                        key={repType.report.reportId}
+                        // checked={repType.report.reportId > 0 ? true : false}
                         name="gilad"
                         style={{ color: "black" }}
                       />
@@ -211,6 +292,21 @@ function EmptyCard() {
                 </Grid>
               ))}
           </Grid>
+          <br />
+          <br />
+          <Button type="submit" variant="contained" color="error" mt={3}>
+            Spremi
+          </Button>
+          &nbsp; &nbsp;
+          <Button
+            onClick={() => navigate("/settings/operators")}
+            style={{ backgroundColor: "black" }}
+            type="button"
+            variant="contained"
+            mt={3}
+          >
+            Odustani
+          </Button>
         </form>
       )}
     </>
@@ -220,7 +316,7 @@ function EmptyCard() {
 function RequestDetail() {
   return (
     <React.Fragment>
-      <Helmet title="Uredi operatora" />
+      <Helmet title="Uredi" />
       <Typography variant="h3" gutterBottom display="inline">
         Uredi operatora
       </Typography>

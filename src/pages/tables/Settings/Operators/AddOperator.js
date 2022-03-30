@@ -121,7 +121,7 @@ function BasicForm() {
   const [isEnabledBSND, setIsEnabledBSND] = useState(false);
   const [isEnabledSNN, setIsEnabledSNN] = useState(false);
   const [isEnabledSBSN, setIsEnabledSBSN] = useState(false);
-  const [requestTypes, setRequestTypes] = useState([]);
+  const [requestTypes, setRequestTypes] = useState([{}]);
 
   useEffect(() => {
     operatorsService
@@ -705,7 +705,7 @@ function BasicForm() {
                 </Button>
                 &nbsp; &nbsp;
                 <Button
-                  onClick={() => navigate("/home")}
+                  onClick={() => navigate("/settings/operators")}
                   style={{ backgroundColor: "black" }}
                   type="button"
                   variant="contained"
