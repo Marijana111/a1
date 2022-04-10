@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useLocation } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
+import { useForm, Controller } from "react-hook-form";
 
 import {
   CardContent,
@@ -62,21 +63,33 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function EmptyCard() {
+  const { register, handleSubmit, errors, control, formState, setValue } =
+    useForm({
+      mode: "onChange",
+      reValidateMode: "onChange",
+    });
   const { state } = useLocation();
   const navigate = useNavigate();
 
   let operatorRef = state.operatorRef;
   let filteredTypes = [];
+  let operatorTypeNames = [];
 
-  const [operatorDetails, setOperatorDetails] = useState({});
+  const [operatorName, setOperatorName] = useState("");
+  const [operatorOib, setOperatorOib] = useState("");
   const [possibleRequestTypes, setPossibleRequestTypes] = useState([]);
+  const [operatorRequestTypes, setOperatorRequestTypes] = useState([]);
+  const [operatorReportTypes, setOperatorReportTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     operatorsService
       .getOperatorByRef(operatorRef)
       .then((res) => {
-        setOperatorDetails(res.data);
+        setOperatorRequestTypes(res.data.operatorRequestTypes);
+        setOperatorReportTypes(res.data.operatorReportTypes);
+        setOperatorName(res.data.operatorName);
+        setOperatorOib(res.data.operatorReferenceId);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
@@ -90,11 +103,13 @@ function EmptyCard() {
       .catch((err) => console.log(err));
   }, []);
 
-  filteredTypes = possibleRequestTypes.filter((el) => {
-    return operatorDetails.operatorRequestTypes.some((f) => {
-      return f.requestType.typeName !== el.requestTypeName;
-    });
+  operatorRequestTypes.map((type) => {
+    return operatorTypeNames.push(type.requestType.typeName);
   });
+
+  filteredTypes = possibleRequestTypes.filter(
+    (type) => !operatorTypeNames.includes(type.requestTypeName)
+  );
 
   const setRequestTypeInputsEnabled = (typeName, checked) => {
     document.getElementById(typeName).disabled = !checked;
@@ -104,12 +119,145 @@ function EmptyCard() {
     document.getElementById(typeName).disabled = !checked;
   };
 
+  const submit = (data) => {
+    let typeRefArray = [];
+    let sblAccountIdArray = [];
+    let sblBillingAccountIdArray = [];
+    let sblBillingProfileIdArray = [];
+    let sblBillingProfileNameArray = [];
+    let typeOfVariableExisting = typeof data.switchExistingType;
+    let typeOfVariablePossible = typeof data.switchPossibleType;
+
+    //Postojeći requestType
+    if (data.switchExistingType) {
+      if (typeOfVariableExisting !== "string") {
+        data.switchExistingType.forEach((element) => {
+          typeRefArray.push(document.getElementById(element + "typeRef").value);
+
+          sblAccountIdArray.push(
+            document.getElementById(element + "sblAccountId").value
+          );
+
+          sblBillingAccountIdArray.push(
+            document.getElementById(element + "sblBillingAccountId").value
+          );
+
+          sblBillingProfileIdArray.push(
+            document.getElementById(element + "sblBillingProfileId").value
+          );
+
+          sblBillingProfileNameArray.push(
+            document.getElementById(element + "sblBillingProfileName").value
+          );
+        });
+      } else {
+        typeRefArray.push(
+          document.getElementById(data.switchExistingType + "typeRef").value
+        );
+
+        sblAccountIdArray.push(
+          document.getElementById(data.switchExistingType + "sblAccountId")
+            .value
+        );
+
+        sblBillingAccountIdArray.push(
+          document.getElementById(
+            data.switchExistingType + "sblBillingAccountId"
+          ).value
+        );
+
+        sblBillingProfileIdArray.push(
+          document.getElementById(
+            data.switchExistingType + "sblBillingProfileId"
+          ).value
+        );
+
+        sblBillingProfileNameArray.push(
+          document.getElementById(
+            data.switchExistingType + "sblBillingProfileName"
+          ).value
+        );
+      }
+    }
+
+    //Mogući requestType
+    if (data.switchPossibleType) {
+      if (typeOfVariablePossible !== "string") {
+        data.switchPossibleType.forEach((element) => {
+          typeRefArray.push(
+            document.getElementById(element + "typeRefPoss").value
+          );
+
+          sblAccountIdArray.push(
+            document.getElementById(element + "AccountIdPoss").value
+          );
+
+          sblBillingAccountIdArray.push(
+            document.getElementById(element + "BillingAccountIdPoss").value
+          );
+
+          sblBillingProfileIdArray.push(
+            document.getElementById(element + "BillingProfileIdPoss").value
+          );
+
+          sblBillingProfileNameArray.push(
+            document.getElementById(element + "BillingProfileNamePoss").value
+          );
+        });
+      } else {
+        typeRefArray.push(
+          document.getElementById(data.switchPossibleType + "typeRefPoss").value
+        );
+
+        sblAccountIdArray.push(
+          document.getElementById(
+            data.switchPossibleType + "BillingAccountIdPoss"
+          ).value
+        );
+
+        sblBillingAccountIdArray.push(
+          document.getElementById(
+            data.switchPossibleType + "BillingAccountIdPoss"
+          ).value
+        );
+
+        sblBillingProfileIdArray.push(
+          document.getElementById(
+            data.switchPossibleType + "BillingProfileIdPoss"
+          ).value
+        );
+
+        sblBillingProfileNameArray.push(
+          document.getElementById(
+            data.switchPossibleType + "BillingProfileNamePoss"
+          ).value
+        );
+      }
+    }
+
+    operatorsService
+      .updateOperator(
+        data.name,
+        data.oib,
+        typeRefArray,
+        sblAccountIdArray,
+        sblBillingAccountIdArray,
+        sblBillingProfileIdArray,
+        sblBillingProfileNameArray,
+        data.checkboxReport
+      )
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       {isLoading ? (
         <LinearProgress />
       ) : (
-        <form>
+        <form onSubmit={handleSubmit(submit)}>
           <Grid container spacing={6}>
             <Grid item md={12}>
               <h4>
@@ -122,7 +270,8 @@ function EmptyCard() {
                 focusColor="black"
                 name="name"
                 label="Naziv"
-                defaultValue={operatorDetails.operatorName}
+                value={operatorName && operatorName}
+                {...register("name")}
                 fullWidth
                 variant="outlined"
                 my={2}
@@ -133,7 +282,8 @@ function EmptyCard() {
                 focusColor="black"
                 name="oib"
                 label="OIB"
-                defaultValue={operatorDetails.operatorReferenceId}
+                {...register("oib")}
+                value={operatorOib && operatorOib}
                 fullWidth
                 variant="outlined"
                 my={2}
@@ -145,126 +295,184 @@ function EmptyCard() {
               </h4>
               <Divider />
             </Grid>
-            {operatorDetails &&
-              operatorDetails.operatorRequestTypes.map((type) => (
-                <Grid item md={4}>
-                  <FormControlLabel
-                    control={
-                      <StyledSwitch
-                        key={type.requestType.typeId}
-                        defaultChecked
-                        onChange={(event) => {
-                          setRequestTypeInputsEnabled(
-                            type.requestType.typeName,
-                            event.target.checked
-                          );
-                        }}
-                        style={{ color: "#233044" }}
-                        name={type.requestType.typeName}
+            {operatorRequestTypes.length !== 0 &&
+              operatorRequestTypes.map((type) => {
+                return (
+                  <>
+                    <Grid container justify="center" md={3}>
+                      <FormControlLabel
+                        style={{ marginLeft: "25px" }}
+                        centered
+                        component
+                        control={
+                          <StyledSwitch
+                            key={type.requestType.typeId}
+                            defaultChecked
+                            value={type.requestType.typeName}
+                            onClick={(event) => {
+                              setRequestTypeInputsEnabled(
+                                type.requestType.typeName,
+                                event.target.checked
+                              );
+                            }}
+                            {...register("switchExistingType")}
+                            style={{ color: "#233044" }}
+                            name="switchExistingType"
+                          />
+                        }
+                        label={type.requestType.typeDescription}
                       />
-                    }
-                    label={type.requestType.typeDescription}
-                  />
-                  <fieldset id={type.requestType.typeName}>
-                    <CssTextField
-                      key={type.wholesaleAccount.sblAccountId}
-                      focusColor="black"
-                      defaultValue={type.wholesaleAccount.sblAccountId}
-                      name="AccountId"
-                      label="AccountId"
-                      fullWidth
-                      variant="outlined"
-                      my={2}
-                    />
-                    <CssTextField
-                      key={type.wholesaleAccount.sblBillingAccountId}
-                      focusColor="black"
-                      name="BillingAccountId"
-                      label="BillingAccountId"
-                      defaultValue={type.wholesaleAccount.sblBillingAccountId}
-                      fullWidth
-                      variant="outlined"
-                      my={2}
-                    />
-                    <CssTextField
-                      key={type.wholesaleAccount.sblBillingProfileId}
-                      focusColor="black"
-                      name="BillingProfileId"
-                      label="BillingProfileId"
-                      defaultValue={type.wholesaleAccount.sblBillingProfileId}
-                      fullWidth
-                      variant="outlined"
-                      my={2}
-                    />
-                    <CssTextField
-                      key={type.wholesaleAccount.sblBillingProfileName}
-                      focusColor="black"
-                      name="BillingProfileName"
-                      label="BillingProfileName"
-                      defaultValue={type.wholesaleAccount.sblBillingProfileName}
-                      fullWidth
-                      variant="outlined"
-                      my={2}
-                    />
-                  </fieldset>
-                </Grid>
-              ))}
-            {filteredTypes &&
+                    </Grid>
+                    <Grid item md={3}>
+                      <fieldset id={type.requestType.typeName}>
+                        <input
+                          className="inputNonDisplay"
+                          value={type.requestType.typeRef}
+                          type="text"
+                          id={type.requestType.typeName + "typeRef"}
+                        />
+                        <CssTextField
+                          id={type.requestType.typeName + "sblAccountId"}
+                          key={type.wholesaleAccount.sblAccountId}
+                          focusColor="black"
+                          defaultValue={type.wholesaleAccount.sblAccountId}
+                          name="AccountId"
+                          label="AccountId"
+                          {...register("AccountId")}
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={type.requestType.typeName + "sblBillingAccountId"}
+                          key={type.wholesaleAccount.sblBillingAccountId}
+                          focusColor="black"
+                          name="BillingAccountId"
+                          label="BillingAccountId"
+                          {...register("BillingAccountId")}
+                          defaultValue={
+                            type.wholesaleAccount.sblBillingAccountId
+                          }
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={type.requestType.typeName + "sblBillingProfileId"}
+                          key={type.wholesaleAccount.sblBillingProfileId}
+                          focusColor="black"
+                          name="BillingProfileId"
+                          label="BillingProfileId"
+                          {...register("BillingProfileId")}
+                          defaultValue={
+                            type.wholesaleAccount.sblBillingProfileId
+                          }
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={
+                            type.requestType.typeName + "sblBillingProfileName"
+                          }
+                          key={type.wholesaleAccount.sblBillingProfileName}
+                          focusColor="black"
+                          name="BillingProfileName"
+                          label="BillingProfileName"
+                          {...register("BillingProfileName")}
+                          defaultValue={
+                            type.wholesaleAccount.sblBillingProfileName
+                          }
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                      </fieldset>
+                    </Grid>
+                  </>
+                );
+              })}
+            {filteredTypes.length !== 0 &&
               filteredTypes.map((filType) => {
                 return (
-                  <Grid item md={4}>
-                    <FormControlLabel
-                      control={
-                        <StyledSwitch
-                          key={filType.requestTypeId}
-                          defaultChecked={false}
-                          onChange={(event) => {
-                            setPossibleRequestTypeInputsEnabled(
-                              filType.requestTypeName,
-                              event.target.checked
-                            );
-                          }}
-                          style={{ color: "#233044" }}
-                          name={filType.requestTypeName}
+                  <>
+                    <Grid container justify="center" md={3}>
+                      <FormControlLabel
+                        style={{ marginLeft: "25px" }}
+                        centered
+                        component
+                        control={
+                          <StyledSwitch
+                            key={filType.requestTypeId}
+                            defaultChecked={false}
+                            value={filType.requestTypeName}
+                            onClick={(event) => {
+                              setPossibleRequestTypeInputsEnabled(
+                                filType.requestTypeName,
+                                event.target.checked
+                              );
+                            }}
+                            {...register("switchPossibleType")}
+                            style={{ color: "#233044" }}
+                            name="switchPossibleType"
+                          />
+                        }
+                        label={filType.requestTypeDescription}
+                      />
+                    </Grid>
+                    <Grid item md={3}>
+                      <fieldset disabled id={filType.requestTypeName}>
+                        <input
+                          className="inputNonDisplay"
+                          value={filType.requestTypeRef}
+                          type="text"
+                          id={filType.requestTypeName + "typeRefPoss"}
                         />
-                      }
-                      label={filType.requestTypeDescription}
-                    />
-                    <fieldset disabled id={filType.requestTypeName}>
-                      <CssTextField
-                        focusColor="black"
-                        name="AccountId"
-                        label="AccountId"
-                        fullWidth
-                        variant="outlined"
-                        my={2}
-                      />
-                      <CssTextField
-                        focusColor="black"
-                        name="BillingAccountId"
-                        label="BillingAccountId"
-                        fullWidth
-                        variant="outlined"
-                        my={2}
-                      />
-                      <CssTextField
-                        focusColor="black"
-                        name="BillingProfileId"
-                        label="BillingProfileId"
-                        fullWidth
-                        variant="outlined"
-                        my={2}
-                      />
-                      <CssTextField
-                        focusColor="black"
-                        name="BillingProfileName"
-                        label="BillingProfileName"
-                        fullWidth
-                        variant="outlined"
-                        my={2}
-                      />
-                    </fieldset>
-                  </Grid>
+                        <CssTextField
+                          id={filType.requestTypeName + "AccountIdPoss"}
+                          focusColor="black"
+                          name="AccountIdPoss"
+                          label="AccountId"
+                          {...register("AccountIdPoss")}
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={filType.requestTypeName + "BillingAccountIdPoss"}
+                          focusColor="black"
+                          name="BillingAccountIdPoss"
+                          {...register("BillingAccountIdPoss")}
+                          label="BillingAccountId"
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={filType.requestTypeName + "BillingProfileIdPoss"}
+                          focusColor="black"
+                          name="BillingProfileIdPoss"
+                          {...register("BillingProfileIdPoss")}
+                          label="BillingProfileId"
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={
+                            filType.requestTypeName + "BillingProfileNamePoss"
+                          }
+                          focusColor="black"
+                          name="BillingProfileNamePoss"
+                          {...register("BillingProfileNamePoss")}
+                          label="BillingProfileName"
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                      </fieldset>
+                    </Grid>
+                  </>
                 );
               })}
             <Grid item md={12}>
@@ -273,21 +481,21 @@ function EmptyCard() {
               </h4>
               <Divider />
             </Grid>
-            {operatorDetails &&
-              operatorDetails.operatorReportTypes.map((repType) => (
-                <Grid item md={3}>
+            {operatorReportTypes.length !== 0 &&
+              operatorReportTypes.map((repType) => (
+                <Grid item md={6}>
                   <FormControlLabel
                     control={
                       <Checkbox
                         defaultChecked
                         key={repType.report.reportId}
-                        // checked={repType.report.reportId > 0 ? true : false}
-                        name="gilad"
+                        value={repType.report.reportType}
+                        {...register("checkboxReport")}
+                        name="checkboxReport"
                         style={{ color: "black" }}
                       />
                     }
                     label={repType.report.reportName}
-                    labelPlacement="bottom"
                   />
                 </Grid>
               ))}
