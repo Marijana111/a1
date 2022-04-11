@@ -20,10 +20,26 @@ import {
   Switch,
   Checkbox,
   TextField as MuiTextField,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { operatorsService } from "../../../../Services/operatorsService";
 import "./operators.css";
+import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const Card = styled(MuiCard)(spacing);
 
@@ -81,6 +97,9 @@ function EmptyCard() {
   const [operatorRequestTypes, setOperatorRequestTypes] = useState([]);
   const [operatorReportTypes, setOperatorReportTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSuccessfull, setIsSuccessfull] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     operatorsService
@@ -234,7 +253,7 @@ function EmptyCard() {
         );
       }
     }
-
+    setIsLoading(true);
     operatorsService
       .updateOperator(
         data.name,
@@ -247,15 +266,29 @@ function EmptyCard() {
         data.checkboxReport
       )
       .then((res) => {
-        console.log("res", res);
+        if (res.status == 200) {
+          setIsSuccessfull(true);
+        } else if (res.status !== 200) {
+          setIsSuccessfull(false);
+          setErrorMessage(res.statusText);
+        }
+        setIsLoading(false);
+        setOpenDialog(true);
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate("/settings/operators");
   };
 
   return (
     <>
       {isLoading ? (
-        <LinearProgress />
+        <Box display="flex" justifyContent="center" my={6}>
+          <CircularProgress />
+        </Box>
       ) : (
         <form onSubmit={handleSubmit(submit)}>
           <Grid container spacing={6}>
@@ -517,6 +550,64 @@ function EmptyCard() {
           </Button>
         </form>
       )}
+
+      <BootstrapDialog
+        PaperProps={{ sx: { width: "30%", height: "40%" } }}
+        onClose={handleCloseDialog}
+        aria-labelledby="customized-dialog-title"
+        open={openDialog}
+      >
+        <DialogTitle>
+          {isSuccessfull == true ? (
+            <strong>Uspješno</strong>
+          ) : (
+            <strong>Greška</strong>
+          )}
+        </DialogTitle>
+        <DialogContent
+          dividers
+          style={{ textAlign: "center", padding: "20px" }}
+        >
+          {isSuccessfull == true ? (
+            <>
+              <CheckCircleOutline
+                style={{ color: "green", fontSize: "80px" }}
+              />
+              <br />
+              <br />
+              <br />
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                }}
+              >
+                Uspješno ste uredili operatora!
+              </span>
+            </>
+          ) : (
+            <>
+              <ErrorOutline style={{ color: "red", fontSize: "80px" }} />
+              <br />
+              <br />
+              <br />
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                }}
+              >
+                {errorMessage && errorMessage}
+              </span>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseDialog}>
+            OK
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
     </>
   );
 }
