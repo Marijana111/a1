@@ -28,6 +28,21 @@ import { spacing } from "@mui/system";
 import { pink } from "@mui/material/colors";
 import { operatorsService } from "../../../../Services/operatorsService";
 import "./operators.css";
+import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { format } from "date-fns";
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const Divider = styled(MuiDivider)(spacing);
 
@@ -73,6 +88,16 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function BasicForm() {
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  //   setValue,
+  // } = useForm({
+  //   mode: "onChange",
+  //   reValidateMode: "onChange",
+  // });
+
   const { register, handleSubmit, errors, control, formState, setValue } =
     useForm({
       mode: "onChange",
@@ -80,549 +105,367 @@ function BasicForm() {
     });
 
   const navigate = useNavigate();
-  const [isEnabledNNA, setIsEnabledNNA] = useState(false);
-  const [isEnabledNND, setIsEnabledNND] = useState(false);
-  const [isEnabledBSNA, setIsEnabledBSNA] = useState(false);
-  const [isEnabledBSND, setIsEnabledBSND] = useState(false);
-  const [isEnabledSNN, setIsEnabledSNN] = useState(false);
-  const [isEnabledSBSN, setIsEnabledSBSN] = useState(false);
-  const [requestTypes, setRequestTypes] = useState([{}]);
+  const [requestTypes, setRequestTypes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessageName, setErrorMessageName] = useState("");
+  const [errorMessageOIB, setErrorMessageOIB] = useState("");
+  const [isSuccessfull, setIsSuccessfull] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  let reportTypes = [
+    { value: "10", label: "Izvještaj o dostupnim adresama" },
+    { value: "11", label: "Izvještaj o dostupnosti po adresi" },
+    { value: "12", label: "Provjera statusa usluge po oznaci priključka" },
+    {
+      value: "13",
+      label: "Izvještaj o slobodnim kapacitetima po distribucijskom čvoru",
+    },
+  ];
 
   useEffect(() => {
     operatorsService
       .getRequestTypes()
       .then((res) => {
         setRequestTypes(res.data);
+        setIsLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
 
+  const setRequestTypeInputsEnabled = (typeName, checked) => {
+    document.getElementById(typeName).disabled = !checked;
+  };
+
   const submit = (data) => {
-    console.log("dataCreate", data);
+    let typeRefArray = [];
+    let sblAccountIdArray = [];
+    let sblBillingAccountIdArray = [];
+    let sblBillingProfileIdArray = [];
+    let sblBillingProfileNameArray = [];
+
+    if (data.switchRequestType) {
+      if (data.switchRequestType.length > 1) {
+        data.switchRequestType.forEach((element) => {
+          typeRefArray.push(document.getElementById(element + "typeRef").value);
+
+          sblAccountIdArray.push(
+            document.getElementById(element + "AccountId").value
+          );
+
+          sblBillingAccountIdArray.push(
+            document.getElementById(element + "BillingAccountId").value
+          );
+
+          sblBillingProfileIdArray.push(
+            document.getElementById(element + "BillingProfileId").value
+          );
+
+          sblBillingProfileNameArray.push(
+            document.getElementById(element + "BillingProfileName").value
+          );
+        });
+      } else {
+        typeRefArray.push(
+          document.getElementById(data.switchRequestType + "typeRef").value
+        );
+
+        sblAccountIdArray.push(
+          document.getElementById(data.switchRequestType + "AccountId").value
+        );
+
+        sblBillingAccountIdArray.push(
+          document.getElementById(data.switchRequestType + "BillingAccountId")
+            .value
+        );
+
+        sblBillingProfileIdArray.push(
+          document.getElementById(data.switchRequestType + "BillingProfileId")
+            .value
+        );
+
+        sblBillingProfileNameArray.push(
+          document.getElementById(data.switchRequestType + "BillingProfileName")
+            .value
+        );
+      }
+    }
+
+    setIsLoading(true);
+    operatorsService
+      .createOperator(
+        data.name,
+        data.oib,
+        typeRefArray,
+        sblAccountIdArray,
+        sblBillingAccountIdArray,
+        sblBillingProfileIdArray,
+        sblBillingProfileNameArray,
+        data.checkboxReport == false ? [] : data.checkboxReport
+      )
+      .then((res) => {
+        if (res.status == 200) {
+          setIsSuccessfull(true);
+        } else if (res.status !== 200) {
+          setIsSuccessfull(false);
+          setErrorMessage(res.statusText);
+        }
+        setIsLoading(false);
+        setOpenDialog(true);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate("/settings/operators");
   };
 
   return (
-    <form onSubmit={handleSubmit(submit)}>
-      <Grid container spacing={6}>
-        <Grid item md={12}>
-          <h4>
-            <strong>Operator</strong>
-          </h4>
-          <Divider />
-        </Grid>
-        <Grid item md={5}>
-          <CssTextField
-            focusColor="black"
-            name="name"
-            label="Naziv"
-            {...register("name")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-        </Grid>
-        <Grid item md={5}>
-          <CssTextField
-            focusColor="black"
-            name="oib"
-            label="OIB"
-            {...register("oib")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-        </Grid>
-        <Grid item md={12}>
-          <h4>
-            <strong>Zahtjevi</strong>
-          </h4>
-          <Divider />
-        </Grid>
-        <Grid container justify="center" md={3}>
-          <FormControlLabel
-            style={{ marginLeft: "25px" }}
-            centered
-            component
-            control={
-              <StyledSwitch
-                //checked={isEnabledNNA}
-                onClick={(event) => {
-                  setIsEnabledNNA(event.target.checked);
+    <>
+      {isLoading ? (
+        <Box display="flex" justifyContent="center" my={6}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <form onSubmit={handleSubmit(submit)}>
+          <Grid container spacing={6}>
+            <Grid item md={12}>
+              <h4>
+                <strong>Operator</strong>
+              </h4>
+              <Divider />
+            </Grid>
+            <Grid item md={5}>
+              <CssTextField
+                focusColor="black"
+                name="name"
+                label="Naziv"
+                {...register("name")}
+                onChange={(event) => {
+                  if (event.target.value !== "") {
+                    setErrorMessageName("");
+                  } else {
+                    setErrorMessageName("Unesite validan naziv.");
+                  }
                 }}
-                style={{ color: "#233044" }}
-                name="typeNNA"
-                {...register("typeNNA")}
+                error={errorMessageName}
+                helperText={errorMessageName ? errorMessageName : ""}
+                fullWidth
+                variant="outlined"
+                my={2}
               />
-            }
-            label="Najam niti aktivacija"
-          />
-        </Grid>
-        <Grid item md={3}>
-          <input
-            className="inputNonDisplay"
-            value={"0b0c9dbf-bfbb-4abc-bb32-caa85e44d220"}
-            type="text"
-            {...register("NNAtypeRef")}
-          />
-          <CssTextField
-            disabled={isEnabledNNA ? false : true}
-            focusColor="black"
-            name="NNAAccountId"
-            label="AccountId"
-            {...register("NNAAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledNNA ? false : true}
-            focusColor="black"
-            name="NNABillingAccountId"
-            label="BillingAccountId"
-            {...register("NNABillingAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledNNA ? false : true}
-            focusColor="black"
-            name="NNABillingProfileId"
-            label="BillingProfileId"
-            {...register("NNABillingProfileId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledNNA ? false : true}
-            focusColor="black"
-            name="NNABillingProfileName"
-            label="BillingProfileName"
-            {...register("NNABillingProfileName")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-        </Grid>
-        <Grid container justify="center" md={3}>
-          <FormControlLabel
-            style={{ marginLeft: "25px" }}
-            centered
-            component
-            control={
-              <StyledSwitch
-                //checked={isEnabledNND}
-                onClick={(event) => {
-                  setIsEnabledNND(event.target.checked);
+            </Grid>
+            <Grid item md={5}>
+              <CssTextField
+                focusColor="black"
+                name="oib"
+                label="OIB"
+                {...register("oib")}
+                onChange={(event) => {
+                  let pattern = /^[0-9]*$/;
+                  if (
+                    pattern.test(event.target.value) &&
+                    event.target.value.length == 11 &&
+                    event.target.value !== ""
+                  ) {
+                    setErrorMessageOIB("");
+                  } else {
+                    setErrorMessageOIB("Unesite validan OIB.");
+                  }
                 }}
-                style={{ color: "#233044" }}
-                name="typeNND"
-                {...register("typeNND")}
+                error={errorMessageOIB}
+                helperText={errorMessageOIB ? errorMessageOIB : ""}
+                fullWidth
+                variant="outlined"
+                my={2}
               />
-            }
-            label="Najam niti deaktivacija"
-          />
-        </Grid>
-        <Grid item md={3}>
-          <input
-            className="inputNonDisplay"
-            value={"1e126157-f22e-49de-a730-2f34ae52b9e2"}
-            type="text"
-            {...register("NNDtypeRef")}
-          />
-          <CssTextField
-            disabled={isEnabledNND ? false : true}
-            focusColor="black"
-            name="NNDAccountId"
-            label="AccountId"
-            {...register("NNDAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledNND ? false : true}
-            focusColor="black"
-            name="NNDBillingAccountId"
-            label="BillingAccountId"
-            {...register("NNDBillingAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledNND ? false : true}
-            focusColor="black"
-            name="BillingProfileId"
-            label="BillingProfileId"
-            {...register("NNDBillingProfileId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledNND ? false : true}
-            focusColor="black"
-            name="NNDBillingProfileName"
-            label="BillingProfileName"
-            {...register("NNDBillingProfileName")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-        </Grid>
-        <Grid container justify="center" md={3}>
-          <FormControlLabel
-            style={{ marginLeft: "25px" }}
-            centered
-            component
-            control={
-              <StyledSwitch
-                //checked={isEnabledBSNA}
-                onClick={(event) => {
-                  setIsEnabledBSNA(event.target.checked);
-                }}
-                style={{ color: "#233044" }}
-                name="typeBSNA"
-                {...register("typeBSNA")}
-              />
-            }
-            label="Bitstream na niti aktivacija"
-          />
-        </Grid>
-        <Grid item md={3}>
-          <input
-            className="inputNonDisplay"
-            value={"f6927acd-a9df-47bd-ab39-584840f2b256"}
-            type="text"
-            {...register("BSNAtypeRef")}
-          />
-          <CssTextField
-            disabled={isEnabledBSNA ? false : true}
-            focusColor="black"
-            name="BSNAAccountId"
-            label="AccountId"
-            {...register("BSNAAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledBSNA ? false : true}
-            focusColor="black"
-            name="BSNABillingAccountId"
-            label="BillingAccountId"
-            {...register("BSNABillingAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledBSNA ? false : true}
-            focusColor="black"
-            name="BSNABillingProfileId"
-            label="BillingProfileId"
-            {...register("BSNABillingProfileId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledBSNA ? false : true}
-            focusColor="black"
-            name="BSNABillingProfileName"
-            label="BillingProfileName"
-            {...register("BSNABillingProfileName")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-        </Grid>
-        <Grid container justify="center" md={3}>
-          <FormControlLabel
-            style={{ marginLeft: "25px" }}
-            centered
-            component
-            control={
-              <StyledSwitch
-                //checked={isEnabledBSND}
-                onClick={(event) => {
-                  setIsEnabledBSND(event.target.checked);
-                }}
-                style={{ color: "#233044" }}
-                name="typeBSND"
-                {...register("typeBSND")}
-              />
-            }
-            label="Bitstream na niti deaktivacija"
-          />
-        </Grid>
-        <Grid item md={3}>
-          <input
-            className="inputNonDisplay"
-            value={"ab67a847-eaf1-441d-bb28-6b3f3dbb43eb"}
-            type="text"
-            {...register("BSNDtypeRef")}
-          />
-          <CssTextField
-            disabled={isEnabledBSND ? false : true}
-            focusColor="black"
-            name="BSNDAccountId"
-            label="AccountId"
-            {...register("BSNDAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledBSND ? false : true}
-            focusColor="black"
-            name="BSNDBillingAccountId"
-            label="BillingAccountId"
-            {...register("BSNDBillingAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledBSND ? false : true}
-            focusColor="black"
-            name="BSNDBillingProfileId"
-            label="BillingProfileId"
-            {...register("BSNDBillingProfileId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledBSND ? false : true}
-            focusColor="black"
-            name="BSNDBillingProfileName"
-            label="BillingProfileName"
-            {...register("BSNDBillingProfileName")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-        </Grid>
-        <Grid container justify="center" md={3}>
-          <FormControlLabel
-            style={{ marginLeft: "25px" }}
-            centered
-            component
-            control={
-              <StyledSwitch
-                //checked={isEnabledSNN}
-                onClick={(event) => {
-                  setIsEnabledSNN(event.target.checked);
-                }}
-                style={{ color: "#233044" }}
-                name="typeSNN"
-                {...register("typeSNN")}
-              />
-            }
-            label="Smetnja na usluzi najam niti"
-          />
-        </Grid>
-        <Grid item md={3}>
-          <input
-            className="inputNonDisplay"
-            value={"b74aa635-dd7a-455d-980c-853fc582b79d"}
-            type="text"
-            {...register("SNNtypeRef")}
-          />
-          <CssTextField
-            disabled={isEnabledSNN ? false : true}
-            focusColor="black"
-            name="SNNAccountId"
-            label="AccountId"
-            {...register("SNNAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledSNN ? false : true}
-            focusColor="black"
-            name="BillingAccountId"
-            label="BillingAccountId"
-            {...register("SNNBillingAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledSNN ? false : true}
-            focusColor="black"
-            name="SNNBillingProfileId"
-            label="BillingProfileId"
-            {...register("SNNBillingProfileId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledSNN ? false : true}
-            focusColor="black"
-            name="SNNBillingProfileName"
-            label="BillingProfileName"
-            {...register("SNNBillingProfileName")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-        </Grid>
-        <Grid container justify="center" md={3}>
-          <FormControlLabel
-            style={{ marginLeft: "25px" }}
-            centered
-            component
-            control={
-              <StyledSwitch
-                //checked={isEnabledSBSN}
-                onClick={(event) => {
-                  setIsEnabledSBSN(event.target.checked);
-                }}
-                style={{ color: "#233044" }}
-                name="typeSBSN"
-                {...register("typeSBSN")}
-              />
-            }
-            label="Smetnja na usluzi bitstream na niti"
-          />
-        </Grid>
-        <Grid item md={3}>
-          <input
-            className="inputNonDisplay"
-            value={"a358236e-6cb9-48d1-84a9-53621ce7a7de"}
-            type="text"
-            {...register("SBSNtypeRef")}
-          />
-          <CssTextField
-            disabled={isEnabledSBSN ? false : true}
-            focusColor="black"
-            name="SBSNAccountId"
-            label="AccountId"
-            {...register("SBSNAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledSBSN ? false : true}
-            focusColor="black"
-            name="SBSNBillingAccountId"
-            label="BillingAccountId"
-            {...register("SBSNBillingAccountId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledSBSN ? false : true}
-            focusColor="black"
-            name="SBSNBillingProfileId"
-            label="BillingProfileId"
-            {...register("SBSNBillingProfileId")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-          <CssTextField
-            disabled={isEnabledSBSN ? false : true}
-            focusColor="black"
-            name="SBSNBillingProfileName"
-            label="BillingProfileName"
-            {...register("SBSNBillingProfileName")}
-            fullWidth
-            variant="outlined"
-            my={2}
-          />
-        </Grid>
-        <Grid item md={12}>
-          <h4>
-            <strong>Izvještaji</strong>
-          </h4>
-          <Divider />
-        </Grid>
-        <Grid item md={6}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                //   checked={gilad}
-                //   onChange={handleChange}
-                value={"10"}
-                name="report10"
-                style={{ color: "black" }}
-                {...register("report10")}
-              />
-            }
-            label="Izvještaj o dostupnim adresama"
-          />
-        </Grid>
-        <Grid item md={6}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                //   checked={gilad}
-                //   onChange={handleChange}
-                value={"11"}
-                name="report11"
-                style={{ color: "black" }}
-                {...register("report11")}
-              />
-            }
-            label="Izvještaj o dostupnosti po adresi"
-          />
-        </Grid>
-        <Grid item md={6}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                //   checked={gilad}
-                //   onChange={handleChange}
-                value={"12"}
-                name="report12"
-                style={{ color: "black" }}
-                {...register("report12")}
-              />
-            }
-            label="Provjera statusa usluge po oznaci priključka"
-          />
-        </Grid>
-        <Grid item md={6}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                //   checked={gilad}
-                //   onChange={handleChange}
-                value={"13"}
-                name="report13"
-                style={{ color: "black" }}
-                {...register("report13")}
-              />
-            }
-            label="Izvještaj o slobodnim kapacitetima po distribucijskom čvoru"
-          />
-        </Grid>
-      </Grid>
-      <br />
-      <br />
-      <Button type="submit" variant="contained" color="error" mt={3}>
-        Spremi
-      </Button>
-      &nbsp; &nbsp;
-      <Button
-        onClick={() => navigate("/settings/operators")}
-        style={{ backgroundColor: "black" }}
-        type="button"
-        variant="contained"
-        mt={3}
+            </Grid>
+            <Grid item md={12}>
+              <h4>
+                <strong>Zahtjevi</strong>
+              </h4>
+              <Divider />
+            </Grid>
+            {requestTypes.length !== 0 &&
+              requestTypes.map((type) => {
+                return (
+                  <>
+                    <Grid container justify="center" md={3}>
+                      <FormControlLabel
+                        style={{ marginLeft: "25px" }}
+                        centered
+                        component
+                        control={
+                          <StyledSwitch
+                            key={type.requestTypeId}
+                            value={type.requestTypeName}
+                            onClick={(event) => {
+                              setRequestTypeInputsEnabled(
+                                type.requestTypeName,
+                                event.target.checked
+                              );
+                            }}
+                            {...register("switchRequestType")}
+                            style={{ color: "#233044" }}
+                            name="switchRequestType"
+                          />
+                        }
+                        label={type.requestTypeDescription}
+                      />
+                    </Grid>
+                    <Grid item md={3}>
+                      <fieldset disabled id={type.requestTypeName}>
+                        <input
+                          className="inputNonDisplay"
+                          value={type.requestTypeRef}
+                          type="text"
+                          id={type.requestTypeName + "typeRef"}
+                        />
+                        <CssTextField
+                          id={type.requestTypeName + "AccountId"}
+                          focusColor="black"
+                          name="AccountId"
+                          label="AccountId"
+                          {...register("AccountId")}
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={type.requestTypeName + "BillingAccountId"}
+                          focusColor="black"
+                          name="BillingAccountId"
+                          label="BillingAccountId"
+                          {...register("BillingAccountId")}
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={type.requestTypeName + "BillingProfileId"}
+                          focusColor="black"
+                          name="BillingProfileId"
+                          label="BillingProfileId"
+                          {...register("BillingProfileId")}
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                        <CssTextField
+                          id={type.requestTypeName + "BillingProfileName"}
+                          focusColor="black"
+                          name="BillingProfileName"
+                          label="BillingProfileName"
+                          {...register("BillingProfileName")}
+                          fullWidth
+                          variant="outlined"
+                          my={2}
+                        />
+                      </fieldset>
+                    </Grid>
+                  </>
+                );
+              })}
+            <Grid item md={12}>
+              <h4>
+                <strong>Izvještaji</strong>
+              </h4>
+              <Divider />
+            </Grid>
+            {reportTypes.length !== 0 &&
+              reportTypes.map((repType) => (
+                <Grid item md={6}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        value={repType.value}
+                        {...register("checkboxReport")}
+                        name="checkboxReport"
+                        style={{ color: "black" }}
+                      />
+                    }
+                    label={repType.label}
+                  />
+                </Grid>
+              ))}
+          </Grid>
+          <br />
+          <br />
+          <Button type="submit" variant="contained" color="error" mt={3}>
+            Spremi
+          </Button>
+          &nbsp; &nbsp;
+          <Button
+            onClick={() => navigate("/settings/operators")}
+            style={{ backgroundColor: "black" }}
+            type="button"
+            variant="contained"
+            mt={3}
+          >
+            Odustani
+          </Button>
+        </form>
+      )}
+
+      <BootstrapDialog
+        PaperProps={{ sx: { width: "30%", height: "40%" } }}
+        onClose={handleCloseDialog}
+        aria-labelledby="customized-dialog-title"
+        open={openDialog}
       >
-        Odustani
-      </Button>
-    </form>
+        <DialogTitle>
+          {isSuccessfull == true ? (
+            <strong>Uspješno</strong>
+          ) : (
+            <strong>Greška</strong>
+          )}
+        </DialogTitle>
+        <DialogContent
+          dividers
+          style={{ textAlign: "center", padding: "20px" }}
+        >
+          {isSuccessfull == true ? (
+            <>
+              <CheckCircleOutline
+                style={{ color: "green", fontSize: "80px" }}
+              />
+              <br />
+              <br />
+              <br />
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                }}
+              >
+                Uspješno ste uredili operatora!
+              </span>
+            </>
+          ) : (
+            <>
+              <ErrorOutline style={{ color: "red", fontSize: "80px" }} />
+              <br />
+              <br />
+              <br />
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                }}
+              >
+                {errorMessage && errorMessage}
+              </span>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseDialog}>
+            OK
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
+    </>
   );
 }
 

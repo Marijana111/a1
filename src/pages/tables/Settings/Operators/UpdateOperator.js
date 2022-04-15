@@ -145,7 +145,6 @@ function EmptyCard() {
     let sblBillingProfileIdArray = [];
     let sblBillingProfileNameArray = [];
     let typeOfVariableExisting = typeof data.switchExistingType;
-    let typeOfVariablePossible = typeof data.switchPossibleType;
 
     //Postojeći requestType
     if (data.switchExistingType) {
@@ -201,7 +200,7 @@ function EmptyCard() {
 
     //Mogući requestType
     if (data.switchPossibleType) {
-      if (typeOfVariablePossible !== "string") {
+      if (data.switchPossibleType.length > 1) {
         data.switchPossibleType.forEach((element) => {
           typeRefArray.push(
             document.getElementById(element + "typeRefPoss").value
@@ -253,6 +252,7 @@ function EmptyCard() {
         );
       }
     }
+
     setIsLoading(true);
     operatorsService
       .updateOperator(

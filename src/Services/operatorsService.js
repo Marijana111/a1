@@ -23,9 +23,43 @@ async function getOperatorByRef(ref) {
     .catch((err) => err);
 }
 
-async function createOperator() {
+async function createOperator(
+  name,
+  oib,
+  typeRefArray,
+  sblAccountIdArray,
+  sblBillingAccountIdArray,
+  sblBillingProfileIdArray,
+  sblBillingProfileNameArray,
+  reportArray
+) {
+  let reportTypesList = [];
+  for (let i = 0; i < reportArray.length; i++) {
+    var reports = {
+      reportType: reportArray[i],
+    };
+    reportTypesList.push(reports);
+  }
+
+  let requestTypesList = [];
+  for (let i = 0; i < typeRefArray.length; i++) {
+    var requests = {
+      requestTypeRef: typeRefArray[i],
+      sblAccountId: sblAccountIdArray[i],
+      sblBillingAccountId: sblBillingAccountIdArray[i],
+      sblBillingProfileId: sblBillingProfileIdArray[i],
+      sblBillingProfileName: sblBillingProfileNameArray[i],
+    };
+    requestTypesList.push(requests);
+  }
+
   return axios
-    .post(`${operatorsURL}`, {})
+    .post(`${operatorsURL}`, {
+      operatorName: name,
+      operatorReferenceId: oib,
+      operatorReportTypes: reportTypesList,
+      requestTypeList: requestTypesList,
+    })
     .then((res) => res)
     .catch((err) => err);
 }
@@ -40,17 +74,6 @@ async function updateOperator(
   sblBillingProfileNameArray,
   reportArray
 ) {
-  console.log(
-    "bodyUpdateSerrr",
-    name,
-    oib,
-    typeRefArray,
-    sblAccountIdArray,
-    sblBillingAccountIdArray,
-    sblBillingProfileIdArray,
-    sblBillingProfileNameArray,
-    reportArray
-  );
   let reportTypesList = [];
   for (let i = 0; i < reportArray.length; i++) {
     var reports = {
