@@ -138,7 +138,7 @@ function DataGridDemo() {
         />,
         <GridActionsCellItem
           icon={<Edit />}
-          onClick={() => console.log("edit")}
+          onClick={() => handleToUpdate(params.row.operatorRef)}
         />,
       ],
     },
@@ -164,6 +164,14 @@ function DataGridDemo() {
     navigate(`/settings/operators/details/${ref}`, {
       state: {
         operatorRef: ref,
+      },
+    });
+  };
+
+  const handleToUpdate = (refOperator) => {
+    navigate(`/settings/operators/update-operator/${refOperator}`, {
+      state: {
+        operatorRef: refOperator,
       },
     });
   };

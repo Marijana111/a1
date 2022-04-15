@@ -85,11 +85,6 @@ const initialValues = {
   value: null,
 };
 
-// const validationSchema = Yup.object().shape({
-//   name: Yup.string(),
-//   value: Yup.string(),
-// });
-
 function BasicForm() {
   const { state } = useLocation();
   const [valueDateFrom, setValueDateFrom] = useState(new Date());
@@ -178,17 +173,6 @@ function BasicForm() {
           console.log(err);
         });
     }
-
-    // try {
-    //   await timeOut(1500);
-    //   setStatus({ sent: true });
-    //   setSubmitting(false);
-    //   setOpenDialog(true);
-    // } catch (error) {
-    //   setStatus({ sent: false });
-    //   setErrors({ submit: error.message });
-    //   setSubmitting(false);
-    // }
   };
 
   const navigate = useNavigate();
