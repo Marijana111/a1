@@ -1,20 +1,16 @@
 import axios from "axios";
+import { userURL } from "../components/Config/Url";
 
 export const userService = {
-  getUsers,
-  getUserById,
+  login,
 };
 
-async function getUsers() {
+async function login(password, userName) {
   return axios
-    .get(`https://jsonplaceholder.typicode.com/users`)
-    .then((res) => res)
-    .catch((err) => err);
-}
-
-async function getUserById(id) {
-  return axios
-    .get(`https://jsonplaceholder.typicode.com/users/${id}`)
+    .post(`${userURL}/user/login`, {
+      password,
+      userName,
+    })
     .then((res) => res)
     .catch((err) => err);
 }

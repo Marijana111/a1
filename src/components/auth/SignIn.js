@@ -13,6 +13,11 @@ import {
   TextField as MuiTextField,
 } from "@mui/material";
 import { spacing } from "@mui/system";
+import {
+  loginUser,
+  useAuthState,
+  useAuthDispatch,
+} from "../../components/Context";
 
 import useAuth from "../../hooks/useAuth";
 
@@ -22,7 +27,10 @@ const TextField = styled(MuiTextField)(spacing);
 
 function SignIn() {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+
+  const dispatch = useAuthDispatch();
+  const { loading, errorMessage } = useAuthState();
+  //const { signIn } = useAuth();
 
   const CssTextField = styled(TextField, {
     shouldForwardProp: (props) => props !== "focusColor",
@@ -56,23 +64,32 @@ function SignIn() {
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string()
-          .email("Unesite validan email.")
+          //.email("Unesite validan email.")
           .max(255)
           .required("Obavezno polje."),
         password: Yup.string().max(255).required("Obavezno polje."),
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        let password = values.password;
+        let userName = values.email;
         try {
-          await signIn(values.email, values.password);
-
+          let response = await loginUser(dispatch, { password, userName });
+          if (!response) return;
           navigate("/home");
         } catch (error) {
-          const message = error.message || "Dogodila se greška.";
-
-          setStatus({ success: false });
-          setErrors({ submit: message });
-          setSubmitting(false);
+          console.log(error);
         }
+        // try {
+        //   await signIn(values.email, values.password);
+
+        //   navigate("/home");
+        // } catch (error) {
+        //   const message = error.message || "Dogodila se greška.";
+
+        //   setStatus({ success: false });
+        //   setErrors({ submit: message });
+        //   setSubmitting(false);
+        // }
       }}
     >
       {({

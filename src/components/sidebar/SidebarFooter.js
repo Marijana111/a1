@@ -3,7 +3,7 @@ import styled from "styled-components/macro";
 
 import { Badge, Grid, Avatar, Typography } from "@mui/material";
 
-import useAuth from "../../hooks/useAuth";
+//import useAuth from "../../hooks/useAuth";
 
 const Footer = styled.div`
   background-color: ${(props) =>
@@ -37,7 +37,9 @@ const FooterBadge = styled(Badge)`
 `;
 
 const SidebarFooter = ({ ...rest }) => {
-  const { user } = useAuth();
+  //const { user } = useAuth();
+
+  const user = localStorage.getItem("currentUser");
 
   return (
     <Footer {...rest}>
@@ -53,7 +55,7 @@ const SidebarFooter = ({ ...rest }) => {
           >
             {!!user && (
               <Avatar
-                alt={user.displayName}
+                alt={user.userName}
                 src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
                 // {user.avatar}
               />
