@@ -18,8 +18,7 @@ import {
   useAuthState,
   useAuthDispatch,
 } from "../../components/Context";
-
-import useAuth from "../../hooks/useAuth";
+import Loading from "react-fullscreen-loading";
 
 const Alert = styled(MuiAlert)(spacing);
 
@@ -27,11 +26,10 @@ const TextField = styled(MuiTextField)(spacing);
 
 function SignIn() {
   const navigate = useNavigate();
-
   const dispatch = useAuthDispatch();
   const { loading, errorMessage } = useAuthState();
-  //const { signIn } = useAuth();
 
+  const [isLoading, setIsLoading] = React.useState(false);
   const CssTextField = styled(TextField, {
     shouldForwardProp: (props) => props !== "focusColor",
   })((p) => ({
@@ -56,84 +54,74 @@ function SignIn() {
   }));
 
   return (
-    <Formik
-      initialValues={{
-        email: "",
-        password: "",
-        submit: false,
-      }}
-      validationSchema={Yup.object().shape({
-        email: Yup.string()
-          //.email("Unesite validan email.")
-          .max(255)
-          .required("Obavezno polje."),
-        password: Yup.string().max(255).required("Obavezno polje."),
-      })}
-      onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-        let password = values.password;
-        let userName = values.email;
-        try {
-          let response = await loginUser(dispatch, { password, userName });
-          if (!response) return;
-          navigate("/home");
-        } catch (error) {
-          console.log(error);
-        }
-        // try {
-        //   await signIn(values.email, values.password);
-
-        //   navigate("/home");
-        // } catch (error) {
-        //   const message = error.message || "Dogodila se greška.";
-
-        //   setStatus({ success: false });
-        //   setErrors({ submit: message });
-        //   setSubmitting(false);
-        // }
-      }}
-    >
-      {({
-        errors,
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        isSubmitting,
-        touched,
-        values,
-      }) => (
-        <form noValidate onSubmit={handleSubmit}>
-          {errors.submit && (
-            <Alert mt={2} mb={3} severity="warning">
-              {errors.submit}
-            </Alert>
-          )}
-          <CssTextField
-            type="email"
-            name="email"
-            label="Email adresa"
-            //value={values.email}
-            error={Boolean(touched.email && errors.email)}
-            fullWidth
-            helperText={touched.email && errors.email}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            my={2}
-            focusColor="black"
-          />
-          <CssTextField
-            type="password"
-            name="password"
-            label="Lozinka"
-            //value={values.password}
-            error={Boolean(touched.password && errors.password)}
-            fullWidth
-            helperText={touched.password && errors.password}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            focusColor="black"
-            my={2}
-          />
-          <FormControlLabel
+    <>
+      <Formik
+        initialValues={{
+          userName: "",
+          password: "",
+          submit: false,
+        }}
+        validationSchema={Yup.object().shape({
+          userName: Yup.string().max(255).required("Obavezno polje."),
+          password: Yup.string().max(255).required("Obavezno polje."),
+        })}
+        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          setIsLoading(true);
+          let password = values.password;
+          let userName = values.userName;
+          try {
+            let response = await loginUser(dispatch, { password, userName });
+            if (!response) return;
+            setIsLoading(false);
+            navigate("/home");
+          } catch (error) {
+            navigate("/");
+            console.log(error);
+          }
+        }}
+      >
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values,
+        }) => (
+          <form noValidate onSubmit={handleSubmit}>
+            {errors.submit && (
+              <Alert mt={2} mb={3} severity="warning">
+                {errors.submit}
+              </Alert>
+            )}
+            <CssTextField
+              type="text"
+              name="userName"
+              label="Korisničko ime"
+              value={values.userName}
+              error={Boolean(touched.userName && errors.userName)}
+              fullWidth
+              helperText={touched.userName && errors.userName}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              my={2}
+              focusColor="black"
+            />
+            <CssTextField
+              type="password"
+              name="password"
+              label="Lozinka"
+              value={values.password}
+              error={Boolean(touched.password && errors.password)}
+              fullWidth
+              helperText={touched.password && errors.password}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              focusColor="black"
+              my={2}
+            />
+            {/* <FormControlLabel
             control={
               <Checkbox
                 value="remember"
@@ -143,31 +131,37 @@ function SignIn() {
               />
             }
             label="Zapamti me"
-          />
-          <Button
-            style={{ backgroundColor: "black", color: "white" }}
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            disabled={
-              values.email == "" || values.password == "" ? true : false
-            }
-          >
-            Prijavi se
-          </Button>
-          <Button
-            component={Link}
-            //to="/auth/reset-password"
-            to="#"
-            fullWidth
-            color="error"
-          >
-            Zaboravljena lozinka
-          </Button>
-        </form>
-      )}
-    </Formik>
+          /> */}
+            <Button
+              style={{ backgroundColor: "black", color: "white" }}
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={
+                values.email == "" || values.password == "" ? true : false
+              }
+            >
+              Prijavi se
+            </Button>
+            <Button
+              component={Link}
+              //to="/auth/reset-password"
+              to="#"
+              fullWidth
+              color="error"
+            >
+              Zaboravljena lozinka
+            </Button>
+          </form>
+        )}
+      </Formik>
+      <Loading
+        loading={isLoading}
+        background="rgba(60, 60, 60, 0.5)"
+        loaderColor="#d71920"
+      />
+    </>
   );
 }
 

@@ -9,8 +9,7 @@ import {
   MenuItem,
   IconButton as MuiIconButton,
 } from "@mui/material";
-
-import useAuth from "../../hooks/useAuth";
+import { useAuthDispatch, logout } from "../Context";
 
 const IconButton = styled(MuiIconButton)`
   svg {
@@ -22,7 +21,7 @@ const IconButton = styled(MuiIconButton)`
 function NavbarUserDropdown() {
   const [anchorMenu, setAnchorMenu] = React.useState(null);
   const navigate = useNavigate();
-  //const { signOut } = useAuth();
+  const dispatch = useAuthDispatch();
 
   const toggleMenu = (event) => {
     setAnchorMenu(event.currentTarget);
@@ -33,8 +32,7 @@ function NavbarUserDropdown() {
   };
 
   const handleSignOut = async () => {
-    console.log("odjava");
-    //await signOut();
+    logout(dispatch);
     navigate("/");
   };
 
@@ -57,7 +55,14 @@ function NavbarUserDropdown() {
         open={Boolean(anchorMenu)}
         onClose={closeMenu}
       >
-        <MenuItem onClick={handleSignOut}>Odjava</MenuItem>
+        <MenuItem
+          style={{
+            fontSize: "17px",
+          }}
+          onClick={handleSignOut}
+        >
+          Odjava
+        </MenuItem>
       </Menu>
     </React.Fragment>
   );

@@ -4,17 +4,24 @@ let user = localStorage.getItem("currentUser")
   ? JSON.parse(localStorage.getItem("currentUser")).user
   : "";
 let token = localStorage.getItem("currentUser")
-  ? JSON.parse(localStorage.getItem("currentUser")).auth_token
+  ? JSON.parse(localStorage.getItem("currentUser")).jwttoken
   : "";
 
 export const initialState = {
-  user: "" || user,
   token: "" || token,
   loading: false,
-  errorMessage: null,
+  errorMessage: "",
+  type: "",
+  username: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  roles: [],
 };
 
 export const AuthReducer = (initialState, action) => {
+  console.log("initialState", initialState);
+  console.log("action", action);
   switch (action.type) {
     case "REQUEST_LOGIN":
       return {
@@ -24,15 +31,28 @@ export const AuthReducer = (initialState, action) => {
     case "LOGIN_SUCCESS":
       return {
         ...initialState,
-        user: action.payload.user,
-        token: action.payload.auth_token,
+        token: action.payload.jwttoken,
         loading: false,
+        errorMessage: "",
+        type: action.payload.type,
+        username: action.payload.username,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
+        email: action.payload.email,
+        roles: action.payload.roles,
       };
     case "LOGOUT":
       return {
         ...initialState,
-        user: "",
         token: "",
+        loading: false,
+        errorMessage: "",
+        type: "",
+        username: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        roles: "",
       };
 
     case "LOGIN_ERROR":
