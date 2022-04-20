@@ -2,15 +2,12 @@ import axios from "axios";
 import { userURL } from "../components/Config/Url";
 
 export const userService = {
-  login,
+  getUsers,
 };
 
-async function login(password, userName) {
+async function getUsers(password, userName) {
   return axios
-    .post(`${userURL}/user/login`, {
-      password,
-      userName,
-    })
+    .get(`${userURL}/user/all`)
     .then((res) => res)
     .catch((err) => err);
 }
