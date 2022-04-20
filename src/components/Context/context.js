@@ -1,5 +1,6 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import { initialState, AuthReducer } from "./reducer";
+import axios from "axios";
 
 const AuthStateContext = React.createContext();
 const AuthDispatchContext = React.createContext();
@@ -24,6 +25,11 @@ export function useAuthDispatch() {
 
 export const AuthProvider = ({ children }) => {
   const [user, dispatch] = useReducer(AuthReducer, initialState);
+
+  useEffect(() => {
+    axios.defaults.headers.common["Authorization"] =
+      "Bearer " + localStorage.getItem("userToken");
+  }, [user]);
 
   return (
     <AuthStateContext.Provider value={user}>

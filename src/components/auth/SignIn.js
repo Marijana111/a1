@@ -72,6 +72,7 @@ function SignIn() {
           try {
             let response = await loginUser(dispatch, { password, userName });
             if (!response) return;
+            localStorage.setItem("userToken", response.jwttoken);
             setIsLoading(false);
             navigate("/home");
           } catch (error) {

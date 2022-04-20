@@ -20,8 +20,6 @@ export const initialState = {
 };
 
 export const AuthReducer = (initialState, action) => {
-  console.log("initialState", initialState);
-  console.log("action", action);
   switch (action.type) {
     case "REQUEST_LOGIN":
       return {
