@@ -19,11 +19,12 @@ import routes from "./routes";
 import useTheme from "./hooks/useTheme";
 import { store } from "./redux/store";
 
-import { AuthProvider } from "./contexts/JWTContext";
+//import { AuthProvider } from "./contexts/JWTContext";
 import { THEMES } from "./constants";
 // import { AuthProvider } from "./contexts/FirebaseAuthContext";
 // import { AuthProvider } from "./contexts/Auth0Context";
 // import { AuthProvider } from "./contexts/CognitoContext";
+import { AuthProvider } from "./components/Context";
 
 const jss = create({
   ...jssPreset(),

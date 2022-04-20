@@ -12,3 +12,4 @@ export const operatorsURL = `${a1Url}/business/persistence/operators`;
 export const homeURL = `${a1Url}/business/persistence`;
 export const orderStatusURL = `${a1processorURL}/orderStatus`;
 export const faultStatusURL = `${a1processorURL}/faultStatus`;
+export const userURL = `https://9025a38e-2061-4543-b45c-10d1e5438da8.mock.pstmn.io/api/`;

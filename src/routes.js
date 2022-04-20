@@ -22,42 +22,21 @@ import Page404 from "./pages/auth/Page404";
 import Page500 from "./pages/auth/Page500";
 
 // Components
-import Accordion from "./pages/components/Accordion";
-import Alerts from "./pages/components/Alerts";
-import Avatars from "./pages/components/Avatars";
-import Badges from "./pages/components/Badges";
-import Buttons from "./pages/components/Buttons";
-import Cards from "./pages/components/Cards";
-import Chips from "./pages/components/Chips";
-import Dialogs from "./pages/components/Dialogs";
-import Lists from "./pages/components/Lists";
-import Menus from "./pages/components/Menus";
-import Pagination from "./pages/components/Pagination";
-import Progress from "./pages/components/Progress";
-import Snackbars from "./pages/components/Snackbars";
-import Tooltips from "./pages/components/Tooltips";
-
-import SelectionCtrls from "./pages/forms/SelectionControls";
-import Selects from "./pages/forms/Selects";
-import TextFields from "./pages/forms/TextFields";
-
-import MaterialIcons from "./pages/icons/MaterialIcons";
-
-import SimpleTable from "./pages/tables/SimpleTable";
-import AdvancedTable from "./pages/tables/AdvancedTable";
-
-import Landing from "./pages/presentation/Landing";
-
-import ProtectedPage from "./pages/protected/ProtectedPage";
 import RequestDetail from "./pages/tables/Requests/RequestDetail";
 import FaultOrderDetail from "./pages/tables/FaultOrders/FaultOrderDetail";
 import ReportOrderDetail from "./pages/tables/ReportOrders/ReportOrderDetails";
 
 const Default = async(() => import("./pages/dashboards/Default"));
-const Analytics = async(() => import("./pages/dashboards/Analytics"));
-const SaaS = async(() => import("./pages/dashboards/SaaS"));
-
-const DataGrid = async(() => import("./pages/tables/DataGrid"));
+const DataGridUsers = async(() =>
+  import("./pages/tables/Settings/User/DataGridUsers")
+);
+const AddUser = async(() => import("./pages/tables/Settings/User/CreateUser"));
+const UpdateUser = async(() =>
+  import("./pages/tables/Settings/User/UpdateUser")
+);
+const UserDetails = async(() =>
+  import("./pages/tables/Settings/User/UserDetails")
+);
 const DataGridOperators = async(() =>
   import("./pages/tables/Settings/Operators/DataGridOperators")
 );
@@ -70,7 +49,6 @@ const UpdateOperator = async(() =>
 const OperatorDetails = async(() =>
   import("./pages/tables/Settings/Operators/OperatorDetails")
 );
-const AddUser = async(() => import("./pages/tables/User/AddUser"));
 
 const DataGridRequests = async(() =>
   import("./pages/tables/Requests/DataGridRequests")
@@ -129,7 +107,19 @@ const routes = [
     children: [
       {
         path: "users",
-        element: <DataGrid />,
+        element: <DataGridUsers />,
+      },
+      {
+        path: "users/add-user",
+        element: <AddUser />,
+      },
+      {
+        path: "users/update-user/:userRef",
+        element: <UpdateUser />,
+      },
+      {
+        path: "users/details/:userRef",
+        element: <UserDetails />,
       },
       {
         path: "operators",

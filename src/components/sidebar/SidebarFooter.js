@@ -3,7 +3,7 @@ import styled from "styled-components/macro";
 
 import { Badge, Grid, Avatar, Typography } from "@mui/material";
 
-import useAuth from "../../hooks/useAuth";
+import { useAuthDispatch, logout, useAuthState } from "../Context";
 
 const Footer = styled.div`
   background-color: ${(props) =>
@@ -37,7 +37,7 @@ const FooterBadge = styled(Badge)`
 `;
 
 const SidebarFooter = ({ ...rest }) => {
-  const { user } = useAuth();
+  const userDetails = useAuthState();
 
   return (
     <Footer {...rest}>
@@ -51,15 +51,14 @@ const SidebarFooter = ({ ...rest }) => {
             }}
             variant="dot"
           >
-            {!!user && (
+            {!!userDetails && (
               <Avatar
-                alt={user.displayName}
+                alt={userDetails.username}
                 src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
                 // {user.avatar}
               />
             )}
-            {/* Demo data */}
-            {!user && (
+            {!userDetails && (
               <Avatar
                 alt="Lucy Lavender"
                 src="https://tellmetrip.com/img/no-user.png"
@@ -68,15 +67,24 @@ const SidebarFooter = ({ ...rest }) => {
           </FooterBadge>
         </Grid>
         <Grid item>
-          {!!user && (
+          {!!userDetails && (
             <FooterText variant="body2">
-              User Test
-              {/* {user.displayName} */}
+              {userDetails.firstName + " " + userDetails.lastName}
             </FooterText>
           )}
-          {/* Demo data */}
-          {!user && <FooterText variant="body2">User Test</FooterText>}
-          <FooterSubText variant="caption">Admin</FooterSubText>
+          {!userDetails && (
+            <FooterText variant="body2">
+              {userDetails.firstName + " " + userDetails.lastName}
+            </FooterText>
+          )}
+          <FooterSubText variant="caption">
+            {userDetails.roles &&
+              userDetails.roles.map((role, i, arr) => (
+                <span style={{ fontSize: "8px" }}>
+                  {role} {i != arr.length - 1 ? ", " : ""}
+                </span>
+              ))}
+          </FooterSubText>
         </Grid>
       </Grid>
     </Footer>
