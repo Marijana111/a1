@@ -118,7 +118,7 @@ const routes = [
         element: <UpdateUser />,
       },
       {
-        path: "users/details/:userRef",
+        path: "users/details/:username",
         element: <UserDetails />,
       },
       {

@@ -88,16 +88,6 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function BasicForm() {
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  //   setValue,
-  // } = useForm({
-  //   mode: "onChange",
-  //   reValidateMode: "onChange",
-  // });
-
   const { register, handleSubmit, errors, control, formState, setValue } =
     useForm({
       mode: "onChange",
