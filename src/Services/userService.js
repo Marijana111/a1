@@ -53,18 +53,19 @@ async function updateUser(
 async function createUser(
   email,
   password,
-  roles,
-  status,
+  role,
   username,
   firstName,
   lastName
 ) {
+  let roles = role.map((r) => ({
+    name: r,
+  }));
   return axios
-    .post(`${userURL}/user/updateUser`, {
+    .post(`${userURL}/user/createUser`, {
       email,
       password,
       roles,
-      status,
       username,
       firstName,
       lastName,

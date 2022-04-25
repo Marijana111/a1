@@ -259,7 +259,7 @@ function DataGridPage() {
           <Grid item>
             <div>
               <Button
-                //onClick={() => navigate("/settings/users/add-user")}
+                onClick={() => navigate("/settings/users/add-user")}
                 variant="contained"
                 type="button"
                 color="error"

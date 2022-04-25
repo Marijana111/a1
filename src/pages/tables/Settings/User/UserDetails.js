@@ -4,8 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as dateHelper from "../../../../components/Config/DateHelper";
-import AddIcon from "@mui/icons-material/Add";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
@@ -25,7 +24,6 @@ import {
 } from "@mui/material";
 import { spacing } from "@mui/system";
 import { userService } from "../../../../Services/userService";
-import { Check, Close } from "@mui/icons-material";
 import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -91,13 +89,6 @@ function EmptyCard() {
   const { register, handleSubmit, reset, formState } = useForm(validationOpt);
 
   const { errors } = formState;
-
-  //   const {
-  //     register,
-  //     getValues,
-  //     formState: { errors },
-  //     handleSubmit,
-  //   } = useForm();
 
   const { state } = useLocation();
   const navigate = useNavigate();
