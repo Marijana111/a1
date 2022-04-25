@@ -88,21 +88,18 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function BasicForm() {
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  //   setValue,
-  // } = useForm({
-  //   mode: "onChange",
-  //   reValidateMode: "onChange",
-  // });
-
-  const { register, handleSubmit, errors, control, formState, setValue } =
-    useForm({
-      mode: "onChange",
-      reValidateMode: "onChange",
-    });
+  const {
+    register,
+    handleSubmit,
+    errors,
+    control,
+    formState,
+    setValue,
+    getValues,
+  } = useForm({
+    mode: "onChange",
+    reValidateMode: "onChange",
+  });
 
   const navigate = useNavigate();
   const [requestTypes, setRequestTypes] = useState([]);
@@ -112,6 +109,7 @@ function BasicForm() {
   const [errorMessageOIB, setErrorMessageOIB] = useState("");
   const [isSuccessfull, setIsSuccessfull] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
+  const [ifValEmpty, setIfValEmpty] = useState(true);
 
   let reportTypes = [
     { value: "10", label: "Izvještaj o dostupnim adresama" },
@@ -245,8 +243,10 @@ function BasicForm() {
                 onChange={(event) => {
                   if (event.target.value !== "") {
                     setErrorMessageName("");
+                    setIfValEmpty(false);
                   } else {
                     setErrorMessageName("Unesite validan naziv.");
+                    setIfValEmpty(true);
                   }
                 }}
                 error={errorMessageName}
@@ -392,7 +392,13 @@ function BasicForm() {
           </Grid>
           <br />
           <br />
-          <Button type="submit" variant="contained" color="error" mt={3}>
+          <Button
+            disabled={ifValEmpty}
+            type="submit"
+            variant="contained"
+            color="error"
+            mt={3}
+          >
             Spremi
           </Button>
           &nbsp; &nbsp;
@@ -439,7 +445,7 @@ function BasicForm() {
                   fontSize: "17px",
                 }}
               >
-                Uspješno ste uredili operatora!
+                Uspješno ste kreirali operatora!
               </span>
             </>
           ) : (

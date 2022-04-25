@@ -160,7 +160,7 @@ function DataGridDemo() {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<RemoveRedEye label="Detalji" />}
-          onClick={() => handleToDetail(params.row.ref)}
+          onClick={() => handleToDetail(params.row.username)}
         />,
         <GridActionsCellItem
           icon={<Edit />}
@@ -174,13 +174,12 @@ function DataGridDemo() {
     },
   ];
 
-  const handleToDetail = (refDetail) => {
-    alert("detail");
-    // navigate(`/settings/users/details/${refDetail}`, {
-    //   state: {
-    //     userRef: refDetail,
-    //   },
-    // });
+  const handleToDetail = (usernameDetail) => {
+    navigate(`/settings/users/details/${usernameDetail}`, {
+      state: {
+        username: usernameDetail,
+      },
+    });
   };
 
   const handleToUpdate = (refUpdate) => {
@@ -260,7 +259,7 @@ function DataGridPage() {
           <Grid item>
             <div>
               <Button
-                //onClick={() => navigate("/settings/users/add-user")}
+                onClick={() => navigate("/settings/users/add-user")}
                 variant="contained"
                 type="button"
                 color="error"
