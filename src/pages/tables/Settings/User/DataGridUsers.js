@@ -33,6 +33,20 @@ import { FilterList, RemoveRedEye } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import { userService } from "../../../../Services/userService";
 import * as dateHelper from "../../../../components/Config/DateHelper";
+import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const Card = styled(MuiCard)(spacing);
 
@@ -82,6 +96,12 @@ function DataGridDemo() {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [pageSize, setPageSize] = useState(10);
+  const [userRefDelete, setUserRefDelete] = useState("");
+  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+  const [update, setUpdate] = useState(new Date());
+  const [isSuccessfull, setIsSuccessfull] = useState(true);
+  const [openDialogResult, setOpenDialogResult] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     userService
@@ -91,7 +111,7 @@ function DataGridDemo() {
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [update]);
 
   const reloadData = () => {
     setIsLoading(true);
@@ -164,7 +184,7 @@ function DataGridDemo() {
         />,
         <GridActionsCellItem
           icon={<Edit />}
-          onClick={() => handleToUpdate(params.row.ref)}
+          onClick={() => handleToUpdate(params.row.username)}
         />,
         <GridActionsCellItem
           icon={<Delete />}
@@ -182,17 +202,45 @@ function DataGridDemo() {
     });
   };
 
-  const handleToUpdate = (refUpdate) => {
-    alert("update");
-    // navigate(`/settings/users/update-user/${refUpdate}`, {
-    //   state: {
-    //     userRef: refUpdate,
-    //   },
-    // });
+  const handleToUpdate = (usernameUpdate) => {
+    navigate(`/settings/users/update-user/${usernameUpdate}`, {
+      state: {
+        username: usernameUpdate,
+      },
+    });
   };
 
   const handleToDelete = (refDelete) => {
-    alert("delete");
+    setUserRefDelete(refDelete);
+    setIsOpenModalDelete(true);
+  };
+
+  const deleteUser = () => {
+    userService
+      .deleteUser(userRefDelete)
+      .then((res) => {
+        if (res.status == 200) {
+          setIsSuccessfull(true);
+        } else if (res.status !== 200) {
+          setIsSuccessfull(false);
+          setErrorMessage(res.statusText);
+        }
+        setIsLoading(false);
+        setOpenDialogResult(true);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleCloseDialogDelete = () => {
+    setIsOpenModalDelete(false);
+    navigate("/settings/users");
+  };
+
+  const handleCloseDialogResult = () => {
+    setIsOpenModalDelete(false);
+    setOpenDialogResult(false);
+    navigate("/settings/users");
+    setUpdate(new Date());
   };
 
   return (
@@ -231,6 +279,108 @@ function DataGridDemo() {
           </div>
         </Paper>
       </Card>
+
+      <BootstrapDialog
+        PaperProps={{ sx: { width: "30%", height: "35%" } }}
+        onClose={handleCloseDialogDelete}
+        aria-labelledby="customized-dialog-title"
+        open={isOpenModalDelete}
+      >
+        <DialogTitle>Brisanje korisnika</DialogTitle>
+        <DialogContent
+          dividers
+          style={{ textAlign: "center", padding: "20px" }}
+        >
+          <br />
+          <br />
+          <span
+            style={{
+              fontSize: "17px",
+            }}
+          >
+            Jeste li sigurni da želite izbrisati korisnika?
+          </span>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            type="button"
+            variant="contained"
+            color="error"
+            onClick={() => deleteUser()}
+            mt={3}
+          >
+            Izbriši
+          </Button>
+          &nbsp; &nbsp;
+          <Button
+            onClick={handleCloseDialogDelete}
+            style={{ backgroundColor: "black" }}
+            type="button"
+            variant="contained"
+            mt={3}
+          >
+            Odustani
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
+
+      <BootstrapDialog
+        PaperProps={{ sx: { width: "30%", height: "40%" } }}
+        onClose={handleCloseDialogResult}
+        aria-labelledby="customized-dialog-title"
+        open={openDialogResult}
+      >
+        <DialogTitle>
+          {isSuccessfull == true ? (
+            <strong>Uspješno</strong>
+          ) : (
+            <strong>Greška</strong>
+          )}
+        </DialogTitle>
+        <DialogContent
+          dividers
+          style={{ textAlign: "center", padding: "20px" }}
+        >
+          {isSuccessfull == true ? (
+            <>
+              <CheckCircleOutline
+                style={{ color: "green", fontSize: "80px" }}
+              />
+              <br />
+              <br />
+              <br />
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                }}
+              >
+                Uspješno ste izbrisali korisnika!
+              </span>
+            </>
+          ) : (
+            <>
+              <ErrorOutline style={{ color: "red", fontSize: "80px" }} />
+              <br />
+              <br />
+              <br />
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                }}
+              >
+                {errorMessage && errorMessage}
+              </span>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseDialogResult}>
+            OK
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
     </>
   );
 }
