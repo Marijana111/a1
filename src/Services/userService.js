@@ -7,11 +7,19 @@ export const userService = {
   updateUser,
   createUser,
   changePassword,
+  deleteUser,
 };
 
 async function getUsers(password, userName) {
   return axios
     .get(`${userURL}/user/all`)
+    .then((res) => res)
+    .catch((err) => err);
+}
+
+async function deleteUser(ref) {
+  return axios
+    .delete(`${userURL}user/${ref}`)
     .then((res) => res)
     .catch((err) => err);
 }

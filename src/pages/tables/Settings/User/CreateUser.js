@@ -255,7 +255,7 @@ function EmptyCard() {
                 </Grid>
                 <Grid item md={12}>
                   <Divider />
-                  <h4>Role</h4>
+                  <h4>Uloga</h4>
                   <Grid item md={5}>
                     <FormControlLabel
                       control={
@@ -287,7 +287,7 @@ function EmptyCard() {
                       label="Back office upravitelj"
                     />
                     <FormControlLabel
-                      value="Back office samo pregled"
+                      value="Back office pregled"
                       control={
                         <Radio
                           icon={
@@ -296,34 +296,8 @@ function EmptyCard() {
                           checkedIcon={<CheckBox style={{ color: "black" }} />}
                         />
                       }
-                      label="Back office samo pregled"
+                      label="Back office pregled"
                     />
-                    {/* <Grid item md={5}>
-                      <FormControlLabel
-                        value="manager"
-                        control={
-                          <Checkbox
-                            {...register("BOmanager")}
-                            name="BOmanager"
-                            style={{ color: "black" }}
-                          />
-                        }
-                        label={"Back office upravitelj"}
-                      />
-                    </Grid>
-                    <Grid item md={5}>
-                      <FormControlLabel
-                        value="readonly"
-                        control={
-                          <Checkbox
-                            {...register("BOreadonly")}
-                            name="BOreadonly"
-                            style={{ color: "black" }}
-                          />
-                        }
-                        label={"Back office samo pregled "}
-                      />
-                    </Grid> */}
                   </RadioGroup>
                 </Grid>
               </Grid>
