@@ -253,15 +253,6 @@ function EmptyCard() {
         <Card mb={6}>
           <CardContent>
             <form style={{ marginTop: "20px" }} onSubmit={handleSubmit(submit)}>
-              <Alert mb={4} severity="info" style={{ fontSize: "12px" }}>
-                <AlertTitle>Info</AlertTitle>
-                Ispravan unos —{" "}
-                <strong>
-                  Lozinka mora sadržavati najmanje 8 znakova, jedno veliko
-                  slovo, jedan broj i jedan poseban znak. Unos i potvrda lozinke
-                  moraju se podudarati.
-                </strong>
-              </Alert>
               <Grid container spacing={8}>
                 <Grid item md={5}>
                   <CssTextField
