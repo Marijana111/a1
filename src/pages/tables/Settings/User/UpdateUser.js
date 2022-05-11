@@ -38,6 +38,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import "./user.css";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -113,6 +114,10 @@ function EmptyCard() {
   const [isSuccessfull, setIsSuccessfull] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isCheckedManager, setIsCheckedManager] = useState();
+  const [isCheckedReadOnly, setIsCheckedReadOnly] = useState();
+  const [isTouchedManager, setIsTouchedManager] = useState(false);
+  const [isTouchedReadOnly, setIsTouchedReadOnly] = useState(false);
 
   useEffect(() => {
     userService
@@ -144,6 +149,26 @@ function EmptyCard() {
   const submit = (data) => {
     setIsLoading(true);
     let roles = [];
+    let manager;
+    let readOnly;
+
+    if (isTouchedManager) {
+      manager = isCheckedManager;
+    } else {
+      manager = data.roleManager;
+    }
+
+    if (manager == true) {
+      readOnly = false;
+    }
+
+    if (isTouchedReadOnly) {
+      readOnly = isCheckedReadOnly;
+    } else if (isTouchedReadOnly == false && isCheckedReadOnly == false) {
+      readOnly = false;
+    } else {
+      readOnly = data.roleReadOnly;
+    }
 
     if (data.roleAdmin == true) {
       if (userRoles.filter((role) => role.name == "Administrator").length > 0) {
@@ -158,7 +183,7 @@ function EmptyCard() {
       }
     }
 
-    if (data.roleManager == true) {
+    if (manager == true) {
       if (
         userRoles.filter((role) => role.name == "Back office upravitelj")
           .length > 0
@@ -174,7 +199,7 @@ function EmptyCard() {
       }
     }
 
-    if (data.roleReadOnly == true) {
+    if (readOnly == true) {
       if (
         userRoles.filter((role) => role.name == "Back office pregled").length >
         0
@@ -228,15 +253,6 @@ function EmptyCard() {
         <Card mb={6}>
           <CardContent>
             <form style={{ marginTop: "20px" }} onSubmit={handleSubmit(submit)}>
-              <Alert mb={4} severity="info" style={{ fontSize: "12px" }}>
-                <AlertTitle>Info</AlertTitle>
-                Ispravan unos —{" "}
-                <strong>
-                  Lozinka mora sadržavati najmanje 8 znakova, jedno veliko
-                  slovo, jedan broj i jedan poseban znak. Unos i potvrda lozinke
-                  moraju se podudarati.
-                </strong>
-              </Alert>
               <Grid container spacing={8}>
                 <Grid item md={5}>
                   <CssTextField
@@ -356,7 +372,25 @@ function EmptyCard() {
                     />
                   </Grid>
                   <Grid item md={5}>
-                    <FormControlLabel
+                    <label>
+                      <input
+                        id="myCheckbox"
+                        name="roleManager"
+                        type="checkbox"
+                        defaultChecked={roleManager ? true : false}
+                        {...register("roleManager")}
+                        checked={isCheckedManager}
+                        onChange={(event) => {
+                          setIsTouchedManager(true);
+                          setIsCheckedManager(event.target.checked);
+                          if (event.target.checked) {
+                            setIsCheckedReadOnly(false);
+                          }
+                        }}
+                      />
+                      Back office upravitelj
+                    </label>
+                    {/* <FormControlLabel
                       control={
                         <Checkbox
                           defaultChecked={roleManager ? true : false}
@@ -366,10 +400,29 @@ function EmptyCard() {
                         />
                       }
                       label={"Back office upravitelj"}
-                    />
+                    /> */}
+                    <br />
                   </Grid>
                   <Grid item md={5}>
-                    <FormControlLabel
+                    <label>
+                      <input
+                        id="myCheckbox"
+                        name="roleReadOnly"
+                        type="checkbox"
+                        defaultChecked={roleReadOnly ? true : false}
+                        {...register("roleReadOnly")}
+                        checked={isCheckedReadOnly}
+                        onChange={(event) => {
+                          setIsTouchedReadOnly(true);
+                          setIsCheckedReadOnly(event.target.checked);
+                          if (event.target.checked) {
+                            setIsCheckedManager(false);
+                          }
+                        }}
+                      />
+                      Back office pregled
+                    </label>
+                    {/* <FormControlLabel
                       control={
                         <Checkbox
                           defaultChecked={roleReadOnly ? true : false}
@@ -379,7 +432,7 @@ function EmptyCard() {
                         />
                       }
                       label={"Back office pregled"}
-                    />
+                    /> */}
                   </Grid>
                 </Grid>
               </Grid>

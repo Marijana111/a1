@@ -9,10 +9,17 @@ import { spacing } from "@mui/system";
 
 import GlobalStyle from "../components/GlobalStyle";
 import Navbar from "../components/navbar/Navbar";
-import dashboardItems from "../components/sidebar/dashboardItems";
 import Sidebar from "../components/sidebar/Sidebar";
 import Footer from "../components/Footer";
-import Settings from "../components/Settings";
+import { Sliders, Archive } from "react-feather";
+import ErrorIcon from "@mui/icons-material/Error";
+import TableChartIcon from "@mui/icons-material/TableChart";
+import { ListAlt, Settings } from "@mui/icons-material";
+import {
+  useAuthDispatch,
+  logout,
+  useAuthState,
+} from "../../src/components/Context";
 
 const drawerWidth = 258;
 
@@ -51,7 +58,103 @@ const MainContent = styled(Paper)`
 `;
 
 const Dashboard = ({ children }) => {
+  let isAdmin;
+  let navItems;
+  const userDetails = useAuthState();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  userDetails.roles.filter((r) => r === "ADMIN").length > 0
+    ? (isAdmin = true)
+    : (isAdmin = false);
+
+  const pagesSectionForAdmin = [
+    {
+      href: "/home",
+      icon: Sliders,
+      title: "Naslovna",
+    },
+    {
+      href: "/daily-list",
+      icon: ListAlt,
+      title: "Dnevna lista",
+    },
+    {
+      href: "/requests",
+      icon: TableChartIcon,
+      title: "Zahtjevi",
+    },
+    {
+      href: "/fault-orders",
+      icon: ErrorIcon,
+      title: "Smetnje",
+    },
+
+    {
+      href: "/report-orders",
+      icon: Archive,
+      title: "Izvještaji",
+    },
+    {
+      href: "/settings",
+      icon: Settings,
+      title: "Postavke",
+      children: [
+        {
+          href: "/settings/users",
+          title: "Korisnici",
+        },
+        {
+          href: "/settings/operators",
+          title: "Operatori",
+        },
+      ],
+    },
+  ];
+
+  const pagesSectionNotAdmin = [
+    {
+      href: "/home",
+      icon: Sliders,
+      title: "Naslovna",
+    },
+    {
+      href: "/daily-list",
+      icon: ListAlt,
+      title: "Dnevna lista",
+    },
+    {
+      href: "/requests",
+      icon: TableChartIcon,
+      title: "Zahtjevi",
+    },
+    {
+      href: "/fault-orders",
+      icon: ErrorIcon,
+      title: "Smetnje",
+    },
+
+    {
+      href: "/report-orders",
+      icon: Archive,
+      title: "Izvještaji",
+    },
+  ];
+
+  if (isAdmin == true) {
+    navItems = [
+      {
+        title: "Pages",
+        pages: pagesSectionForAdmin,
+      },
+    ];
+  } else {
+    navItems = [
+      {
+        title: "Pages",
+        pages: pagesSectionNotAdmin,
+      },
+    ];
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -71,13 +174,13 @@ const Dashboard = ({ children }) => {
             variant="temporary"
             open={mobileOpen}
             onClose={handleDrawerToggle}
-            items={dashboardItems}
+            items={navItems}
           />
         </Hidden>
         <Hidden mdDown implementation="css">
           <Sidebar
             PaperProps={{ style: { width: drawerWidth } }}
-            items={dashboardItems}
+            items={navItems}
           />
         </Hidden>
       </Drawer>
@@ -89,7 +192,6 @@ const Dashboard = ({ children }) => {
         </MainContent>
         <Footer />
       </AppContent>
-      {/* <Settings /> */}
     </Root>
   );
 };
