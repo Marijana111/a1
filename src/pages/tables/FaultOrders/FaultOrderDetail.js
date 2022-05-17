@@ -25,6 +25,11 @@ import {
 import { spacing } from "@mui/system";
 import { tableCellClasses } from "@mui/material/TableCell";
 import { faultOrdersService } from "../../../Services/faultOrdersService";
+import {
+  useAuthDispatch,
+  logout,
+  useAuthState,
+} from "../../../components/Context";
 
 const Card = styled(MuiCard)(spacing);
 
@@ -46,8 +51,19 @@ const CustomTableCell = styled(TableCell)`
 `;
 
 function EmptyCard() {
+  let isAdmin;
+  let isManager;
   const { state } = useLocation();
   const navigate = useNavigate();
+  const userDetails = useAuthState();
+
+  userDetails.roles.filter((r) => r === "Administrator").length > 0
+    ? (isAdmin = true)
+    : (isAdmin = false);
+
+  userDetails.roles.filter((r) => r === "Back office upravitelj").length > 0
+    ? (isManager = true)
+    : (isManager = false);
 
   let requestId = state.requestId;
 
@@ -154,24 +170,28 @@ function EmptyCard() {
                   <h3>Statusi smetnje</h3>
                 </Typography>
               </Grid>
-              <Grid item>
-                <Button
-                  onClick={() =>
-                    navigate(`/fault-orders/add-status`, {
-                      state: {
-                        faultOrderDetails: faultOrderDetails,
-                      },
-                    })
-                  }
-                  variant="contained"
-                  type="button"
-                  color="error"
-                  style={{ float: "right" }}
-                >
-                  <AddIcon />
-                  Dodaj status
-                </Button>
-              </Grid>
+              {isAdmin || isManager ? (
+                <Grid item>
+                  <Button
+                    onClick={() =>
+                      navigate(`/fault-orders/add-status`, {
+                        state: {
+                          faultOrderDetails: faultOrderDetails,
+                        },
+                      })
+                    }
+                    variant="contained"
+                    type="button"
+                    color="error"
+                    style={{ float: "right" }}
+                  >
+                    <AddIcon />
+                    Dodaj status
+                  </Button>
+                </Grid>
+              ) : (
+                ""
+              )}
             </Grid>
             <Table>
               <TableHead>
