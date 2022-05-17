@@ -390,17 +390,6 @@ function EmptyCard() {
                       />
                       Back office upravitelj
                     </label>
-                    {/* <FormControlLabel
-                      control={
-                        <Checkbox
-                          defaultChecked={roleManager ? true : false}
-                          {...register("roleManager")}
-                          name="roleManager"
-                          style={{ color: "black" }}
-                        />
-                      }
-                      label={"Back office upravitelj"}
-                    /> */}
                     <br />
                   </Grid>
                   <Grid item md={5}>
@@ -422,17 +411,6 @@ function EmptyCard() {
                       />
                       Back office pregled
                     </label>
-                    {/* <FormControlLabel
-                      control={
-                        <Checkbox
-                          defaultChecked={roleReadOnly ? true : false}
-                          {...register("roleReadOnly")}
-                          name="roleReadOnly"
-                          style={{ color: "black" }}
-                        />
-                      }
-                      label={"Back office pregled"}
-                    /> */}
                   </Grid>
                 </Grid>
               </Grid>
