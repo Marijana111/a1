@@ -1,27 +1,12 @@
 import React from "react";
 
 import async from "./components/Async";
-
-// All pages that rely on 3rd party components (other than Material-UI) are
-// loaded asynchronously, to keep the initial JS bundle to a minimum size
-
-// Layouts
 import AuthLayout from "./layouts/Auth";
 import DashboardLayout from "./layouts/Dashboard";
-import DocLayout from "./layouts/Doc";
-//import PresentationLayout from "./layouts/Presentation";
-
-// Guards
 import AuthGuard from "./components/guards/AuthGuard";
-
-// Auth components
 import SignIn from "./pages/auth/SignIn";
-import SignUp from "./pages/auth/SignUp";
-import ResetPassword from "./pages/auth/ResetPassword";
 import Page404 from "./pages/auth/Page404";
 import Page500 from "./pages/auth/Page500";
-
-// Components
 import RequestDetail from "./pages/tables/Requests/RequestDetail";
 import FaultOrderDetail from "./pages/tables/FaultOrders/FaultOrderDetail";
 import ReportOrderDetail from "./pages/tables/ReportOrders/ReportOrderDetails";
@@ -64,10 +49,6 @@ const AddStatusFaulOrders = async(() =>
 
 const DataGridReportOrders = async(() =>
   import("./pages/tables/ReportOrders/DataGridReportOrders")
-);
-
-const DataGridConfiguration = async(() =>
-  import("./pages/tables/DataGridConfiguration")
 );
 
 const routes = [
@@ -216,21 +197,6 @@ const routes = [
       {
         path: "details/:id",
         element: <ReportOrderDetail />,
-      },
-    ],
-  },
-
-  {
-    path: "configuration",
-    element: (
-      <AuthGuard>
-        <DashboardLayout />
-      </AuthGuard>
-    ),
-    children: [
-      {
-        path: "configuration-grid",
-        element: <DataGridConfiguration />,
       },
     ],
   },
