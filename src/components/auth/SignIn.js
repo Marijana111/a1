@@ -68,13 +68,13 @@ function SignIn() {
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           setIsLoading(true);
           let password = values.password;
-          let userName = values.userName;
+          let username = values.userName;
           try {
-            let response = await loginUser(dispatch, { password, userName });
-            if (!response) return;
+            let response = await loginUser(dispatch, { password, username });
             localStorage.setItem("userToken", response.jwttoken);
             setIsLoading(false);
             navigate("/home");
+            if (!response) return navigate("/");
           } catch (error) {
             navigate("/");
             console.log(error);
@@ -122,17 +122,6 @@ function SignIn() {
               focusColor="black"
               my={2}
             />
-            {/* <FormControlLabel
-            control={
-              <Checkbox
-                value="remember"
-                style={{
-                  color: "#0c0c0d",
-                }}
-              />
-            }
-            label="Zapamti me"
-          /> */}
             <Button
               style={{ backgroundColor: "black", color: "white" }}
               type="submit"
@@ -144,15 +133,6 @@ function SignIn() {
               }
             >
               Prijavi se
-            </Button>
-            <Button
-              component={Link}
-              //to="/auth/reset-password"
-              to="#"
-              fullWidth
-              color="error"
-            >
-              Zaboravljena lozinka
             </Button>
           </form>
         )}

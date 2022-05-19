@@ -299,7 +299,7 @@ function EmptyCard() {
                 <Grid item md={5}>
                   <CssTextField
                     focusColor="black"
-                    defaultValue={userDetails && userDetails.username}
+                    value={userDetails && userDetails.username}
                     name="username"
                     label="Korisničko ime"
                     {...register("username")}
