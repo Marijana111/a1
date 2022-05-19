@@ -14,15 +14,12 @@ export async function loginUser(dispatch, loginPayload) {
     let response = await fetch(`${ROOT_URL}/user/login`, requestOptions);
     let data = await response.json();
 
-    console.log("data", data);
-
     if (data) {
       dispatch({ type: "LOGIN_SUCCESS", payload: data });
       localStorage.setItem("currentUser", JSON.stringify(data));
       localStorage.setItem("roles", JSON.stringify(data.roles));
       return data;
     }
-
     dispatch({ type: "LOGIN_ERROR", error: data.username });
     console.log(data.username);
     return;
