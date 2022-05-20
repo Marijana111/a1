@@ -19,7 +19,7 @@ async function getUsers(password, userName) {
 
 async function deleteUser(ref) {
   return axios
-    .delete(`${userURL}user/${ref}`)
+    .delete(`${userURL}/user/${ref}`)
     .then((res) => res)
     .catch((err) => err);
 }

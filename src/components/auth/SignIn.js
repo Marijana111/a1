@@ -70,11 +70,14 @@ function SignIn() {
           let password = values.password;
           let username = values.userName;
           try {
-            let response = await loginUser(dispatch, { password, username });
-            localStorage.setItem("userToken", response.jwttoken);
             setIsLoading(false);
-            navigate("/home");
-            if (!response) return navigate("/");
+            let response = await loginUser(dispatch, { password, username });
+            if (response) {
+              localStorage.setItem("userToken", response.jwttoken);
+              navigate("/home");
+            } else {
+              navigate("/");
+            }
           } catch (error) {
             navigate("/");
             console.log(error);
