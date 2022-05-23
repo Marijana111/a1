@@ -12,6 +12,12 @@ import FaultOrderDetail from "./pages/tables/FaultOrders/FaultOrderDetail";
 import ReportOrderDetail from "./pages/tables/ReportOrders/ReportOrderDetails";
 
 const Default = async(() => import("./pages/dashboards/Default"));
+const DailyListRequestsGrid = async(() =>
+  import("./pages/tables/DailyList/DailyListRequestsGrid")
+);
+const DailyListFaultOrdersGrid = async(() =>
+  import("./pages/tables/DailyList/DailyListFaultOrdersGrid")
+);
 const DataGridUsers = async(() =>
   import("./pages/tables/Settings/User/DataGridUsers")
 );
@@ -176,8 +182,12 @@ const routes = [
     ),
     children: [
       {
-        path: "",
-        //element: <DataGridFaultRepair />,
+        path: "requests",
+        element: <DailyListRequestsGrid />,
+      },
+      {
+        path: "fault-orders",
+        element: <DailyListFaultOrdersGrid />,
       },
     ],
   },

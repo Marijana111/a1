@@ -77,6 +77,16 @@ const Dashboard = ({ children }) => {
       href: "/daily-list",
       icon: ListAlt,
       title: "Dnevna lista",
+      children: [
+        {
+          href: "/daily-list/requests",
+          title: "Zahtjevi",
+        },
+        {
+          href: "/daily-list/fault-orders",
+          title: "Smetnje",
+        },
+      ],
     },
     {
       href: "/requests",
@@ -121,6 +131,16 @@ const Dashboard = ({ children }) => {
       href: "/daily-list",
       icon: ListAlt,
       title: "Dnevna lista",
+      children: [
+        {
+          href: "/daily-list/requests",
+          title: "Zahtjevi",
+        },
+        {
+          href: "/daily-list/fault-orders",
+          title: "Smetnje",
+        },
+      ],
     },
     {
       href: "/requests",
