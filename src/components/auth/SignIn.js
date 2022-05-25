@@ -79,10 +79,18 @@ function SignIn() {
               localStorage.setItem("userToken", response.jwttoken);
               navigate("/home");
             } else {
+              localStorage.removeItem("currentUser");
+              localStorage.removeItem("token");
+              localStorage.removeItem("userToken");
+              localStorage.removeItem("roles");
               setErrorMessage("Unesite validne podatke za prijavu.");
               navigate("/");
             }
           } catch (error) {
+            localStorage.removeItem("currentUser");
+            localStorage.removeItem("token");
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("roles");
             setErrorMessage("Unesite validne podatke za prijavu.");
             navigate("/");
             console.log(error);

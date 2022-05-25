@@ -14,16 +14,25 @@ export async function loginUser(dispatch, loginPayload) {
     let response = await fetch(`${ROOT_URL}/user/login`, requestOptions);
     let data = await response.json();
 
-    if (data) {
+    if (data.status !== 401) {
       dispatch({ type: "LOGIN_SUCCESS", payload: data });
       localStorage.setItem("currentUser", JSON.stringify(data));
       localStorage.setItem("roles", JSON.stringify(data.roles));
       return data;
+    } else {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("token");
+      localStorage.removeItem("userToken");
+      localStorage.removeItem("roles");
+      dispatch({ type: "LOGIN_ERROR", error: data.username });
     }
-    dispatch({ type: "LOGIN_ERROR", error: data.username });
-    console.log(data.username);
+
     return;
   } catch (error) {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("roles");
     dispatch({ type: "LOGIN_ERROR", error: error });
     console.log(error);
   }
