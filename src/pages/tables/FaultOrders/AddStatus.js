@@ -86,11 +86,6 @@ const initialValues = {
   value: null,
 };
 
-// const validationSchema = Yup.object().shape({
-//   name: Yup.string(),
-//   value: Yup.string(),
-// });
-
 function BasicForm() {
   const { state } = useLocation();
   const [valueDateFrom, setValueDateFrom] = useState(new Date());
