@@ -72,7 +72,6 @@ const CssTextField = styled(TextField, {
 
 function EmptyCard() {
   const formSchema = Yup.object().shape({
-    oldPassword: Yup.string().required("Obavezno polje!"),
     newPassword: Yup.string()
       .required("Obavezno polje!")
       .matches(
@@ -115,12 +114,7 @@ function EmptyCard() {
   const submit = (data) => {
     setIsLoading(true);
     userService
-      .changePassword(
-        userDetails.ref,
-        data.confirmPassword,
-        data.oldPassword,
-        data.newPassword
-      )
+      .changePassword(userDetails.ref, data.confirmPassword, data.newPassword)
       .then((res) => {
         if (res.status == 200) {
           setIsSuccessfull(true);
@@ -215,22 +209,6 @@ function EmptyCard() {
                   </strong>
                 </Alert>
                 <Grid container spacing={6}>
-                  <Grid item md={12}>
-                    <CssTextField
-                      type="password"
-                      focusColor="black"
-                      name="oldPassword"
-                      label="Stara lozinka"
-                      {...register("oldPassword")}
-                      error={errors.oldPassword}
-                      helperText={
-                        errors.oldPassword && errors.oldPassword.message
-                      }
-                      variant="outlined"
-                      my={2}
-                    />
-                  </Grid>
-                  <br />
                   <Grid item md={12}>
                     <CssTextField
                       type="password"

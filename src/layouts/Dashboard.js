@@ -63,9 +63,9 @@ const Dashboard = ({ children }) => {
   const userDetails = useAuthState();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  userDetails.roles.filter((r) => r === "Administrator").length > 0
-    ? (isAdmin = true)
-    : (isAdmin = false);
+  // userDetails.roles.filter((r) => r === "Administrator").length > 0
+  //   ? (isAdmin = true)
+  //   : (isAdmin = false);
 
   const pagesSectionForAdmin = [
     {
@@ -188,6 +188,7 @@ const Dashboard = ({ children }) => {
       <CssBaseline />
       <GlobalStyle />
       <Drawer>
+        {console.log("userDetails", userDetails)}
         <Hidden lgUp implementation="js">
           <Sidebar
             PaperProps={{ style: { width: drawerWidth } }}

@@ -27,9 +27,10 @@ const TextField = styled(MuiTextField)(spacing);
 function SignIn() {
   const navigate = useNavigate();
   const dispatch = useAuthDispatch();
-  const { loading, errorMessage } = useAuthState();
+  const { loading } = useAuthState();
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
   const CssTextField = styled(TextField, {
     shouldForwardProp: (props) => props !== "focusColor",
   })((p) => ({
@@ -72,13 +73,17 @@ function SignIn() {
           try {
             setIsLoading(false);
             let response = await loginUser(dispatch, { password, username });
-            if (response) {
+
+            if (response.status !== 401) {
+              setErrorMessage("");
               localStorage.setItem("userToken", response.jwttoken);
               navigate("/home");
             } else {
+              setErrorMessage("Unesite validne podatke za prijavu.");
               navigate("/");
             }
           } catch (error) {
+            setErrorMessage("Unesite validne podatke za prijavu.");
             navigate("/");
             console.log(error);
           }
@@ -94,9 +99,9 @@ function SignIn() {
           values,
         }) => (
           <form noValidate onSubmit={handleSubmit}>
-            {errors.submit && (
+            {errorMessage !== "" && (
               <Alert mt={2} mb={3} severity="warning">
-                {errors.submit}
+                {errorMessage}
               </Alert>
             )}
             <CssTextField

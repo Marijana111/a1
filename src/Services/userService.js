@@ -82,16 +82,10 @@ async function createUser(
     .catch((err) => err);
 }
 
-async function changePassword(
-  userRef,
-  confirmPassword,
-  currentPassword,
-  newPassword
-) {
+async function changePassword(userRef, confirmPassword, newPassword) {
   return axios
     .post(`${userURL}/user/changePassword/${userRef}`, {
       confirmPassword,
-      currentPassword,
       newPassword,
     })
     .then((res) => res)
