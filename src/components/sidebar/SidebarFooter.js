@@ -37,7 +37,12 @@ const FooterBadge = styled(Badge)`
 `;
 
 const SidebarFooter = ({ ...rest }) => {
+  let arrayRoles = [];
   const userDetails = useAuthState();
+
+  const nameOfUser = localStorage.getItem("currentUserName");
+  const rolesOfUser = localStorage.getItem("currentUserRoles");
+  arrayRoles.push(rolesOfUser);
 
   return (
     <Footer {...rest}>
@@ -51,35 +56,23 @@ const SidebarFooter = ({ ...rest }) => {
             }}
             variant="dot"
           >
-            {!!userDetails && (
+            {!!nameOfUser && (
               <Avatar
-                alt={userDetails.username}
+                alt={nameOfUser}
                 src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
                 // {user.avatar}
-              />
-            )}
-            {!userDetails && (
-              <Avatar
-                alt="Lucy Lavender"
-                src="https://tellmetrip.com/img/no-user.png"
               />
             )}
           </FooterBadge>
         </Grid>
         <Grid item>
-          {!!userDetails && (
-            <FooterText variant="body2">
-              {userDetails.firstName + " " + userDetails.lastName}
-            </FooterText>
+          {!!nameOfUser && (
+            <FooterText variant="body2">{nameOfUser}</FooterText>
           )}
-          {!userDetails && (
-            <FooterText variant="body2">
-              {userDetails.firstName + " " + userDetails.lastName}
-            </FooterText>
-          )}
+          {!nameOfUser && <FooterText variant="body2">{nameOfUser}</FooterText>}
           <FooterSubText variant="caption">
-            {userDetails.roles &&
-              userDetails.roles.map((role, i, arr) => (
+            {arrayRoles &&
+              arrayRoles.map((role, i, arr) => (
                 <span style={{ fontSize: "8px" }}>
                   {role} {i != arr.length - 1 ? ", " : ""}
                 </span>

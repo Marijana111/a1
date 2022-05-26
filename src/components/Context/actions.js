@@ -20,6 +20,8 @@ export async function loginUser(dispatch, loginPayload) {
       localStorage.setItem("roles", JSON.stringify(data.roles));
       return data;
     } else {
+      localStorage.removeItem("currentUserName");
+      localStorage.removeItem("currentUserRoles");
       localStorage.removeItem("currentUser");
       localStorage.removeItem("token");
       localStorage.removeItem("userToken");
@@ -29,6 +31,8 @@ export async function loginUser(dispatch, loginPayload) {
 
     return;
   } catch (error) {
+    localStorage.removeItem("currentUserName");
+    localStorage.removeItem("currentUserRoles");
     localStorage.removeItem("currentUser");
     localStorage.removeItem("token");
     localStorage.removeItem("userToken");
@@ -40,6 +44,8 @@ export async function loginUser(dispatch, loginPayload) {
 
 export async function logout(dispatch) {
   dispatch({ type: "LOGOUT" });
+  localStorage.removeItem("currentUserName");
+  localStorage.removeItem("currentUserRoles");
   localStorage.removeItem("currentUser");
   localStorage.removeItem("token");
   localStorage.removeItem("userToken");
