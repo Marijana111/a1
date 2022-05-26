@@ -77,8 +77,15 @@ function SignIn() {
             if (response.status !== 401) {
               setErrorMessage("");
               localStorage.setItem("userToken", response.jwttoken);
+              localStorage.setItem(
+                "currentUserName",
+                response.firstName + " " + response.lastName
+              );
+              localStorage.setItem("currentUserRoles", response.roles);
               navigate("/home");
             } else {
+              localStorage.removeItem("currentUserName");
+              localStorage.removeItem("currentUserRoles");
               localStorage.removeItem("currentUser");
               localStorage.removeItem("token");
               localStorage.removeItem("userToken");
@@ -87,6 +94,8 @@ function SignIn() {
               navigate("/");
             }
           } catch (error) {
+            localStorage.removeItem("currentUserName");
+            localStorage.removeItem("currentUserRoles");
             localStorage.removeItem("currentUser");
             localStorage.removeItem("token");
             localStorage.removeItem("userToken");
