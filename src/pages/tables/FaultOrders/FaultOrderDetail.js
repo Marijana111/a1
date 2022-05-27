@@ -53,17 +53,23 @@ const CustomTableCell = styled(TableCell)`
 function EmptyCard() {
   let isAdmin;
   let isManager;
+  let arrayRoles = [];
   const { state } = useLocation();
   const navigate = useNavigate();
   const userDetails = useAuthState();
 
-  userDetails.roles.filter((r) => r === "Administrator").length > 0
-    ? (isAdmin = true)
-    : (isAdmin = false);
+  const rolesOfUser = localStorage.getItem("currentUserRoles");
+  arrayRoles.push(rolesOfUser);
 
-  userDetails.roles.filter((r) => r === "Back office upravitelj").length > 0
-    ? (isManager = true)
-    : (isManager = false);
+  arrayRoles.filter((role) =>
+    role.includes("Administrator") ? (isAdmin = true) : (isAdmin = false)
+  );
+
+  arrayRoles.filter((role) =>
+    role.includes("Back office upravitelj")
+      ? (isManager = true)
+      : (isManager = false)
+  );
 
   let requestId = state.requestId;
 
