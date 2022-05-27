@@ -58,14 +58,17 @@ const MainContent = styled(Paper)`
 `;
 
 const Dashboard = ({ children }) => {
+  let arrayRoles = [];
   let isAdmin;
   let navItems;
   const userDetails = useAuthState();
+  const rolesOfUser = localStorage.getItem("currentUserRoles");
+  arrayRoles.push(rolesOfUser);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  userDetails.roles.filter((r) => r === "Administrator").length > 0
-    ? (isAdmin = true)
-    : (isAdmin = false);
+  arrayRoles.filter((role) =>
+    role.includes("Administrator") ? (isAdmin = true) : (isAdmin = false)
+  );
 
   const pagesSectionForAdmin = [
     {
