@@ -18,6 +18,7 @@ import {
   LinearProgress,
   Chip as MuiChip,
   Button as MuiButton,
+  Badge,
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { Loop as LoopIcon } from "@mui/icons-material";
@@ -42,6 +43,14 @@ const Breadcrumbs = styled(MuiBreadcrumbs)(spacing);
 const Paper = styled(MuiPaper)(spacing);
 
 const TextField = styled(MuiTextField)(spacing);
+
+const StyledBadge = styled(Badge)({
+  "& .MuiBadge-badge": {
+    color: "black",
+    backgroundColor: "white",
+    border: "1px solid black",
+  },
+});
 
 const Chip = styled(MuiChip)`
   ${spacing};
@@ -140,17 +149,6 @@ function DataGridDemo() {
       .catch((err) => console.log(err));
   }, [search, update]);
 
-  const reloadData = () => {
-    setIsLoading(true);
-    dailyListService
-      .getRequests()
-      .then((res) => {
-        setRequests(res.data.requestList);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
-  };
-
   const columns = [
     { field: "requestId", headerName: "Case Id", width: 105 },
     {
@@ -173,17 +171,6 @@ function DataGridDemo() {
       headerName: "Kategorija",
       width: 170,
     },
-    // {
-    //   field: "fullName",
-    //   headerName: "Kategorija",
-    //   description: "This column has a value getter and is not sortable.",
-    //   sortable: false,
-    //   width: 250,
-    //   valueGetter: (params) =>
-    //     `${params.getValue(params.id, "firstName") || ""} ${
-    //       params.getValue(params.id, "lastName") || ""
-    //     }`,
-    // },
     {
       field: "requestAdapterId",
       headerName: "Adapter Id",
@@ -267,236 +254,207 @@ function DataGridDemo() {
       <Card mb={6}>
         <CardContent pb={1}>
           <Typography variant="h6" gutterBottom>
-            <SmallButton onClick={() => reloadData()} size="small" mr={2}>
-              <LoopIcon style={{ color: "black" }} />
-            </SmallButton>
-            {/* {isVisibleFilters ? (
-              <>
-                <Grid style={{ marginTop: "5px" }} container spacing={4}>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="caseId"
-                      label="Case Id"
-                      //value={values.firstName}
-                      fullWidth
-                      //onBlur={handleBlur}
-                      onChange={(event) => {
-                        setSearch({ ...search, caseId: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="guid"
-                      label="GUID"
-                      //value={values.lastName}
-                      fullWidth
-                      //onBlur={handleBlur}
-                      onChange={(event) => {
-                        setSearch({ ...search, guid: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="adapterId"
-                      label="Adapter Id"
-                      //value={values.lastName}
-                      fullWidth
-                      //onBlur={handleBlur}
-                      onChange={(event) => {
-                        setSearch({ ...search, adapterId: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <DatePicker
-                      label="Datum od"
-                      inputFormat="dd.MM.yyyy"
-                      fullWidth
-                      value={valueDateFrom}
-                      onChange={(newValue) => {
-                        setValueDateFrom(newValue);
-                        setSearch({
-                          ...search,
-                          dateFrom: dateHelper.formatUtcToDateApi(newValue),
-                        });
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <DatePicker
-                      label="Datum do"
-                      inputFormat="dd.MM.yyyy"
-                      fullWidth
-                      minDate={valueDateFrom}
-                      value={valueDateTo}
-                      onChange={(newValue) => {
-                        setValueDateTo(newValue);
-                        setSearch({
-                          ...search,
-                          dateTo: dateHelper.formatUtcToDateApi(newValue),
-                        });
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Grid>
-
-                  <Grid
-                    style={{ marginTop: "10px", marginLeft: "1px" }}
-                    container
-                    spacing={4}
+            <Grid style={{ marginTop: "5px" }} container spacing={2}>
+              <StyledBadge badgeContent={4}>
+                <Button
+                  //onClick={() => navigate(-1)}
+                  style={{ backgroundColor: "black" }}
+                  type="button"
+                  variant="contained"
+                >
+                  SVI
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={4}>
+                <Button
+                  //onClick={() => navigate(-1)}
+                  color="error"
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  GREŠKA
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={4}>
+                <Button
+                  //onClick={() => navigate(-1)}
+                  color="error"
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  ODBIJEN
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={4}>
+                <Button
+                  //onClick={() => navigate(-1)}
+                  style={{ backgroundColor: "#f2932e" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  PRIHVAĆEN
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={4}>
+                <Button
+                  //onClick={() => navigate(-1)}
+                  style={{ backgroundColor: "#7a7d7b" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  INFO
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={4}>
+                <Button
+                  //onClick={() => navigate(-1)}
+                  style={{ backgroundColor: "#3cbd67" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  REALIZIRAN
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={4}>
+                <Button
+                  //onClick={() => navigate(-1)}
+                  style={{ backgroundColor: "#d2d9d3" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  STORNO
+                </Button>
+              </StyledBadge>
+              {/* <Grid item md={1}>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{ backgroundColor: "black" }}
+                    type="button"
+                    variant="contained"
+                    fullWidth
                   >
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="operator"
-                        label="Operator"
-                        value={operatorValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setOperatorValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            operator: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite operatora</MenuItem>
-                        {operatorsOptions.map((status) => (
-                          <MenuItem
-                            key={status.operatorName}
-                            value={status.operatorName}
-                          >
-                            {status.operatorName}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="requestType"
-                        label="Vrsta"
-                        value={requestTypeValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setRequestTypeValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            type: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite vrstu</MenuItem>
-                        {requestTypesOptions.map((status) => (
-                          <MenuItem
-                            key={status.requestTypeName}
-                            value={status.requestTypeName}
-                          >
-                            {status.requestTypeDescription}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="category"
-                        label="Kategorija"
-                        value={categoryValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setCategoryValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            category: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite kategoriju</MenuItem>
-                        {optionsCategory.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="status"
-                        label="Status"
-                        value={statusValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setStatusValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            status: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite status</MenuItem>
-                        {optionsStatus.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="statusInt"
-                        label="Status interno"
-                        value={statusIntValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setStatusIntValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            statusInt: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite status interno</MenuItem>
-                        {optionsStatusInt.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </>
-            ) : (
-              ""
-            )} */}
+                    SVI
+                  </Button>
+                </StyledBadge>
+              </Grid>
+              <Grid item md={2}>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    color="error"
+                    type="button"
+                    variant="contained"
+                    fullWidth
+                  >
+                    GREŠKA
+                  </Button>
+                </StyledBadge>
+              </Grid>
+              <Grid item md={2}>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    color="error"
+                    type="button"
+                    variant="contained"
+                    fullWidth
+                  >
+                    ODBIJEN
+                  </Button>
+                </StyledBadge>
+              </Grid>
+              <Grid item md={2}>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{ backgroundColor: "#f2932e" }}
+                    type="button"
+                    variant="contained"
+                    fullWidth
+                  >
+                    PRIHVAĆEN
+                  </Button>
+                </StyledBadge>
+              </Grid>
+              <Grid item md={1}>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{ backgroundColor: "#7a7d7b" }}
+                    type="button"
+                    variant="contained"
+                    fullWidth
+                  >
+                    INFO
+                  </Button>
+                </StyledBadge>
+              </Grid>
+              <Grid item md={2}>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{ backgroundColor: "#3cbd67" }}
+                    type="button"
+                    variant="contained"
+                    fullWidth
+                  >
+                    REALIZIRAN
+                  </Button>
+                </StyledBadge>
+              </Grid>
+              <Grid item md={2}>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{ backgroundColor: "#d2d9d3" }}
+                    type="button"
+                    variant="contained"
+                    fullWidth
+                  >
+                    STORNO
+                  </Button>
+                </StyledBadge>
+              </Grid> */}
+              <Grid style={{ marginTop: "20px" }} container spacing={4}>
+                <StyledBadge fullWidth badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      border: "1px solid black",
+                    }}
+                    type="button"
+                    variant="contained"
+                    ml={4}
+                  >
+                    BO potreban novi termin
+                  </Button>
+                </StyledBadge>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      border: "1px solid black",
+                    }}
+                    type="button"
+                    variant="contained"
+                    ml={4}
+                  >
+                    BO očekuje se akcija
+                  </Button>
+                </StyledBadge>
+              </Grid>
+            </Grid>
           </Typography>
         </CardContent>
         <br />
