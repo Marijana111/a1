@@ -18,6 +18,7 @@ import {
   LinearProgress,
   Chip as MuiChip,
   Button as MuiButton,
+  Badge,
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { Loop as LoopIcon } from "@mui/icons-material";
@@ -42,6 +43,14 @@ const Breadcrumbs = styled(MuiBreadcrumbs)(spacing);
 const Paper = styled(MuiPaper)(spacing);
 
 const TextField = styled(MuiTextField)(spacing);
+
+const StyledBadge = styled(Badge)({
+  "& .MuiBadge-badge": {
+    color: "black",
+    backgroundColor: "white",
+    border: "1px solid black",
+  },
+});
 
 const Chip = styled(MuiChip)`
   ${spacing};
@@ -89,66 +98,95 @@ const CssTextField = styled(TextField, {
 
 function DataGridDemo() {
   const navigate = useNavigate();
+
+  let Error;
+  let Rejected;
+  let Accepted;
+  let Info;
+  let Realized;
+  let Cancellation;
+
   const [update, setUpdate] = useState(new Date());
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isVisibleFilters, setIsVisibleFilter] = useState(false);
-  const [valueDateFrom, setValueDateFrom] = useState(null);
-  const [valueDateTo, setValueDateTo] = useState(null);
-  const [statusValue, setStatusValue] = useState(null);
-  const [statusIntValue, setStatusIntValue] = useState(null);
-  const [categoryValue, setCategoryValue] = useState(null);
-  const [requestTypeValue, setRequestTypeValue] = useState(null);
-  const [operatorValue, setOperatorValue] = useState(null);
-  const [operatorsOptions, setOperatorsOptions] = useState([]);
-  const [requestTypesOptions, setRequestTypesOptions] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const [search, setSearch] = useState({
-    caseId: "",
-    guid: "",
-    adapterId: "",
-    dateFrom: null,
-    dateTo: null,
-    operator: 0,
-    type: 0,
-    category: 0,
-    status: 0,
-    statusInt: 0,
-  });
+  const [totalCount, setTotalCounut] = useState(0);
+  const [countError, setCountErorr] = useState([]);
+  const [countRejected, setCountRejected] = useState([]);
+  const [countAccepted, setCountAccepted] = useState([]);
+  const [countInfo, setCountInfo] = useState([]);
+  const [countRealized, setCountRealized] = useState([]);
+  const [countCancellation, setCountCancellation] = useState([]);
 
   useEffect(() => {
     dailyListService
       .getRequests()
       .then((res) => {
+        setTotalCounut(res.data.total);
         setRequests(res.data.requestList);
+        handleGetCount(res.data.requestList);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
+  }, [update]);
 
-    selectService
-      .getOperators()
-      .then((res) => {
-        setOperatorsOptions(res.data);
-      })
-      .catch((err) => console.log(err));
+  const handleGetCount = (requestsCount) => {
+    //console.log("requestsCount", requestsCount);
 
-    selectService
-      .getRequestTypes()
-      .then((res) => {
-        setRequestTypesOptions(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, [search, update]);
+    Error = requestsCount.filter((r) => {
+      return r.statusName.includes("GREŠKA");
+    });
+    setCountErorr(Error);
 
-  const reloadData = () => {
-    setIsLoading(true);
-    dailyListService
-      .getRequests()
-      .then((res) => {
-        setRequests(res.data.requestList);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
+    Rejected = requestsCount.filter((r) => {
+      return r.statusName.includes("ODBIJEN");
+    });
+    setCountRejected(Rejected);
+
+    Accepted = requestsCount.filter((r) => {
+      return r.statusName.includes("PRIHVAĆEN");
+    });
+    setCountAccepted(Accepted);
+
+    Info = requestsCount.filter((r) => {
+      return r.statusName.includes("INFO");
+    });
+    setCountInfo(Info);
+
+    Realized = requestsCount.filter((r) => {
+      return r.statusName.includes("REALIZIRAN");
+    });
+    setCountRealized(Realized);
+
+    Cancellation = requestsCount.filter((r) => {
+      return r.statusName.includes("STORNO");
+    });
+    setCountCancellation(Cancellation);
+  };
+
+  const searchByStatus = (statusName) => {
+    switch (statusName) {
+      case "SVI":
+        setUpdate(new Date());
+        break;
+      case "GREŠKA":
+        setRequests(countError);
+        break;
+      case "ODBIJEN":
+        setRequests(countRejected);
+        break;
+      case "PRIHVAĆEN":
+        setRequests(countAccepted);
+        break;
+      case "INFO":
+        setRequests(countInfo);
+        break;
+      case "REALIZIRAN":
+        setRequests(countRealized);
+        break;
+      case "STORNO":
+        setRequests(countCancellation);
+    }
   };
 
   const columns = [
@@ -173,17 +211,6 @@ function DataGridDemo() {
       headerName: "Kategorija",
       width: 170,
     },
-    // {
-    //   field: "fullName",
-    //   headerName: "Kategorija",
-    //   description: "This column has a value getter and is not sortable.",
-    //   sortable: false,
-    //   width: 250,
-    //   valueGetter: (params) =>
-    //     `${params.getValue(params.id, "firstName") || ""} ${
-    //       params.getValue(params.id, "lastName") || ""
-    //     }`,
-    // },
     {
       field: "requestAdapterId",
       headerName: "Adapter Id",
@@ -240,263 +267,122 @@ function DataGridDemo() {
     });
   };
 
-  const optionsStatus = [
-    { value: "PRIHVAĆEN", name: "PRIHVAĆEN" },
-    { value: "REALIZIRAN", name: "REALIZIRAN" },
-    { value: "ODBIJEN", name: "ODBIJEN" },
-    { value: "STORNO", name: "STORNO" },
-    { value: "INFO", name: "INFO" },
-    { value: "REALIZIRAN_OK", name: "REALIZIRAN_OK" },
-    { value: "REALIZIRAN_NOK", name: "REALIZIRAN_NOK" },
-  ];
-
-  const optionsStatusInt = [
-    { value: "Status 1", name: "Status 1" },
-    { value: "Status 2", name: "Status 2" },
-    { value: "Status 3", name: "Status 3" },
-  ];
-
-  const optionsCategory = [
-    { value: "Kategorija 1", name: "Kategorija 1" },
-    { value: "Kategorija 2", name: "Kategorija 2" },
-    { value: "Kategorija 3", name: "Kategorija 3" },
-  ];
-
   return (
     <>
       <Card mb={6}>
         <CardContent pb={1}>
           <Typography variant="h6" gutterBottom>
-            <SmallButton onClick={() => reloadData()} size="small" mr={2}>
-              <LoopIcon style={{ color: "black" }} />
-            </SmallButton>
-            {/* {isVisibleFilters ? (
-              <>
-                <Grid style={{ marginTop: "5px" }} container spacing={4}>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="caseId"
-                      label="Case Id"
-                      //value={values.firstName}
-                      fullWidth
-                      //onBlur={handleBlur}
-                      onChange={(event) => {
-                        setSearch({ ...search, caseId: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="guid"
-                      label="GUID"
-                      //value={values.lastName}
-                      fullWidth
-                      //onBlur={handleBlur}
-                      onChange={(event) => {
-                        setSearch({ ...search, guid: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="adapterId"
-                      label="Adapter Id"
-                      //value={values.lastName}
-                      fullWidth
-                      //onBlur={handleBlur}
-                      onChange={(event) => {
-                        setSearch({ ...search, adapterId: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <DatePicker
-                      label="Datum od"
-                      inputFormat="dd.MM.yyyy"
-                      fullWidth
-                      value={valueDateFrom}
-                      onChange={(newValue) => {
-                        setValueDateFrom(newValue);
-                        setSearch({
-                          ...search,
-                          dateFrom: dateHelper.formatUtcToDateApi(newValue),
-                        });
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <DatePicker
-                      label="Datum do"
-                      inputFormat="dd.MM.yyyy"
-                      fullWidth
-                      minDate={valueDateFrom}
-                      value={valueDateTo}
-                      onChange={(newValue) => {
-                        setValueDateTo(newValue);
-                        setSearch({
-                          ...search,
-                          dateTo: dateHelper.formatUtcToDateApi(newValue),
-                        });
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Grid>
+            <Grid style={{ marginTop: "5px" }} container spacing={2}>
+              <StyledBadge badgeContent={totalCount}>
+                <Button
+                  onClick={() => searchByStatus("SVI")}
+                  style={{ backgroundColor: "black" }}
+                  type="button"
+                  variant="contained"
+                >
+                  SVI
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={countError.length}>
+                <Button
+                  onClick={() => searchByStatus("GREŠKA")}
+                  color="error"
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  GREŠKA
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={countRejected.length}>
+                <Button
+                  onClick={() => searchByStatus("ODBIJEN")}
+                  color="error"
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  ODBIJEN
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={countAccepted.length}>
+                <Button
+                  onClick={() => searchByStatus("PRIHVAĆEN")}
+                  style={{ backgroundColor: "#f2932e" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  PRIHVAĆEN
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={countInfo.length}>
+                <Button
+                  onClick={() => searchByStatus("INFO")}
+                  style={{ backgroundColor: "#7a7d7b" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  INFO
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={countRealized.length}>
+                <Button
+                  onClick={() => searchByStatus("REALIZIRAN")}
+                  style={{ backgroundColor: "#3cbd67" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  REALIZIRAN
+                </Button>
+              </StyledBadge>
+              <StyledBadge badgeContent={countCancellation.length}>
+                <Button
+                  onClick={() => searchByStatus("STORNO")}
+                  style={{ backgroundColor: "#d2d9d3" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  STORNO
+                </Button>
+              </StyledBadge>
 
-                  <Grid
-                    style={{ marginTop: "10px", marginLeft: "1px" }}
-                    container
-                    spacing={4}
+              <Grid style={{ marginTop: "20px" }} container spacing={4}>
+                <StyledBadge fullWidth badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      border: "1px solid black",
+                    }}
+                    type="button"
+                    variant="contained"
+                    ml={4}
                   >
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="operator"
-                        label="Operator"
-                        value={operatorValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setOperatorValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            operator: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite operatora</MenuItem>
-                        {operatorsOptions.map((status) => (
-                          <MenuItem
-                            key={status.operatorName}
-                            value={status.operatorName}
-                          >
-                            {status.operatorName}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="requestType"
-                        label="Vrsta"
-                        value={requestTypeValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setRequestTypeValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            type: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite vrstu</MenuItem>
-                        {requestTypesOptions.map((status) => (
-                          <MenuItem
-                            key={status.requestTypeName}
-                            value={status.requestTypeName}
-                          >
-                            {status.requestTypeDescription}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="category"
-                        label="Kategorija"
-                        value={categoryValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setCategoryValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            category: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite kategoriju</MenuItem>
-                        {optionsCategory.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="status"
-                        label="Status"
-                        value={statusValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setStatusValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            status: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite status</MenuItem>
-                        {optionsStatus.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="statusInt"
-                        label="Status interno"
-                        value={statusIntValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setStatusIntValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            statusInt: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite status interno</MenuItem>
-                        {optionsStatusInt.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </>
-            ) : (
-              ""
-            )} */}
+                    BO potreban novi termin
+                  </Button>
+                </StyledBadge>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      border: "1px solid black",
+                    }}
+                    type="button"
+                    variant="contained"
+                    ml={4}
+                  >
+                    BO očekuje se akcija
+                  </Button>
+                </StyledBadge>
+              </Grid>
+            </Grid>
           </Typography>
         </CardContent>
         <br />
