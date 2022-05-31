@@ -131,8 +131,6 @@ function DataGridDemo() {
   }, [update]);
 
   const handleGetCount = (requestsCount) => {
-    //console.log("requestsCount", requestsCount);
-
     Error = requestsCount.filter((r) => {
       return r.statusName.includes("GREŠKA");
     });
