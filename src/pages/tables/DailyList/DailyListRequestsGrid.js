@@ -98,56 +98,96 @@ const CssTextField = styled(TextField, {
 
 function DataGridDemo() {
   const navigate = useNavigate();
+
+  let Error;
+  let Rejected;
+  let Accepted;
+  let Info;
+  let Realized;
+  let Cancellation;
+
   const [update, setUpdate] = useState(new Date());
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isVisibleFilters, setIsVisibleFilter] = useState(false);
-  const [valueDateFrom, setValueDateFrom] = useState(null);
-  const [valueDateTo, setValueDateTo] = useState(null);
-  const [statusValue, setStatusValue] = useState(null);
-  const [statusIntValue, setStatusIntValue] = useState(null);
-  const [categoryValue, setCategoryValue] = useState(null);
-  const [requestTypeValue, setRequestTypeValue] = useState(null);
-  const [operatorValue, setOperatorValue] = useState(null);
-  const [operatorsOptions, setOperatorsOptions] = useState([]);
-  const [requestTypesOptions, setRequestTypesOptions] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const [search, setSearch] = useState({
-    caseId: "",
-    guid: "",
-    adapterId: "",
-    dateFrom: null,
-    dateTo: null,
-    operator: 0,
-    type: 0,
-    category: 0,
-    status: 0,
-    statusInt: 0,
-  });
+  const [totalCount, setTotalCounut] = useState(0);
+  const [countError, setCountErorr] = useState([]);
+  const [countRejected, setCountRejected] = useState([]);
+  const [countAccepted, setCountAccepted] = useState([]);
+  const [countInfo, setCountInfo] = useState([]);
+  const [countRealized, setCountRealized] = useState([]);
+  const [countCancellation, setCountCancellation] = useState([]);
 
   useEffect(() => {
     dailyListService
       .getRequests()
       .then((res) => {
+        setTotalCounut(res.data.total);
         setRequests(res.data.requestList);
+        handleGetCount(res.data.requestList);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
+  }, [update]);
 
-    selectService
-      .getOperators()
-      .then((res) => {
-        setOperatorsOptions(res.data);
-      })
-      .catch((err) => console.log(err));
+  const handleGetCount = (requestsCount) => {
+    //console.log("requestsCount", requestsCount);
 
-    selectService
-      .getRequestTypes()
-      .then((res) => {
-        setRequestTypesOptions(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, [search, update]);
+    Error = requestsCount.filter((r) => {
+      return r.statusName.includes("GREŠKA");
+    });
+    setCountErorr(Error);
+
+    Rejected = requestsCount.filter((r) => {
+      return r.statusName.includes("ODBIJEN");
+    });
+    setCountRejected(Rejected);
+
+    Accepted = requestsCount.filter((r) => {
+      return r.statusName.includes("PRIHVAĆEN");
+    });
+    setCountAccepted(Accepted);
+
+    Info = requestsCount.filter((r) => {
+      return r.statusName.includes("INFO");
+    });
+    setCountInfo(Info);
+
+    Realized = requestsCount.filter((r) => {
+      return r.statusName.includes("REALIZIRAN");
+    });
+    setCountRealized(Realized);
+
+    Cancellation = requestsCount.filter((r) => {
+      return r.statusName.includes("STORNO");
+    });
+    setCountCancellation(Cancellation);
+  };
+
+  const searchByStatus = (statusName) => {
+    switch (statusName) {
+      case "SVI":
+        setUpdate(new Date());
+        break;
+      case "GREŠKA":
+        setRequests(countError);
+        break;
+      case "ODBIJEN":
+        setRequests(countRejected);
+        break;
+      case "PRIHVAĆEN":
+        setRequests(countAccepted);
+        break;
+      case "INFO":
+        setRequests(countInfo);
+        break;
+      case "REALIZIRAN":
+        setRequests(countRealized);
+        break;
+      case "STORNO":
+        setRequests(countCancellation);
+    }
+  };
 
   const columns = [
     { field: "requestId", headerName: "Case Id", width: 105 },
@@ -227,37 +267,15 @@ function DataGridDemo() {
     });
   };
 
-  const optionsStatus = [
-    { value: "PRIHVAĆEN", name: "PRIHVAĆEN" },
-    { value: "REALIZIRAN", name: "REALIZIRAN" },
-    { value: "ODBIJEN", name: "ODBIJEN" },
-    { value: "STORNO", name: "STORNO" },
-    { value: "INFO", name: "INFO" },
-    { value: "REALIZIRAN_OK", name: "REALIZIRAN_OK" },
-    { value: "REALIZIRAN_NOK", name: "REALIZIRAN_NOK" },
-  ];
-
-  const optionsStatusInt = [
-    { value: "Status 1", name: "Status 1" },
-    { value: "Status 2", name: "Status 2" },
-    { value: "Status 3", name: "Status 3" },
-  ];
-
-  const optionsCategory = [
-    { value: "Kategorija 1", name: "Kategorija 1" },
-    { value: "Kategorija 2", name: "Kategorija 2" },
-    { value: "Kategorija 3", name: "Kategorija 3" },
-  ];
-
   return (
     <>
       <Card mb={6}>
         <CardContent pb={1}>
           <Typography variant="h6" gutterBottom>
             <Grid style={{ marginTop: "5px" }} container spacing={2}>
-              <StyledBadge badgeContent={4}>
+              <StyledBadge badgeContent={totalCount}>
                 <Button
-                  //onClick={() => navigate(-1)}
+                  onClick={() => searchByStatus("SVI")}
                   style={{ backgroundColor: "black" }}
                   type="button"
                   variant="contained"
@@ -265,9 +283,9 @@ function DataGridDemo() {
                   SVI
                 </Button>
               </StyledBadge>
-              <StyledBadge badgeContent={4}>
+              <StyledBadge badgeContent={countError.length}>
                 <Button
-                  //onClick={() => navigate(-1)}
+                  onClick={() => searchByStatus("GREŠKA")}
                   color="error"
                   type="button"
                   variant="contained"
@@ -276,9 +294,9 @@ function DataGridDemo() {
                   GREŠKA
                 </Button>
               </StyledBadge>
-              <StyledBadge badgeContent={4}>
+              <StyledBadge badgeContent={countRejected.length}>
                 <Button
-                  //onClick={() => navigate(-1)}
+                  onClick={() => searchByStatus("ODBIJEN")}
                   color="error"
                   type="button"
                   variant="contained"
@@ -287,9 +305,9 @@ function DataGridDemo() {
                   ODBIJEN
                 </Button>
               </StyledBadge>
-              <StyledBadge badgeContent={4}>
+              <StyledBadge badgeContent={countAccepted.length}>
                 <Button
-                  //onClick={() => navigate(-1)}
+                  onClick={() => searchByStatus("PRIHVAĆEN")}
                   style={{ backgroundColor: "#f2932e" }}
                   type="button"
                   variant="contained"
@@ -298,9 +316,9 @@ function DataGridDemo() {
                   PRIHVAĆEN
                 </Button>
               </StyledBadge>
-              <StyledBadge badgeContent={4}>
+              <StyledBadge badgeContent={countInfo.length}>
                 <Button
-                  //onClick={() => navigate(-1)}
+                  onClick={() => searchByStatus("INFO")}
                   style={{ backgroundColor: "#7a7d7b" }}
                   type="button"
                   variant="contained"
@@ -309,9 +327,9 @@ function DataGridDemo() {
                   INFO
                 </Button>
               </StyledBadge>
-              <StyledBadge badgeContent={4}>
+              <StyledBadge badgeContent={countRealized.length}>
                 <Button
-                  //onClick={() => navigate(-1)}
+                  onClick={() => searchByStatus("REALIZIRAN")}
                   style={{ backgroundColor: "#3cbd67" }}
                   type="button"
                   variant="contained"
@@ -320,9 +338,9 @@ function DataGridDemo() {
                   REALIZIRAN
                 </Button>
               </StyledBadge>
-              <StyledBadge badgeContent={4}>
+              <StyledBadge badgeContent={countCancellation.length}>
                 <Button
-                  //onClick={() => navigate(-1)}
+                  onClick={() => searchByStatus("STORNO")}
                   style={{ backgroundColor: "#d2d9d3" }}
                   type="button"
                   variant="contained"
@@ -331,97 +349,7 @@ function DataGridDemo() {
                   STORNO
                 </Button>
               </StyledBadge>
-              {/* <Grid item md={1}>
-                <StyledBadge badgeContent={4}>
-                  <Button
-                    //onClick={() => navigate(-1)}
-                    style={{ backgroundColor: "black" }}
-                    type="button"
-                    variant="contained"
-                    fullWidth
-                  >
-                    SVI
-                  </Button>
-                </StyledBadge>
-              </Grid>
-              <Grid item md={2}>
-                <StyledBadge badgeContent={4}>
-                  <Button
-                    //onClick={() => navigate(-1)}
-                    color="error"
-                    type="button"
-                    variant="contained"
-                    fullWidth
-                  >
-                    GREŠKA
-                  </Button>
-                </StyledBadge>
-              </Grid>
-              <Grid item md={2}>
-                <StyledBadge badgeContent={4}>
-                  <Button
-                    //onClick={() => navigate(-1)}
-                    color="error"
-                    type="button"
-                    variant="contained"
-                    fullWidth
-                  >
-                    ODBIJEN
-                  </Button>
-                </StyledBadge>
-              </Grid>
-              <Grid item md={2}>
-                <StyledBadge badgeContent={4}>
-                  <Button
-                    //onClick={() => navigate(-1)}
-                    style={{ backgroundColor: "#f2932e" }}
-                    type="button"
-                    variant="contained"
-                    fullWidth
-                  >
-                    PRIHVAĆEN
-                  </Button>
-                </StyledBadge>
-              </Grid>
-              <Grid item md={1}>
-                <StyledBadge badgeContent={4}>
-                  <Button
-                    //onClick={() => navigate(-1)}
-                    style={{ backgroundColor: "#7a7d7b" }}
-                    type="button"
-                    variant="contained"
-                    fullWidth
-                  >
-                    INFO
-                  </Button>
-                </StyledBadge>
-              </Grid>
-              <Grid item md={2}>
-                <StyledBadge badgeContent={4}>
-                  <Button
-                    //onClick={() => navigate(-1)}
-                    style={{ backgroundColor: "#3cbd67" }}
-                    type="button"
-                    variant="contained"
-                    fullWidth
-                  >
-                    REALIZIRAN
-                  </Button>
-                </StyledBadge>
-              </Grid>
-              <Grid item md={2}>
-                <StyledBadge badgeContent={4}>
-                  <Button
-                    //onClick={() => navigate(-1)}
-                    style={{ backgroundColor: "#d2d9d3" }}
-                    type="button"
-                    variant="contained"
-                    fullWidth
-                  >
-                    STORNO
-                  </Button>
-                </StyledBadge>
-              </Grid> */}
+
               <Grid style={{ marginTop: "20px" }} container spacing={4}>
                 <StyledBadge fullWidth badgeContent={4}>
                   <Button
