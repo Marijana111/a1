@@ -18,6 +18,7 @@ import {
   LinearProgress,
   Chip as MuiChip,
   Button as MuiButton,
+  Badge,
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { Loop as LoopIcon } from "@mui/icons-material";
@@ -43,6 +44,14 @@ const Breadcrumbs = styled(MuiBreadcrumbs)(spacing);
 const Paper = styled(MuiPaper)(spacing);
 
 const TextField = styled(MuiTextField)(spacing);
+
+const StyledBadge = styled(Badge)({
+  "& .MuiBadge-badge": {
+    color: "black",
+    backgroundColor: "white",
+    border: "1px solid black",
+  },
+});
 
 const Chip = styled(MuiChip)`
   ${spacing};
@@ -89,66 +98,95 @@ const CssTextField = styled(TextField, {
 
 function DataGridDemo() {
   const navigate = useNavigate();
+
+  let Error;
+  let Rejected;
+  let Info;
+  let Realized;
+  let RealizedOK;
+  let RealizedNOK;
+  let Cancellation;
+
   const [update, setUpdate] = useState(new Date());
   const [faultOrders, setFaultOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isVisibleFilters, setIsVisibleFilter] = useState(false);
-  const [valueDateFrom, setValueDateFrom] = useState(null);
-  const [valueDateTo, setValueDateTo] = useState(null);
-  const [statusValue, setStatusValue] = useState(null);
-  const [statusIntValue, setStatusIntValue] = useState(null);
-  const [categoryValue, setCategoryValue] = useState(null);
-  const [requestTypeValue, setRequestTypeValue] = useState(null);
-  const [operatorValue, setOperatorValue] = useState(null);
-  const [operatorsOptions, setOperatorsOptions] = useState([]);
-  const [requestTypesOptions, setRequestTypesOptions] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const [search, setSearch] = useState({
-    caseId: "",
-    guid: "",
-    adapterId: "",
-    dateFrom: null,
-    dateTo: null,
-    operator: 0,
-    type: 0,
-    category: 0,
-    status: 0,
-    statusInt: 0,
-  });
+  const [totalCount, setTotalCounut] = useState(0);
+  const [countRejected, setCountRejected] = useState([]);
+  const [countInfo, setCountInfo] = useState([]);
+  const [countRealized, setCountRealized] = useState([]);
+  const [countRealizedOK, setCountRealizedOK] = useState([]);
+  const [countRealizedNOK, setCountRealizedNOK] = useState([]);
+  const [countCancellation, setCountCancellation] = useState([]);
 
   useEffect(() => {
-    dailyListService
-      .getFaultOrders()
-      .then((res) => {
-        setFaultOrders(res.data.requestList);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
-
-    selectService
-      .getOperators()
-      .then((res) => {
-        setOperatorsOptions(res.data);
-      })
-      .catch((err) => console.log(err));
-
-    selectService
-      .getRequestTypes()
-      .then((res) => {
-        setRequestTypesOptions(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, [search, update]);
-
-  const reloadData = () => {
     setIsLoading(true);
     dailyListService
       .getFaultOrders()
       .then((res) => {
+        setTotalCounut(res.data.total);
         setFaultOrders(res.data.requestList);
+        handleGetCount(res.data.requestList);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
+  }, [update]);
+
+  const handleGetCount = (requestsCount) => {
+    Rejected = requestsCount.filter((r) => {
+      return r.statusName.includes("ODBIJEN");
+    });
+    setCountRejected(Rejected);
+
+    Info = requestsCount.filter((r) => {
+      return r.statusName.includes("INFO");
+    });
+    setCountInfo(Info);
+
+    Realized = requestsCount.filter((r) => {
+      return r.statusName.includes("REALIZIRAN");
+    });
+    setCountRealized(Realized);
+
+    RealizedOK = requestsCount.filter((r) => {
+      return r.statusName.includes("REALIZIRAN OK");
+    });
+    setCountRealizedOK(RealizedOK);
+
+    RealizedNOK = requestsCount.filter((r) => {
+      return r.statusName.includes("REALIZIRAN NOK");
+    });
+    setCountRealizedNOK(RealizedNOK);
+
+    Cancellation = requestsCount.filter((r) => {
+      return r.statusName.includes("STORNO");
+    });
+    setCountCancellation(Cancellation);
+  };
+
+  const searchByStatus = (statusName) => {
+    switch (statusName) {
+      case "SVI":
+        setUpdate(new Date());
+        break;
+      case "ODBIJEN":
+        setFaultOrders(countRejected);
+        break;
+      case "INFO":
+        setFaultOrders(countInfo);
+        break;
+      case "REALIZIRAN":
+        setFaultOrders(countRealized);
+        break;
+      case "REALIZIRAN OK":
+        setFaultOrders(countRealizedOK);
+        break;
+      case "REALIZIRAN NOK":
+        setFaultOrders(countRealizedNOK);
+        break;
+      case "STORNO":
+        setFaultOrders(countCancellation);
+    }
   };
 
   const columns = [
@@ -229,254 +267,159 @@ function DataGridDemo() {
     });
   };
 
-  const optionsStatus = [
-    { value: "PRIHVAĆEN", name: "PRIHVAĆEN" },
-    { value: "REALIZIRAN", name: "REALIZIRAN" },
-    { value: "ODBIJEN", name: "ODBIJEN" },
-    { value: "STORNO", name: "STORNO" },
-    { value: "INFO", name: "INFO" },
-    { value: "REALIZIRAN_OK", name: "REALIZIRAN_OK" },
-    { value: "REALIZIRAN_NOK", name: "REALIZIRAN_NOK" },
-  ];
-
-  const optionsStatusInt = [
-    { value: "Status 1", name: "Status 1" },
-    { value: "Status 2", name: "Status 2" },
-    { value: "Status 3", name: "Status 3" },
-  ];
-
-  const optionsCategory = [
-    { value: "Kategorija 1", name: "Kategorija 1" },
-    { value: "Kategorija 2", name: "Kategorija 2" },
-    { value: "Kategorija 3", name: "Kategorija 3" },
-  ];
-
   return (
     <>
       <Card mb={6}>
         <CardContent pb={1}>
           <Typography variant="h6" gutterBottom>
-            <SmallButton onClick={() => reloadData()} size="small" mr={2}>
-              <LoopIcon style={{ color: "black" }} />
-            </SmallButton>
-            {/* {isVisibleFilters ? (
-              <>
-                <Grid style={{ marginTop: "5px" }} container spacing={4}>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="searchName"
-                      label="Case Id"
-                      //value={values.firstName}
-                      fullWidth
-                      onChange={(event) => {
-                        setSearch({ ...search, caseId: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="searchPhone"
-                      label="GUID"
-                      //value={values.lastName}
-                      fullWidth
-                      onChange={(event) => {
-                        setSearch({ ...search, guid: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <CssTextField
-                      focusColor="black"
-                      name="searchPhone"
-                      label="Adapter Id"
-                      //value={values.lastName}
-                      fullWidth
-                      onChange={(event) => {
-                        setSearch({ ...search, adapterId: event.target.value });
-                      }}
-                      variant="outlined"
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <DatePicker
-                      label="Datum od"
-                      inputFormat="dd.MM.yyyy"
-                      fullWidth
-                      value={valueDateFrom}
-                      onChange={(newValue) => {
-                        setValueDateFrom(newValue);
-                        setSearch({ ...search, dateFrom: newValue });
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Grid>
-                  <Grid item md={2}>
-                    <DatePicker
-                      label="Datum do"
-                      inputFormat="dd.MM.yyyy"
-                      fullWidth
-                      minDate={valueDateFrom}
-                      value={valueDateTo}
-                      onChange={(newValue) => {
-                        setValueDateTo(newValue);
-                        setSearch({ ...search, dateTo: newValue });
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Grid>
+            <Grid style={{ marginTop: "5px" }} container spacing={2}>
+              <StyledBadge badgeContent={totalCount}>
+                <Button
+                  onClick={() => searchByStatus("SVI")}
+                  style={{ backgroundColor: "black" }}
+                  type="button"
+                  variant="contained"
+                >
+                  SVI
+                </Button>
+              </StyledBadge>
+              <StyledBadge
+                badgeContent={
+                  countRejected.length > 0 ? countRejected.length : "0"
+                }
+              >
+                <Button
+                  onClick={() => searchByStatus("ODBIJEN")}
+                  color="error"
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  ODBIJEN
+                </Button>
+              </StyledBadge>
+              <StyledBadge
+                badgeContent={countInfo.length > 0 ? countInfo.length : "0"}
+              >
+                <Button
+                  onClick={() => searchByStatus("INFO")}
+                  style={{ backgroundColor: "#7a7d7b" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  INFO
+                </Button>
+              </StyledBadge>
+              <StyledBadge
+                badgeContent={
+                  countRealized.length > 0 ? countRealized.length : "0"
+                }
+              >
+                <Button
+                  onClick={() => searchByStatus("REALIZIRAN")}
+                  style={{ backgroundColor: "#3cbd67" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  REALIZIRAN
+                </Button>
+              </StyledBadge>
+              <StyledBadge
+                badgeContent={
+                  countRealizedOK.length > 0 ? countRealizedOK.length : "0"
+                }
+              >
+                <Button
+                  onClick={() => searchByStatus("REALIZIRAN OK")}
+                  style={{ backgroundColor: "#d2d9d3" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  REALIZIRAN OK
+                </Button>
+              </StyledBadge>
+              <StyledBadge
+                badgeContent={
+                  countRealizedNOK.length > 0 ? countRealizedNOK.length : "0"
+                }
+              >
+                <Button
+                  onClick={() => searchByStatus("REALIZIRAN NOK")}
+                  color="error"
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  REALIZIRAN NOK
+                </Button>
+              </StyledBadge>
+              <StyledBadge
+                badgeContent={
+                  countCancellation.length > 0 ? countCancellation.length : "0"
+                }
+              >
+                <Button
+                  onClick={() => searchByStatus("STORNO")}
+                  style={{ backgroundColor: "#d2d9d3" }}
+                  type="button"
+                  variant="contained"
+                  ml={4}
+                >
+                  STORNO
+                </Button>
+              </StyledBadge>
 
-                  <Grid
-                    style={{ marginTop: "10px", marginLeft: "1px" }}
-                    container
-                    spacing={4}
+              <Grid style={{ marginTop: "20px" }} container spacing={4}>
+                <StyledBadge fullWidth badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      border: "1px solid black",
+                    }}
+                    type="button"
+                    variant="contained"
+                    ml={4}
                   >
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="operator"
-                        label="Operator"
-                        value={operatorValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setOperatorValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            operator: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite operatora</MenuItem>
-                        {operatorsOptions.map((status) => (
-                          <MenuItem
-                            key={status.operatorName}
-                            value={status.operatorName}
-                          >
-                            {status.operatorName}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="requestType"
-                        label="Vrsta"
-                        value={requestTypeValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setRequestTypeValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            type: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite vrstu</MenuItem>
-                        {requestTypesOptions.map((status) => (
-                          <MenuItem
-                            key={status.requestTypeName}
-                            value={status.requestTypeName}
-                          >
-                            {status.requestTypeDescription}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="category"
-                        label="Kategorija"
-                        value={categoryValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setCategoryValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            category: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite kategoriju</MenuItem>
-                        {optionsCategory.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="status"
-                        label="Status"
-                        value={statusValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setStatusValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            status: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite status</MenuItem>
-                        {optionsStatus.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                    <Grid item md={2}>
-                      <CssTextField
-                        focusColor="black"
-                        name="statusInt"
-                        label="Status interno"
-                        value={statusIntValue}
-                        //error={Boolean(touched.lastName && errors.lastName)}
-                        fullWidth
-                        onChange={(event) => {
-                          setStatusIntValue(event.target.value);
-                          setSearch({
-                            ...search,
-                            statusInt: event.target.value,
-                          });
-                        }}
-                        variant="outlined"
-                        select
-                      >
-                        <MenuItem value={0}>Odaberite status interno</MenuItem>
-                        {optionsStatusInt.map((status) => (
-                          <MenuItem key={status.value} value={status.value}>
-                            {status.name}
-                          </MenuItem>
-                        ))}
-                      </CssTextField>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </>
-            ) : (
-              ""
-            )} */}
+                    TCC potreban termin
+                  </Button>
+                </StyledBadge>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      border: "1px solid black",
+                    }}
+                    type="button"
+                    variant="contained"
+                    ml={4}
+                  >
+                    OpKo smetnja NOK
+                  </Button>
+                </StyledBadge>
+                <StyledBadge badgeContent={4}>
+                  <Button
+                    //onClick={() => navigate(-1)}
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      border: "1px solid black",
+                    }}
+                    type="button"
+                    variant="contained"
+                    ml={4}
+                  >
+                    Čekanje na OpKo verifikaciju
+                  </Button>
+                </StyledBadge>
+              </Grid>
+            </Grid>
           </Typography>
         </CardContent>
         <br />
