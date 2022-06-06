@@ -194,17 +194,6 @@ function DataGridDemo() {
       headerName: "Kategorija",
       width: 170,
     },
-    // {
-    //   field: "fullName",
-    //   headerName: "Kategorija",
-    //   description: "This column has a value getter and is not sortable.",
-    //   sortable: false,
-    //   width: 250,
-    //   valueGetter: (params) =>
-    //     `${params.getValue(params.id, "firstName") || ""} ${
-    //       params.getValue(params.id, "lastName") || ""
-    //     }`,
-    // },
     {
       field: "requestAdapterId",
       headerName: "Adapter Id",

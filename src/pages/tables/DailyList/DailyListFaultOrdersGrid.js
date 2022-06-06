@@ -21,17 +21,28 @@ import {
   Badge,
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { Loop as LoopIcon } from "@mui/icons-material";
+import { Loop as LoopIcon, Check } from "@mui/icons-material";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { requestService } from "../../../Services/requestService";
 import { FilterList, RemoveRedEye } from "@mui/icons-material";
 import { green, orange, red, grey } from "@mui/material/colors";
 import { DatePicker } from "@mui/lab";
-import { selectService } from "../../../Services/selectService";
 import { faultOrdersService } from "../../../Services/faultOrdersService";
 import * as dateHelper from "../../../components/Config/DateHelper";
 import { dailyListService } from "../../../Services/dailyListService";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const Card = styled(MuiCard)(spacing);
 
@@ -99,17 +110,19 @@ const CssTextField = styled(TextField, {
 function DataGridDemo() {
   const navigate = useNavigate();
 
-  let Error;
   let Rejected;
   let Info;
   let Realized;
   let RealizedOK;
   let RealizedNOK;
   let Cancellation;
+  let TCCnewTermin;
+  let OpkoNOK;
+  let OpkoVerification;
 
   const [update, setUpdate] = useState(new Date());
   const [faultOrders, setFaultOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const [totalCount, setTotalCounut] = useState(0);
   const [countRejected, setCountRejected] = useState([]);
@@ -118,9 +131,13 @@ function DataGridDemo() {
   const [countRealizedOK, setCountRealizedOK] = useState([]);
   const [countRealizedNOK, setCountRealizedNOK] = useState([]);
   const [countCancellation, setCountCancellation] = useState([]);
+  const [countTCCnewTermin, setCountTCCnewTermin] = useState([]);
+  const [countOpkoNOK, setCountOpkoNOK] = useState([]);
+  const [countOpkoVerification, setCountOpkoVerification] = useState([]);
+  const [isOpenModalDone, setIsOpenModalDone] = useState(false);
+  const [idOrder, setIdOrder] = useState(0);
 
   useEffect(() => {
-    setIsLoading(true);
     dailyListService
       .getFaultOrders()
       .then((res) => {
@@ -162,6 +179,21 @@ function DataGridDemo() {
       return r.statusName.includes("STORNO");
     });
     setCountCancellation(Cancellation);
+
+    TCCnewTermin = requestsCount.filter((r) => {
+      return r.internalStatusName.includes("TCC potreban termin");
+    });
+    setCountTCCnewTermin(TCCnewTermin);
+
+    OpkoNOK = requestsCount.filter((r) => {
+      return r.internalStatusName.includes("OpKo smetnja NOK");
+    });
+    setCountOpkoNOK(OpkoNOK);
+
+    OpkoVerification = requestsCount.filter((r) => {
+      return r.internalStatusName.includes("Čekanje na OpKo verifikaciju");
+    });
+    setCountOpkoVerification(OpkoVerification);
   };
 
   const searchByStatus = (statusName) => {
@@ -186,11 +218,39 @@ function DataGridDemo() {
         break;
       case "STORNO":
         setFaultOrders(countCancellation);
+        break;
+      case "TCC potreban termin":
+        setFaultOrders(countTCCnewTermin);
+        break;
+      case "OpKo smetnja NOK":
+        setFaultOrders(countOpkoNOK);
+        break;
+      case "Čekanje na OpKo verifikaciju":
+        setFaultOrders(countOpkoVerification);
+        break;
     }
   };
 
   const columns = [
-    { field: "requestId", headerName: "Case Id", width: 105 },
+    {
+      field: "requestId",
+      headerName: "Case Id",
+      width: 105,
+      renderCell: (params) => (
+        <Button
+          onClick={() =>
+            navigate(`/fault-orders/details/${params.id}`, {
+              state: {
+                requestId: params.id,
+              },
+            })
+          }
+          type="button"
+        >
+          {params.id}
+        </Button>
+      ),
+    },
     {
       field: "requestGuid",
       headerName: "GUID",
@@ -239,7 +299,7 @@ function DataGridDemo() {
     },
 
     {
-      field: "statusRef",
+      field: "internalStatusName",
       headerName: "Status interno",
       width: 140,
     },
@@ -255,9 +315,36 @@ function DataGridDemo() {
           label="Detalji"
           onClick={() => handleToDetail(params.id)}
         />,
+        <GridActionsCellItem
+          icon={<Check />}
+          onClick={() => {
+            setIsOpenModalDone(true);
+            setIdOrder(params.id);
+          }}
+        />,
       ],
     },
   ];
+
+  const handleUpdateBackOfficeAction = () => {
+    dailyListService
+      .confirmOrder(idOrder)
+      .then((res) => {
+        setUpdate(new Date());
+        navigate("/daily-list/fault-orders");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setIsOpenModalDone(false);
+    navigate("/daily-list/fault-orders");
+    setUpdate(new Date());
+  };
+
+  const handleCloseDialogDone = () => {
+    setIsOpenModalDone(false);
+    navigate("/daily-list/fault-orders");
+  };
 
   const handleToDetail = (id) => {
     navigate(`/fault-orders/details/${id}`, {
@@ -283,11 +370,7 @@ function DataGridDemo() {
                   SVI
                 </Button>
               </StyledBadge>
-              <StyledBadge
-                badgeContent={
-                  countRejected.length > 0 ? countRejected.length : "0"
-                }
-              >
+              <StyledBadge badgeContent={countRejected.length}>
                 <Button
                   onClick={() => searchByStatus("ODBIJEN")}
                   color="error"
@@ -298,9 +381,7 @@ function DataGridDemo() {
                   ODBIJEN
                 </Button>
               </StyledBadge>
-              <StyledBadge
-                badgeContent={countInfo.length > 0 ? countInfo.length : "0"}
-              >
+              <StyledBadge badgeContent={countInfo.length}>
                 <Button
                   onClick={() => searchByStatus("INFO")}
                   style={{ backgroundColor: "#7a7d7b" }}
@@ -311,11 +392,7 @@ function DataGridDemo() {
                   INFO
                 </Button>
               </StyledBadge>
-              <StyledBadge
-                badgeContent={
-                  countRealized.length > 0 ? countRealized.length : "0"
-                }
-              >
+              <StyledBadge badgeContent={countRealized.length}>
                 <Button
                   onClick={() => searchByStatus("REALIZIRAN")}
                   style={{ backgroundColor: "#3cbd67" }}
@@ -326,14 +403,10 @@ function DataGridDemo() {
                   REALIZIRAN
                 </Button>
               </StyledBadge>
-              <StyledBadge
-                badgeContent={
-                  countRealizedOK.length > 0 ? countRealizedOK.length : "0"
-                }
-              >
+              <StyledBadge badgeContent={countRealizedOK.length}>
                 <Button
                   onClick={() => searchByStatus("REALIZIRAN OK")}
-                  style={{ backgroundColor: "#d2d9d3" }}
+                  style={{ backgroundColor: "#3cbd67" }}
                   type="button"
                   variant="contained"
                   ml={4}
@@ -341,11 +414,7 @@ function DataGridDemo() {
                   REALIZIRAN OK
                 </Button>
               </StyledBadge>
-              <StyledBadge
-                badgeContent={
-                  countRealizedNOK.length > 0 ? countRealizedNOK.length : "0"
-                }
-              >
+              <StyledBadge badgeContent={countRealizedNOK.length}>
                 <Button
                   onClick={() => searchByStatus("REALIZIRAN NOK")}
                   color="error"
@@ -356,11 +425,7 @@ function DataGridDemo() {
                   REALIZIRAN NOK
                 </Button>
               </StyledBadge>
-              <StyledBadge
-                badgeContent={
-                  countCancellation.length > 0 ? countCancellation.length : "0"
-                }
-              >
+              <StyledBadge badgeContent={countCancellation.length}>
                 <Button
                   onClick={() => searchByStatus("STORNO")}
                   style={{ backgroundColor: "#d2d9d3" }}
@@ -373,9 +438,9 @@ function DataGridDemo() {
               </StyledBadge>
 
               <Grid style={{ marginTop: "20px" }} container spacing={4}>
-                <StyledBadge fullWidth badgeContent={4}>
+                <StyledBadge fullWidth badgeContent={countTCCnewTermin.length}>
                   <Button
-                    //onClick={() => navigate(-1)}
+                    onClick={() => searchByStatus("TCC potreban termin")}
                     style={{
                       backgroundColor: "white",
                       color: "black",
@@ -388,9 +453,9 @@ function DataGridDemo() {
                     TCC potreban termin
                   </Button>
                 </StyledBadge>
-                <StyledBadge badgeContent={4}>
+                <StyledBadge badgeContent={countOpkoNOK.length}>
                   <Button
-                    //onClick={() => navigate(-1)}
+                    onClick={() => searchByStatus("OpKo smetnja NOK")}
                     style={{
                       backgroundColor: "white",
                       color: "black",
@@ -403,9 +468,11 @@ function DataGridDemo() {
                     OpKo smetnja NOK
                   </Button>
                 </StyledBadge>
-                <StyledBadge badgeContent={4}>
+                <StyledBadge badgeContent={countOpkoVerification.length}>
                   <Button
-                    //onClick={() => navigate(-1)}
+                    onClick={() =>
+                      searchByStatus("Čekanje na OpKo verifikaciju")
+                    }
                     style={{
                       backgroundColor: "white",
                       color: "black",
@@ -448,6 +515,41 @@ function DataGridDemo() {
           </div>
         </Paper>
       </Card>
+
+      <BootstrapDialog
+        PaperProps={{ sx: { width: "20%", height: "20%" } }}
+        onClose={handleCloseDialogDone}
+        aria-labelledby="customized-dialog-title"
+        open={isOpenModalDone}
+      >
+        <DialogContent
+          dividers
+          style={{ textAlign: "center", padding: "20px", fontSize: "20px" }}
+        >
+          Smetnja odrađena?
+        </DialogContent>
+        <DialogActions>
+          <Button
+            type="button"
+            variant="contained"
+            color="error"
+            onClick={() => handleUpdateBackOfficeAction()}
+            mt={3}
+          >
+            Potvrdi
+          </Button>
+          &nbsp; &nbsp;
+          <Button
+            onClick={handleCloseDialogDone}
+            style={{ backgroundColor: "black" }}
+            type="button"
+            variant="contained"
+            mt={3}
+          >
+            Odustani
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
     </>
   );
 }
