@@ -4,7 +4,11 @@ export const formatUtcToDate = (date) => {
   if (!date) return date;
 
   const gtmDate = new Date(date);
-  return format(gtmDate, "dd.MM.yyyy. hh:mm:ss");
+
+  return gtmDate.toLocaleString("hr-HR", {
+    hour12: false,
+  });
+  //  return format(gtmDate, "dd.MM.yyyy. hh:mm:ss");
 };
 
 export const formatUtcToDateNoTime = (date) => {

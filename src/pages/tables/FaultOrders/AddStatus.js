@@ -82,8 +82,22 @@ const CssTextField = styled(TextField, {
 }));
 
 const initialValues = {
-  name: null,
-  value: null,
+  datumre: "datumre",
+  adapterid: "adapterid",
+  oznakadc: "oznakadc",
+  oznakapoz: "oznakapoz",
+  option82: "option82",
+  datum: "datum",
+  kontaktteh: "kontaktteh",
+  opis: "opis",
+  datumreValue: "",
+  adapteridValue: "",
+  oznakadcValue: "",
+  oznakapozValue: "",
+  option82Value: "",
+  datumValue: "",
+  kontakttehValue: "",
+  opisValue: "",
 };
 
 function BasicForm() {
@@ -92,13 +106,8 @@ function BasicForm() {
   const [statusValue, setStatusValue] = useState(null);
   const [descriptionValue, setDescriptionValue] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [message, setMessage] = useState("");
-  const [valuesForm, setValuesForm] = useState([
-    {
-      name: null,
-      value: null,
-    },
-  ]);
+
+  const valuesForm = [{ name: "", value: "" }];
 
   const optionsStatus = [
     { value: "PRIHVAĆEN", name: "PRIHVAĆEN" },
@@ -119,8 +128,63 @@ function BasicForm() {
     values,
     { resetForm, setErrors, setStatus, setSubmitting }
   ) => {
-    alert("tu");
-    valuesForm.shift();
+    valuesForm.splice(0, 1);
+
+    if (values.datumreValue !== "") {
+      valuesForm.push({
+        name: values.datumre,
+        value: values.datumreValue,
+      });
+    }
+
+    if (values.adapteridValue !== "") {
+      valuesForm.push({
+        name: values.adapterid,
+        value: values.adapteridValue,
+      });
+    }
+
+    if (values.oznakadcValue !== "") {
+      valuesForm.push({
+        name: values.oznakadc,
+        value: values.oznakadcValue,
+      });
+    }
+
+    if (values.oznakapozValue !== "") {
+      valuesForm.push({
+        name: values.oznakapoz,
+        value: values.oznakapozValue,
+      });
+    }
+
+    if (values.option82Value !== "") {
+      valuesForm.push({
+        name: values.option82,
+        value: values.option82Value,
+      });
+    }
+
+    if (values.datumValue !== "") {
+      valuesForm.push({
+        name: values.datum,
+        value: values.datumValue,
+      });
+    }
+
+    if (values.kontakttehValue !== "") {
+      valuesForm.push({
+        name: values.kontaktteh,
+        value: values.kontakttehValue,
+      });
+    }
+
+    if (values.opisValue !== "") {
+      valuesForm.push({
+        name: values.opis,
+        value: values.opisValue,
+      });
+    }
 
     if (valuesForm.length > 0) {
       let parameter = valuesForm;
@@ -167,42 +231,9 @@ function BasicForm() {
           setSubmitting(false);
         });
     }
-
-    // try {
-    //   await timeOut(1500);
-    //   setStatus({ sent: true });
-    //   setSubmitting(false);
-    //   setOpenDialog(true);
-    // } catch (error) {
-    //   setStatus({ sent: false });
-    //   setErrors({ submit: error.message });
-    //   setSubmitting(false);
-    // }
   };
 
   const navigate = useNavigate();
-
-  const handleClick = (values) => {
-    let index;
-
-    index = valuesForm.findIndex((x) => x.name === values.name);
-
-    if (index == -1 && (values.name !== "" || values.value !== "")) {
-      setValuesForm([
-        ...valuesForm,
-        {
-          name: values.name,
-          value: values.value,
-        },
-      ]);
-      valuesForm.shift();
-      setMessage("");
-      values.name = "";
-      values.value = "";
-    } else {
-      setMessage("Parametar s tim nazivom već postoji.");
-    }
-  };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -292,14 +323,6 @@ function BasicForm() {
                 </Box>
               ) : (
                 <form onSubmit={handleSubmit}>
-                  <Alert mb={4} severity="info">
-                    <AlertTitle>Info</AlertTitle>
-                    Ispravan unos —{" "}
-                    <strong>
-                      Molimo Vas da unesete sva polja kako biste ispravno dodali
-                      status!
-                    </strong>
-                  </Alert>
                   <Grid item>
                     <Typography gutterBottom display="inline">
                       <h3>Status smetnje</h3>
@@ -365,41 +388,29 @@ function BasicForm() {
                   <Divider style={{ marginTop: "20px" }} />
                   <Grid item>
                     <Typography gutterBottom display="inline">
-                      <h3>Dodaj parametar</h3>
+                      <h3>Parametri</h3>
                     </Typography>
                   </Grid>
                   <Grid container spacing={6}>
                     <Grid item md={4}>
                       <CssTextField
+                        disabled
                         focusColor="black"
-                        name="name"
+                        name="datumre"
                         label="Naziv"
-                        value={values.name}
+                        value={values.datumre}
                         fullWidth
                         onChange={handleChange}
                         variant="outlined"
                         my={2}
                       />
-                      {message ? (
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "red",
-                            marginTop: "0px",
-                          }}
-                        >
-                          {message}
-                        </p>
-                      ) : (
-                        ""
-                      )}
                     </Grid>
                     <Grid item md={4}>
                       <CssTextField
                         focusColor="black"
-                        name="value"
+                        name="datumreValue"
                         label="Vrijednost"
-                        value={values.value}
+                        defaultValue={values.datumreValue}
                         fullWidth
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -407,95 +418,205 @@ function BasicForm() {
                         my={2}
                       />
                     </Grid>
-                    <Grid item md={2}>
-                      <Button
-                        disabled={values.name == "" || values.value == ""}
-                        onClick={() => handleClick(values)}
-                        variant="contained"
-                        type="button"
-                        color="error"
-                        style={{ marginTop: "14px" }}
-                      >
-                        <AddIcon />
-                        Dodaj
-                      </Button>
+                  </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item md={4}>
+                      <CssTextField
+                        disabled
+                        focusColor="black"
+                        name="adapterid"
+                        label="Naziv"
+                        value={values.adapterid}
+                        fullWidth
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
                     </Grid>
-                    <>
-                      {valuesForm.length > 1 ? (
-                        <Grid item md={12}>
-                          <Typography gutterBottom>
-                            <h3>Uneseni parametri</h3>
-                          </Typography>
-                        </Grid>
-                      ) : (
-                        ""
-                      )}
-                      {valuesForm &&
-                        valuesForm.map((element) =>
-                          element.name !== null ? (
-                            <>
-                              <Grid
-                                style={{ marginLeft: "1px" }}
-                                container
-                                spacing={6}
-                              >
-                                <Grid item md={4}>
-                                  <CssTextField
-                                    disabled
-                                    focusColor="black"
-                                    name="name"
-                                    label="Naziv"
-                                    value={element.name}
-                                    fullWidth
-                                    variant="outlined"
-                                    my={2}
-                                  />
-                                </Grid>
-                                <Grid item md={4}>
-                                  <CssTextField
-                                    disabled
-                                    focusColor="black"
-                                    name="value"
-                                    label="Vrijednost"
-                                    value={element.value}
-                                    fullWidth
-                                    variant="outlined"
-                                    my={2}
-                                  />
-                                </Grid>
-                                <Grid
-                                  style={{ paddingLeft: "0px" }}
-                                  item
-                                  md={1}
-                                >
-                                  <Button
-                                    type="button"
-                                    onClick={() => {
-                                      let filteredArrayParams;
-                                      filteredArrayParams = valuesForm.filter(
-                                        (param) => param.name !== element.name
-                                      );
-                                      setValuesForm(filteredArrayParams);
-                                    }}
-                                  >
-                                    <Delete
-                                      style={{
-                                        color: "black",
-                                        marginTop: "13px",
-                                      }}
-                                    />
-                                  </Button>
-                                </Grid>
-                              </Grid>
-                            </>
-                          ) : (
-                            ""
-                          )
-                        )}
-                    </>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="adapteridValue"
+                        label="Vrijednost"
+                        defaultValue={values.adapteridValue}
+                        fullWidth
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item md={4}>
+                      <CssTextField
+                        disabled
+                        focusColor="black"
+                        name="oznakadc"
+                        label="Naziv"
+                        value={values.oznakadc}
+                        fullWidth
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="oznakadcValue"
+                        label="Vrijednost"
+                        defaultValue={values.oznakadcValue}
+                        fullWidth
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item md={4}>
+                      <CssTextField
+                        disabled
+                        focusColor="black"
+                        name="oznakapoz"
+                        label="Naziv"
+                        value={values.oznakapoz}
+                        fullWidth
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="oznakapozValue"
+                        label="Vrijednost"
+                        defaultValue={values.oznakapozValue}
+                        fullWidth
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item md={4}>
+                      <CssTextField
+                        disabled
+                        focusColor="black"
+                        name="option82"
+                        label="Naziv"
+                        value={values.option82}
+                        fullWidth
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="option82Value"
+                        label="Vrijednost"
+                        defaultValue={values.option82Value}
+                        fullWidth
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item md={4}>
+                      <CssTextField
+                        disabled
+                        focusColor="black"
+                        name="datum"
+                        label="Naziv"
+                        value={values.datum}
+                        fullWidth
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="datumValue"
+                        label="Vrijednost"
+                        defaultValue={values.datumValue}
+                        fullWidth
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item md={4}>
+                      <CssTextField
+                        disabled
+                        focusColor="black"
+                        name="kontaktteh"
+                        label="Naziv"
+                        value={values.kontaktteh}
+                        fullWidth
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="kontakttehValue"
+                        label="Vrijednost"
+                        defaultValue={values.kontakttehValue}
+                        fullWidth
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={6}>
+                    <Grid item md={4}>
+                      <CssTextField
+                        disabled
+                        focusColor="black"
+                        name="opis"
+                        label="Naziv"
+                        value={values.opis}
+                        fullWidth
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
+                    <Grid item md={4}>
+                      <CssTextField
+                        focusColor="black"
+                        name="opisValue"
+                        label="Vrijednost"
+                        defaultValue={values.opisValue}
+                        fullWidth
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        variant="outlined"
+                        my={2}
+                      />
+                    </Grid>
                   </Grid>
                   <Button
-                    disabled={statusValue == null || descriptionValue == null}
+                    disabled={statusValue == null}
                     type="submit"
                     variant="contained"
                     color="error"

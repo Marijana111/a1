@@ -21,16 +21,25 @@ import {
   Badge,
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { Loop as LoopIcon } from "@mui/icons-material";
+import { Check, Loop as LoopIcon } from "@mui/icons-material";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { requestService } from "../../../Services/requestService";
 import { FilterList, RemoveRedEye } from "@mui/icons-material";
 import { green, orange, red, grey } from "@mui/material/colors";
-import { DatePicker } from "@mui/lab";
-import { selectService } from "../../../Services/selectService";
 import * as dateHelper from "../../../components/Config/DateHelper";
 import { dailyListService } from "../../../Services/dailyListService";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const Card = styled(MuiCard)(spacing);
 
@@ -105,10 +114,13 @@ function DataGridDemo() {
   let Info;
   let Realized;
   let Cancellation;
+  let BONewTermin;
+  let BOExpectingAction;
 
   const [update, setUpdate] = useState(new Date());
   const [requests, setRequests] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOpenModalDone, setIsOpenModalDone] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const [totalCount, setTotalCounut] = useState(0);
   const [countError, setCountErorr] = useState([]);
@@ -117,6 +129,9 @@ function DataGridDemo() {
   const [countInfo, setCountInfo] = useState([]);
   const [countRealized, setCountRealized] = useState([]);
   const [countCancellation, setCountCancellation] = useState([]);
+  const [countBONewTermin, setCountBONewTermin] = useState([]);
+  const [countBOExpectingAction, setCountBOExpectingAction] = useState([]);
+  const [idOrder, setIdOrder] = useState(0);
 
   useEffect(() => {
     dailyListService
@@ -160,6 +175,16 @@ function DataGridDemo() {
       return r.statusName.includes("STORNO");
     });
     setCountCancellation(Cancellation);
+
+    BOExpectingAction = requestsCount.filter((r) => {
+      return r.internalStatusName.includes("BO očekuje se akcija");
+    });
+    setCountBOExpectingAction(BOExpectingAction);
+
+    BONewTermin = requestsCount.filter((r) => {
+      return r.internalStatusName.includes("BO potreban novi termin");
+    });
+    setCountBONewTermin(BONewTermin);
   };
 
   const searchByStatus = (statusName) => {
@@ -184,11 +209,36 @@ function DataGridDemo() {
         break;
       case "STORNO":
         setRequests(countCancellation);
+        break;
+      case "BO očekuje se akcija":
+        setRequests(countBOExpectingAction);
+        break;
+      case "BO potreban novi termin":
+        setRequests(countBONewTermin);
+        break;
     }
   };
 
   const columns = [
-    { field: "requestId", headerName: "Case Id", width: 105 },
+    {
+      field: "requestId",
+      headerName: "Case Id",
+      width: 105,
+      renderCell: (params) => (
+        <Button
+          onClick={() =>
+            navigate(`/requests/details/${params.id}`, {
+              state: {
+                requestId: params.id,
+              },
+            })
+          }
+          type="button"
+        >
+          {params.id}
+        </Button>
+      ),
+    },
     {
       field: "requestGuid",
       headerName: "GUID",
@@ -237,7 +287,7 @@ function DataGridDemo() {
     },
 
     {
-      field: "statusRef",
+      field: "internalStatusName",
       headerName: "Status interno",
       width: 140,
     },
@@ -253,6 +303,13 @@ function DataGridDemo() {
           label="Detalji"
           onClick={() => handleToDetail(params.id)}
         />,
+        <GridActionsCellItem
+          icon={<Check />}
+          onClick={() => {
+            setIsOpenModalDone(true);
+            setIdOrder(params.id);
+          }}
+        />,
       ],
     },
   ];
@@ -263,6 +320,26 @@ function DataGridDemo() {
         requestId: id,
       },
     });
+  };
+
+  const handleUpdateBackOfficeAction = () => {
+    dailyListService
+      .confirmOrder(idOrder)
+      .then((res) => {
+        setUpdate(new Date());
+        navigate("/daily-list/requests");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setIsOpenModalDone(false);
+    navigate("/daily-list/requests");
+    setUpdate(new Date());
+  };
+
+  const handleCloseDialogDone = () => {
+    setIsOpenModalDone(false);
+    navigate("/daily-list/requests");
   };
 
   return (
@@ -349,9 +426,9 @@ function DataGridDemo() {
               </StyledBadge>
 
               <Grid style={{ marginTop: "20px" }} container spacing={4}>
-                <StyledBadge fullWidth badgeContent={4}>
+                <StyledBadge fullWidth badgeContent={countBONewTermin.length}>
                   <Button
-                    //onClick={() => navigate(-1)}
+                    onClick={() => searchByStatus("BO potreban novi termin")}
                     style={{
                       backgroundColor: "white",
                       color: "black",
@@ -364,9 +441,9 @@ function DataGridDemo() {
                     BO potreban novi termin
                   </Button>
                 </StyledBadge>
-                <StyledBadge badgeContent={4}>
+                <StyledBadge badgeContent={countBOExpectingAction.length}>
                   <Button
-                    //onClick={() => navigate(-1)}
+                    onClick={() => searchByStatus("BO očekuje se akcija")}
                     style={{
                       backgroundColor: "white",
                       color: "black",
@@ -409,6 +486,41 @@ function DataGridDemo() {
           </div>
         </Paper>
       </Card>
+
+      <BootstrapDialog
+        PaperProps={{ sx: { width: "20%", height: "20%" } }}
+        onClose={handleCloseDialogDone}
+        aria-labelledby="customized-dialog-title"
+        open={isOpenModalDone}
+      >
+        <DialogContent
+          dividers
+          style={{ textAlign: "center", padding: "20px", fontSize: "20px" }}
+        >
+          Zahtjev odrađen?
+        </DialogContent>
+        <DialogActions>
+          <Button
+            type="button"
+            variant="contained"
+            color="error"
+            onClick={() => handleUpdateBackOfficeAction()}
+            mt={3}
+          >
+            Potvrdi
+          </Button>
+          &nbsp; &nbsp;
+          <Button
+            onClick={handleCloseDialogDone}
+            style={{ backgroundColor: "black" }}
+            type="button"
+            variant="contained"
+            mt={3}
+          >
+            Odustani
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
     </>
   );
 }
